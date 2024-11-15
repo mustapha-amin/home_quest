@@ -47,7 +47,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ),
         child: Stack(
-          alignment: Alignment.bottomCenter,
+          alignment: Alignment.center,
           children: [
             Container(
               color: Colors.black.withOpacity(0.6),
@@ -56,26 +56,27 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               opacity: _opacity,
               duration: const Duration(seconds: 2),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text.rich(
-                    TextSpan(
-                      text:
-                          "Connecting you to the perfect property or client, all in one place\n\n",
-                      children: [
-                        TextSpan(
-                          text:
-                              "Start exploring today and make real estate simple.",
-                          style: kTextStyle(16, color: Colors.white),
-                        )
-                      ],
-                    ),
+                  Text(
+                    "Connecting you to the perfect property or client, all in one place\n\n",
                     style: kTextStyle(24, color: Colors.white, isBold: true),
                     textAlign: TextAlign.center,
                   ).padX(20),
                   spaceY(20),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 15,
+              child: Column(
+                children: [
+                  Text(
+                    "Start exploring today and make real estate simple.",
+                    style: kTextStyle(17, color: Colors.white),
+                  ),
+                  spaceY(25),
                   const OnboardBtn(),
-                  spaceY(12),
                 ],
               ),
             ),

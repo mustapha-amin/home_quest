@@ -30,7 +30,7 @@ class OnboardBtn extends StatelessWidget {
           child: Center(
             child: Text(
               "Get started",
-              style: kTextStyle(20),
+              style: kTextStyle(18),
             ),
           ),
         ),

@@ -38,6 +38,7 @@ dependencies:
   flutter_riverpod: ^2.6.1
   google_fonts: ^6.2.1
   google_sign_in: ^6.2.2
+  shared_preferences: ^2.3.3
   shimmer: ^3.0.0
   sizer: ^3.0.4
   uuid: ^4.5.1
