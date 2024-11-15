@@ -1,4 +1,4 @@
-package com.example.home_quest
+package com.mustapha.homequest
 
 import io.flutter.embedding.android.FlutterActivity
 

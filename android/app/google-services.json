@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "461172162912",
+    "project_id": "homequest-f9835",
+    "storage_bucket": "homequest-f9835.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461172162912:android:23f76725c1a31d185d5e05",
+        "android_client_info": {
+          "package_name": "com.mustapha.homequest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8yPRVVVt8jWB36xsafxaFV0S7d1tmdrw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
