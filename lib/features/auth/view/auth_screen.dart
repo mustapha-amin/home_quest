@@ -21,6 +21,8 @@ class _AuthScreenState extends State<AuthScreen> {
   TextEditingController emailContrl = TextEditingController();
   TextEditingController passwordContrl = TextEditingController();
   ValueNotifier<bool> isSignUp = ValueNotifier(true);
+  AutovalidateMode _autovalidateMode = AutovalidateMode.disabled;
+  bool passwordIsObscure = true;
 
   void toggleAuthStatus() {
     isSignUp.value = !isSignUp.value;
@@ -34,116 +36,130 @@ class _AuthScreenState extends State<AuthScreen> {
         builder: (context, isSignUp, _) {
           return Form(
             key: formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Image.asset(
-                    genImagePath("auth house", ImageType.gif),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      isSignUp ? "Create an account" : "Log In",
+                      style: kTextStyle(25, isBold: true),
+                    ).padY(5),
+                  ],
+                ),
+                spaceY(30),
+                TextFormField(
+                  controller: emailContrl,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "email",
+                    hintStyle: kTextStyle(16, color: Colors.grey),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        isSignUp ? "Sign up" : "Log In",
-                        style: kTextStyle(25, isBold: true),
-                      ),
-                    ],
-                  ).padY(5),
-                  TextFormField(
-                    controller: emailContrl,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "email",
-                      hintStyle: kTextStyle(16, color: Colors.grey),
-                    ),
-                    validator: (email) {
-                      if (email!.isEmpty || email == null) {
-                        return "Email can' be be empty";
-                      }
-                      if (!isValidEmail(email)) {
-                        return "Not a valid email";
-                      }
-                      return null;
-                    },
-                  ),
-                  spaceY(20),
-                  TextFormField(
-                    controller: passwordContrl,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: "password",
-                      hintStyle: kTextStyle(16, color: Colors.grey),
-                    ),
-                    validator: (password) {
-                      if (password!.isEmpty || password == null) {
-                        return "Password can' be be empty";
-                      }
-                      if (!isValidpassword(password)) {
-                        return "Password must be at least 8 characters, including a number and an uppercase letter";
-                      }
-                      return null;
-                    },
-                  ),
-                  spaceY(40),
-                  CustomButton(
-                    label: isSignUp ? "Sign up" : "Log In",
-                    onTap: () {
-                      if (formKey.currentState!.validate()) {
-                        print("valid");
-                      }
-                    },
-                  ),
-                  spaceY(15),
-                  SizedBox(
-                    width: 100.w,
-                    height: 50,
-                    child: OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onPressed: () {},
-                      label: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            genImagePath("google", ImageType.png),
-                            width: 35,
-                          ),
-                          spaceX(10),
-                          Text(
-                            "Continue with Google",
-                            style: kTextStyle(18),
-                          )
-                        ],
+                  autovalidateMode: _autovalidateMode,
+                  validator: (email) {
+                    if (email!.isEmpty || email == null) {
+                      return "Email can' be be empty";
+                    }
+                    if (!isValidEmail(email)) {
+                      return "Not a valid email";
+                    }
+                    return null;
+                  },
+                ),
+                spaceY(20),
+                TextFormField(
+                  controller: passwordContrl,
+                  obscureText: passwordIsObscure,
+                  autovalidateMode: _autovalidateMode,
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          passwordIsObscure = !passwordIsObscure;
+                        });
+                      },
+                      icon: Icon(
+                        passwordIsObscure
+                            ? Icons.visibility
+                            : Icons.visibility_off,
                       ),
                     ),
+                    border: OutlineInputBorder(),
+                    hintText: "password",
+                    hintStyle: kTextStyle(16, color: Colors.grey),
                   ),
-                  spaceY(15),
-                  Text.rich(
-                    TextSpan(
-                      text: isSignUp
-                          ? "Already have an account? "
-                          : "Don't have an account? ",
-                      style: kTextStyle(18),
+                  validator: (password) {
+                    if (password!.isEmpty || password == null) {
+                      return "Password can' be be empty";
+                    }
+                    if (!isValidpassword(password)) {
+                      return "Password must be at least 8 characters, including a number and an uppercase letter";
+                    }
+                    return null;
+                  },
+                ),
+                spaceY(40),
+                CustomButton(
+                  label: isSignUp ? "Sign up" : "Log In",
+                  onTap: () {
+                    if (formKey.currentState!.validate()) {
+                      print("Ok");
+                    } else {
+                      setState(() {
+                        _autovalidateMode = AutovalidateMode.onUserInteraction;
+                      });
+                    }
+                  },
+                ),
+                spaceY(15),
+                SizedBox(
+                  width: 100.w,
+                  height: 50,
+                  child: OutlinedButton.icon(
+                    style: OutlinedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {},
+                    label: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TextSpan(
-                          text: isSignUp ? "Log in" : "Sign up",
-                          style: kTextStyle(18, color: Colors.blue),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              toggleAuthStatus();
-                            },
+                        Image.asset(
+                          genImagePath("google", ImageType.png),
+                          width: 35,
+                        ),
+                        spaceX(10),
+                        Text(
+                          "Continue with Google",
+                          style: kTextStyle(18),
                         )
                       ],
                     ),
-                  )
-                ],
-              ).padX(25),
-            ),
+                  ),
+                ),
+                spaceY(15),
+                Text.rich(
+                  TextSpan(
+                    text: isSignUp
+                        ? "Already have an account? "
+                        : "Don't have an account? ",
+                    style: kTextStyle(18),
+                    children: [
+                      TextSpan(
+                        text: isSignUp ? "Log in" : "Sign up",
+                        style: kTextStyle(18, color: Colors.blue),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            toggleAuthStatus();
+                          },
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ).padX(25),
           );
         },
       ),
