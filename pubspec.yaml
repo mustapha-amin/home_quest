@@ -36,6 +36,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.6.1
+  fpdart: ^1.1.1
   google_fonts: ^6.2.1
   google_sign_in: ^6.2.2
   shared_preferences: ^2.3.3

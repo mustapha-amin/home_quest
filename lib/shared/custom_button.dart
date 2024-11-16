@@ -14,15 +14,16 @@ class CustomButton extends StatelessWidget {
       width: 100.w,
       height: 50,
       decoration: BoxDecoration(
+        color: Colors.brown[600],
         borderRadius: BorderRadius.circular(8),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Colors.greenAccent,
-            Colors.yellow,
-          ],
-        ),
+        // gradient: const LinearGradient(
+        //   begin: Alignment.topLeft,
+        //   end: Alignment.bottomRight,
+        //   // colors: [
+        //   //   Colors.greenAccent,
+        //   //   Colors.yellow,
+        //   // ],
+        // ),
       ),
       child: Material(
         color: const Color.fromARGB(0, 126, 40, 40),
@@ -32,7 +33,7 @@ class CustomButton extends StatelessWidget {
           child: Center(
             child: Text(
               label!,
-              style: kTextStyle(18),
+              style: kTextStyle(18, color: Colors.white),
             ),
           ),
         ),

@@ -1,5 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/features/auth/view/auth_screen.dart';
+import 'package:home_quest/services/onboarding_settings.dart';
 import 'package:home_quest/shared/custom_button.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:home_quest/utils/extensions.dart';
@@ -8,14 +13,15 @@ import 'package:home_quest/utils/navigations.dart';
 import 'package:home_quest/utils/textstyle.dart';
 import 'package:sizer/sizer.dart';
 
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   double _opacity = 0;
   final _image = AssetImage(genImagePath("house", ImageType.jpg));
 
@@ -72,7 +78,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   CustomButton(
                     label: "Get Started",
                     onTap: () {
-                      context.push(const AuthScreen());
+                      
+                      try {
+                        ref.read(onBoardingSettingsProvider).passOnboarding();
+                        context.replace(const AuthScreen());
+                      } catch (e) {
+                        log("Error: ${e.toString()}");
+                      }
                     },
                   ).padX(20),
                 ],
