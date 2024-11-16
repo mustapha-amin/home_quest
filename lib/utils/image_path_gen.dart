@@ -1,8 +1,9 @@
-String genPngImagePath(String? name) {
-  return "assets/images/$name.png";
-}
+enum ImageType { png, jpg, gif }
 
-String genJpgImagePath(String? name) {
-  return "assets/images/$name.jpg";
+String genImagePath(String? name, ImageType type) {
+  return switch (type) {
+    ImageType.png => "assets/images/$name.png",
+    ImageType.jpg => "assets/images/$name.jpg",
+    _ => "assets/images/$name.gif"
+  };
 }
-

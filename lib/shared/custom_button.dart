@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../../utils/textstyle.dart';
+import '../utils/textstyle.dart';
 
-class OnboardBtn extends StatelessWidget {
-  const OnboardBtn({super.key});
+class CustomButton extends StatelessWidget {
+  String? label;
+  VoidCallback? onTap;
+  CustomButton({this.label, this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 90.w,
+      width: 100.w,
       height: 50,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -23,13 +25,13 @@ class OnboardBtn extends StatelessWidget {
         ),
       ),
       child: Material(
-        color: Colors.transparent,
+        color: const Color.fromARGB(0, 126, 40, 40),
         borderRadius: BorderRadius.circular(8),
         child: InkWell(
-          onTap: () {},
+          onTap: onTap,
           child: Center(
             child: Text(
-              "Get started",
+              label!,
               style: kTextStyle(18),
             ),
           ),

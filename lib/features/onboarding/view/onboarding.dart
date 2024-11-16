@@ -1,10 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:home_quest/features/onboarding/widgets/onboard_btn.dart';
+import 'package:home_quest/features/auth/view/auth_screen.dart';
+import 'package:home_quest/shared/custom_button.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:home_quest/utils/extensions.dart';
 import 'package:home_quest/utils/image_path_gen.dart';
+import 'package:home_quest/utils/navigations.dart';
 import 'package:home_quest/utils/textstyle.dart';
 import 'package:sizer/sizer.dart';
 
@@ -17,7 +17,7 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   double _opacity = 0;
-  final _image = AssetImage(genJpgImagePath("house"));
+  final _image = AssetImage(genImagePath("house", ImageType.jpg));
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ),
         child: Stack(
-          alignment: Alignment.center,
+          alignment: Alignment.bottomCenter,
           children: [
             Container(
               color: Colors.black.withOpacity(0.6),
@@ -56,7 +56,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               opacity: _opacity,
               duration: const Duration(seconds: 2),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
                     "Connecting you to the perfect property or client, all in one place\n\n",
@@ -64,21 +64,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     textAlign: TextAlign.center,
                   ).padX(20),
                   spaceY(20),
-                ],
-              ),
-            ),
-            Positioned(
-              bottom: 15,
-              child: Column(
-                children: [
                   Text(
                     "Start exploring today and make real estate simple.",
                     style: kTextStyle(17, color: Colors.white),
                   ),
                   spaceY(25),
-                  const OnboardBtn(),
+                  CustomButton(
+                    label: "Get Started",
+                    onTap: () {
+                      context.push(const AuthScreen());
+                    },
+                  ).padX(20),
                 ],
-              ),
+              ).padY(10),
             ),
           ],
         ),

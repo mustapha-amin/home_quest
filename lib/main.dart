@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:home_quest/features/auth/view/signup.dart';
+import 'package:home_quest/features/auth/view/auth_screen.dart';
 import 'package:sizer/sizer.dart';
 
 import 'features/onboarding/view/onboarding.dart';
@@ -20,8 +20,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Sizer(builder: (___, _, __) {
-      return const MaterialApp(
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: OnboardingScreen(),
+        theme: ThemeData(
+          scaffoldBackgroundColor: Colors.white,
+        ),
       );
     });
   }
