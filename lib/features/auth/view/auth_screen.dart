@@ -4,6 +4,7 @@ import 'package:home_quest/shared/custom_button.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:home_quest/utils/extensions.dart';
 import 'package:home_quest/utils/image_path_gen.dart';
+import 'package:home_quest/utils/regex.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../utils/textstyle.dart';
@@ -55,6 +56,15 @@ class _AuthScreenState extends State<AuthScreen> {
                       hintText: "email",
                       hintStyle: kTextStyle(16, color: Colors.grey),
                     ),
+                    validator: (email) {
+                      if (email!.isEmpty || email == null) {
+                        return "Email can' be be empty";
+                      }
+                      if (!isValidEmail(email)) {
+                        return "Not a valid email";
+                      }
+                      return null;
+                    },
                   ),
                   spaceY(20),
                   TextFormField(
@@ -65,11 +75,24 @@ class _AuthScreenState extends State<AuthScreen> {
                       hintText: "password",
                       hintStyle: kTextStyle(16, color: Colors.grey),
                     ),
+                    validator: (password) {
+                      if (password!.isEmpty || password == null) {
+                        return "Password can' be be empty";
+                      }
+                      if (!isValidpassword(password)) {
+                        return "Password must be at least 8 characters, including a number and an uppercase letter";
+                      }
+                      return null;
+                    },
                   ),
                   spaceY(40),
                   CustomButton(
                     label: isSignUp ? "Sign up" : "Log In",
-                    onTap: () {},
+                    onTap: () {
+                      if (formKey.currentState!.validate()) {
+                        print("valid");
+                      }
+                    },
                   ),
                   spaceY(15),
                   SizedBox(

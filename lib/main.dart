@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
     return Sizer(builder: (___, _, __) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: OnboardingScreen(),
+        home: const OnboardingScreen(),
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
         ),
