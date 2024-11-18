@@ -1,7 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:home_quest/core/providers.dart';
 
 import '../../../core/typedefs.dart';
+
+final authServiceProvider = Provider((ref) {
+  return AuthService(firebaseAuth: ref.watch(firebaseAuthProvider));
+});
 
 class AuthService {
   final FirebaseAuth firebaseAuth;
@@ -9,7 +15,6 @@ class AuthService {
 
   Stream<User?> get authStateChanges => firebaseAuth.authStateChanges();
 
-  @override
   FutureEither<UserCredential> signIn({
     required String email,
     required String password,
@@ -59,7 +64,6 @@ class AuthService {
     }
   }
 
-  @override
   FutureEither<String> signOut() async {
     try {
       await firebaseAuth.signOut();
