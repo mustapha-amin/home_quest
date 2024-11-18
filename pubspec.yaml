@@ -35,13 +35,17 @@ dependencies:
   firebase_storage: ^12.3.6
   flutter:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.3
   flutter_riverpod: ^2.6.1
   fpdart: ^1.1.1
   google_fonts: ^6.2.1
   google_sign_in: ^6.2.2
+  image_picker: ^1.1.2
   shared_preferences: ^2.3.3
   shimmer: ^3.0.0
   sizer: ^3.0.4
+  supabase_flutter: ^2.8.0
   uuid: ^4.5.1
 
 dev_dependencies:

@@ -2,12 +2,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:home_quest/shared/custom_button.dart';
 import 'package:home_quest/shared/spacing.dart';
-import 'package:home_quest/utils/extensions.dart';
-import 'package:home_quest/utils/image_path_gen.dart';
-import 'package:home_quest/utils/regex.dart';
+import 'package:home_quest/core/extensions/widget_exts.dart';
+import 'package:home_quest/core/utils/image_path_gen.dart';
+import 'package:home_quest/core/utils/regex.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../../utils/textstyle.dart';
+import '../../../core/utils/textstyle.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -37,21 +37,25 @@ class _AuthScreenState extends State<AuthScreen> {
           return Form(
             key: formKey,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  children: [
-                    Text(
-                      isSignUp ? "Create an account" : "Log In",
-                      style: kTextStyle(25, isBold: true),
-                    ).padY(5),
-                  ],
+                Image.asset(
+                  genImagePath("home_logo", ImageType.png),
+                  width: 20.w,
+                ),
+                Text(
+                  "Wecome to HomeQuest",
+                  style: kTextStyle(20, isBold: true),
+                ),
+                spaceY(12),
+                Text(
+                  "Enter you credentials to sign${isSignUp ? "up" : "in"}",
+                  style: kTextStyle(15),
                 ),
                 spaceY(30),
                 TextFormField(
                   controller: emailContrl,
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                     hintText: "email",
                     hintStyle: kTextStyle(16, color: Colors.grey),
                   ),
@@ -97,6 +101,19 @@ class _AuthScreenState extends State<AuthScreen> {
                     }
                     return null;
                   },
+                ),
+                spaceY(10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: () {},
+                      child: Text(
+                        "Forgot password?",
+                        style: kTextStyle(16, color: Colors.blue),
+                      ),
+                    ),
+                  ],
                 ),
                 spaceY(40),
                 CustomButton(
@@ -145,11 +162,11 @@ class _AuthScreenState extends State<AuthScreen> {
                     text: isSignUp
                         ? "Already have an account? "
                         : "Don't have an account? ",
-                    style: kTextStyle(18),
+                    style: kTextStyle(16),
                     children: [
                       TextSpan(
                         text: isSignUp ? "Log in" : "Sign up",
-                        style: kTextStyle(18, color: Colors.blue),
+                        style: kTextStyle(16, color: Colors.blue),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             toggleAuthStatus();
@@ -159,7 +176,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   ),
                 )
               ],
-            ).padX(25),
+            ).padX(25).padY(120),
           );
         },
       ),

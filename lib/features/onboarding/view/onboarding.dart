@@ -7,10 +7,10 @@ import 'package:home_quest/features/auth/view/auth_screen.dart';
 import 'package:home_quest/services/onboarding_settings.dart';
 import 'package:home_quest/shared/custom_button.dart';
 import 'package:home_quest/shared/spacing.dart';
-import 'package:home_quest/utils/extensions.dart';
-import 'package:home_quest/utils/image_path_gen.dart';
-import 'package:home_quest/utils/navigations.dart';
-import 'package:home_quest/utils/textstyle.dart';
+import 'package:home_quest/core/extensions/widget_exts.dart';
+import 'package:home_quest/core/utils/image_path_gen.dart';
+import 'package:home_quest/core/extensions/navigations.dart';
+import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:sizer/sizer.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {

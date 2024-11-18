@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-import '../utils/textstyle.dart';
+import '../core/utils/textstyle.dart';
 
 class CustomButton extends StatelessWidget {
   String? label;
@@ -14,7 +14,7 @@ class CustomButton extends StatelessWidget {
       width: 100.w,
       height: 50,
       decoration: BoxDecoration(
-        color: Colors.brown[600],
+        color: Color.fromARGB(255, 121, 92, 50),
         borderRadius: BorderRadius.circular(8),
         // gradient: const LinearGradient(
         //   begin: Alignment.topLeft,
