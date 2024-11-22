@@ -1,75 +1,56 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:home_quest/core/providers.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/typedefs.dart';
 
 final authServiceProvider = Provider((ref) {
-  return AuthService(firebaseAuth: ref.watch(firebaseAuthProvider));
+  return AuthService(supabaseClient: ref.watch(supabaseClientProvider));
 });
 
 class AuthService {
-  final FirebaseAuth firebaseAuth;
-  AuthService({required this.firebaseAuth});
+  final SupabaseClient supabaseClient;
+  AuthService({required this.supabaseClient});
 
-  Stream<User?> get authStateChanges => firebaseAuth.authStateChanges();
+  Stream<AuthState> get onAuthStateChange => supabaseClient.auth.onAuthStateChange;
 
-  FutureEither<UserCredential> signIn({
+  FutureEither<AuthResponse> signIn({
     required String email,
     required String password,
   }) async {
     try {
-      final userCredential = await firebaseAuth.signInWithEmailAndPassword(
+      final authResponse = await supabaseClient.auth.signInWithPassword(
         email: email,
         password: password,
       );
-      return right(userCredential);
-    } on FirebaseException catch (e, _) {
-      String? error;
-      if (e.code == 'user-not-found') {
-        error = "User not found";
-      } else if (e.code == "wrong-password") {
-        error = "Incorrect password";
-      } else if (e.code == "network-request-failed") {
-        error = "A network error occured, check your internet settings";
-      } else {
-        error = e.message;
-      }
-      return left(error!);
+      return right(authResponse);
+    } on AuthApiException catch (e, _) {
+      return left(e.message);
     }
   }
 
-  @override
-  FutureEither<UserCredential> signUp({
+  FutureEither<AuthResponse> signUp({
     required String email,
     required String password,
   }) async {
     try {
-      final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
+      final userCredential = await supabaseClient.auth.signUp(
         email: email,
         password: password,
       );
       return right(userCredential);
-    } on FirebaseAuthException catch (e, _) {
-      String? error;
-      if (e.code == 'email-already-in-use') {
-        error = "email already in use";
-      } else if (e.code == "network-request-failed") {
-        error = "A network occured, check your internet settings";
-      } else {
-        error = e.message.toString();
-      }
-      return left(error);
+    } on AuthApiException catch (e, _) {
+      return left(e.message);
     }
   }
 
   FutureEither<String> signOut() async {
     try {
-      await firebaseAuth.signOut();
+      await supabaseClient.auth.signOut();
       return right("success");
-    } catch (e, _) {
-      return left(e.toString());
+    } on AuthApiException catch (e, _) {
+      return left(e.message);
     }
   }
 }

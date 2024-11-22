@@ -1,11 +1,11 @@
 class Agent {
-  final int id, phoneNumber;
-  final String name, profilePicture, email;
+  final int phoneNumber;
+  final String agentID, name, profilePicture, email;
   List<String> listingsIDs;
   double rating;
 
   Agent({
-    required this.id,
+    required this.agentID,
     required this.name,
     required this.email,
     required this.phoneNumber,
@@ -16,7 +16,7 @@ class Agent {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'agentID': agentID,
       'name': name,
       'email': email,
       'phoneNumber': phoneNumber,
@@ -28,7 +28,7 @@ class Agent {
 
   factory Agent.fromJson(Map<String, dynamic> json) {
     return Agent(
-      id: json['id'],
+      agentID: json['agentID'],
       name: json['name'],
       email: json['email'],
       phoneNumber: json['phoneNumber'],

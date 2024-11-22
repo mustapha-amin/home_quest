@@ -22,7 +22,7 @@ void showErrorDialog(BuildContext context, String error) {
             child: Text(
               "Ok",
               style: kTextStyle(
-                18,
+                16,
                 color: Colors.blue,
               ),
             ),

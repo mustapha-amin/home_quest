@@ -1,11 +1,11 @@
 class Client {
-  final int id, phoneNumber;
-  final String name, email;
+  final int phoneNumber;
+  final String userID, name, email;
   final String profilePicture;
   final List<String> bookmarks;
 
   Client({
-    required this.id,
+    required this.userID,
     required this.name,
     required this.email,
     required this.phoneNumber,
@@ -15,7 +15,7 @@ class Client {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'userID': userID,
       'name': name,
       'email': email,
       'phoneNumber': phoneNumber,
@@ -26,7 +26,7 @@ class Client {
 
   factory Client.fromJson(Map<String, dynamic> json) {
     return Client(
-      id: json['id'],
+      userID: json['userID'],
       name: json['name'],
       email: json['email'],
       phoneNumber: json['phoneNumber'],

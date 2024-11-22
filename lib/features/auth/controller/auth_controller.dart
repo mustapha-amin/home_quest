@@ -5,6 +5,7 @@ import 'package:home_quest/core/typedefs.dart';
 import 'package:home_quest/core/utils/errordialog.dart';
 import 'package:home_quest/features/auth/repository/auth_repository.dart';
 import 'package:home_quest/features/auth/view/auth_screen.dart';
+import 'package:home_quest/features/user%20setup/views/user_type.dart';
 
 import '../../home/views/home.dart';
 
@@ -42,7 +43,7 @@ class AuthController extends StateNotifier<bool> {
     final result = await authService.signUp(email: email, password: password);
     result.fold(
       (l) => showErrorDialog(context, l),
-      (r) => context.replace(const Home()),
+      (r) => context.replace(const UserTypeScreen()),
     );
   }
 
