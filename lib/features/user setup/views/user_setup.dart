@@ -6,6 +6,7 @@ import 'package:home_quest/features/user%20setup/views/user_data_setup.dart';
 import 'package:home_quest/features/user%20setup/views/user_type.dart';
 import '../../../core/colors.dart';
 import '../../../shared/spacing.dart';
+import 'package:flutter/services.dart';
 
 final isFirstProvider = StateProvider<bool>((ref) {
   return true;
@@ -28,6 +29,26 @@ class UserSetup extends ConsumerStatefulWidget {
 
 class _UserSetupState extends ConsumerState<UserSetup> {
   @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool isFirst = ref.watch(isFirstProvider);
     return Scaffold(
@@ -46,34 +67,27 @@ class _UserSetupState extends ConsumerState<UserSetup> {
                 },
               ),
       ),
-      body: Stack(
-        alignment: Alignment.topCenter,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                spaceY(10),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    LinearProgressIndicator(
-                      value: ref.watch(progressCtrl),
-                      color: AppColors.brown,
-                    ).padX(10),
-                    const ColoredBox(
-                      color: Colors.white,
-                      child: SizedBox(
-                        width: 5,
-                        height: 50,
-                      ),
-                    )
-                  ],
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              LinearProgressIndicator(
+                value: ref.watch(progressCtrl),
+                color: AppColors.brown,
+              ).padX(10),
+              const ColoredBox(
+                color: Colors.white,
+                child: SizedBox(
+                  width: 5,
+                  height: 50,
                 ),
-                const SizedBox(height: 20),
-                isFirst ? const UserTypeScreen() : const UserDataSetup()
-              ],
-            ),
+              )
+            ],
+          ),
+          Expanded(
+            child: isFirst ? const UserTypeScreen() : const UserDataSetup(),
           ),
         ],
       ),

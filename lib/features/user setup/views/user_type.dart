@@ -75,7 +75,7 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
             }
             ref.read(isFirstProvider.notifier).state = false;
           },
-        ).padX(10),
+        ).padX(10).padY(8),
       ],
     );
   }

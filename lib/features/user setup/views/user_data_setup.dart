@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/core/extensions/widget_exts.dart';
+import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/image_picker_util.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:sizer/sizer.dart';
@@ -26,6 +27,13 @@ class UserDataSetup extends ConsumerStatefulWidget {
 class _UserDataSetupState extends ConsumerState<UserDataSetup> {
   TextEditingController nameCtrl = TextEditingController();
   TextEditingController phonNumberCtrl = TextEditingController();
+
+  @override
+  void dispose() {
+    nameCtrl.dispose();
+    phonNumberCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,13 +127,17 @@ class _UserDataSetupState extends ConsumerState<UserDataSetup> {
           ]),
           builder: (context, _) {
             bool areBothFilled =
-                nameCtrl.text.isNotEmpty && phonNumberCtrl.text.isNotEmpty;
+                nameCtrl.text.isNotEmpty && (phonNumberCtrl.text.length == 10);
             return CustomButton(
               label: "Done",
               width: 90.w,
               color: areBothFilled ? AppColors.brown : Colors.grey,
-              onTap: () {},
-            ).padX(10);
+              onTap: () async {
+                if(areBothFilled) {
+                    
+                }
+              },
+            ).padX(10).padY(8);
           },
         )
       ],
