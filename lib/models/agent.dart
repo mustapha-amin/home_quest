@@ -1,3 +1,5 @@
+
+// TODO Add availability
 class AgentModel {
   final int phoneNumber;
   final String agentID, name, profilePicture;

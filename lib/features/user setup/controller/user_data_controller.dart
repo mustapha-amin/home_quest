@@ -23,6 +23,18 @@ final userRemoteDataProvider =
   return UserRemoteDataNotifier(ref.watch(userDataRepoProvider), ref);
 });
 
+final userDataExistsProvider = FutureProvider((ref) async {
+  return await ref.watch(userDataRepoProvider).userDataExists();
+});
+
+final clientDataStreamProvider = StreamProvider<ClientModel?>((ref) {
+  return ref.watch(userDataRepoProvider).fetchClientData();
+});
+
+final agentDataStreamProvider = StreamProvider<AgentModel?>((ref) {
+  return ref.watch(userDataRepoProvider).fetchAgentData();
+});
+
 class ClientDataNotifier extends Notifier<ClientModel?> {
   @override
   ClientModel? build() {
@@ -61,7 +73,7 @@ class UserRemoteDataNotifier extends StateNotifier<bool> {
   FutureVoid saveClientData(
       BuildContext context, ClientModel? client, File image) async {
     try {
-     await _handleOperation(() async {
+      await _handleOperation(() async {
         await userDataRepo.saveClientData(client!, image);
         context.replace(const BtmNavBar());
       }, ref);
@@ -74,7 +86,7 @@ class UserRemoteDataNotifier extends StateNotifier<bool> {
   FutureVoid saveAgentData(
       BuildContext context, AgentModel? agent, File image) async {
     try {
-     await _handleOperation(() async {
+      await _handleOperation(() async {
         await userDataRepo.saveAgentData(agent!, image);
         context.replace(const BtmNavBar());
       }, ref);
@@ -84,12 +96,5 @@ class UserRemoteDataNotifier extends StateNotifier<bool> {
     }
   }
 
-  Future<bool?> userDataExists(BuildContext context, String? uid) async {
-    try {
-      return await userDataRepo.userDataExists(uid);
-    } catch (e) {
-      showErrorDialog(context, e.toString());
-      return null;
-    }
-  }
+  
 }

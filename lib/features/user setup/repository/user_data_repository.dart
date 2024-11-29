@@ -85,16 +85,44 @@ class UserDataRepository {
     }
   }
 
-  Future<bool?> userDataExists(String? uid) async {
+  Future<bool?> userDataExists() async {
     try {
-      final clientDoc =
-          await firebaseFirestore.collection("clients").doc(uid).get();
-      final agentDoc =
-          await firebaseFirestore.collection("agents").doc(uid).get();
+      final clientDoc = await firebaseFirestore
+          .collection("clients")
+          .doc(firebaseAuth.currentUser!.uid)
+          .get();
+      final agentDoc = await firebaseFirestore
+          .collection("agents")
+          .doc(firebaseAuth.currentUser!.uid)
+          .get();
       if (clientDoc.exists) {
         return true;
       }
       return agentDoc.exists;
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Stream<ClientModel?> fetchClientData() {
+    try {
+      return firebaseFirestore
+          .collection("clients")
+          .doc(firebaseAuth.currentUser!.uid)
+          .snapshots()
+          .map((snap) => ClientModel.fromJson(snap.data()!));
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Stream<AgentModel?> fetchAgentData() {
+    try {
+      return firebaseFirestore
+          .collection("agents")
+          .doc(firebaseAuth.currentUser!.uid)
+          .snapshots()
+          .map((snap) => AgentModel.fromJson(snap.data()!));
     } catch (e) {
       throw Exception(e.toString());
     }

@@ -6,6 +6,12 @@ import 'package:home_quest/features/btm_nav_bar/nav_bar_items/favorites/favorite
 import 'package:home_quest/features/btm_nav_bar/nav_bar_items/home/home.dart';
 import 'package:home_quest/features/btm_nav_bar/nav_bar_items/profile/profile.dart';
 import 'package:home_quest/features/btm_nav_bar/nav_bar_items/search/search.dart';
+import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
+import 'package:home_quest/services/user_type_prefs.dart';
+import 'package:hugeicons/hugeicons.dart';
+import 'package:sizer/sizer.dart';
+
+import '../../core/colors.dart';
 
 final currentScreenProvider = StateProvider<int>((ref) {
   return 0;
@@ -61,18 +67,42 @@ class _BtmNavBarState extends ConsumerState<BtmNavBar> {
           ...screens.map(
             (screen) => BottomNavigationBarItem(
               icon: screens.indexOf(screen) < 3
-                  ? svgImage(btmNavBarIcons[screens.indexOf(screen)], false)
-                  : Icon(Icons.person),
+                  ? screens.indexOf(screen) == ref.watch(currentScreenProvider)
+                      ? svgImage(
+                          btmNavBarIconsFilled[screens.indexOf(screen)], true)
+                      : svgImage(btmNavBarIcons[screens.indexOf(screen)], false)
+                  : ref.watch(clientDataStreamProvider).when(
+                        data: (client) => Container(
+                          width: 7.w,
+                          height: 7.w,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 2,
+                            ),
+                            shape: BoxShape.circle,
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(client!.profilePicture),
+                            ),
+                            
+                          ),
+
+                        ),
+                        error: (_, __) => const HugeIcon(
+                            icon: HugeIcons.strokeRoundedRssError,
+                            color: Colors.red),
+                        loading: () => const HugeIcon(
+                          icon: HugeIcons.strokeRoundedProfile,
+                          color: Colors.black,
+                        ),
+                      ),
               label: switch (screens.indexOf(screen)) {
                 0 => "Home",
                 1 => "Search",
                 2 => "Favorites",
                 _ => "Profile"
               },
-              activeIcon: screens.indexOf(screen) < 3
-                  ? svgImage(
-                      btmNavBarIconsFilled[screens.indexOf(screen)], true)
-                  : Icon(Icons.person),
             ),
           )
         ],
