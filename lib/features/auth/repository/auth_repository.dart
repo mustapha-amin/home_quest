@@ -1,56 +1,65 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:home_quest/core/providers.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/typedefs.dart';
 
-final authServiceProvider = Provider((ref) {
-  return AuthService(supabaseClient: ref.watch(supabaseClientProvider));
+final authRepoProvider = Provider((ref) {
+  return AuthRepository(firebaseAuth: ref.watch(firebaseAuthProvider));
 });
 
-class AuthService {
-  final SupabaseClient supabaseClient;
-  AuthService({required this.supabaseClient});
+class AuthRepository {
+  final FirebaseAuth firebaseAuth;
+  AuthRepository({required this.firebaseAuth});
 
-  Stream<AuthState> get onAuthStateChange => supabaseClient.auth.onAuthStateChange;
+  Stream<User?> get onAuthStateChange => firebaseAuth.authStateChanges();
 
-  FutureEither<AuthResponse> signIn({
+  FutureEither<UserCredential> signIn({
     required String email,
     required String password,
   }) async {
     try {
-      final authResponse = await supabaseClient.auth.signInWithPassword(
+      final userCred = await firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-      return right(authResponse);
-    } on AuthApiException catch (e, _) {
-      return left(e.message);
+      return right(userCred);
+    } on FirebaseAuthException catch (e, _) {
+      return left(e.message!);
     }
   }
 
-  FutureEither<AuthResponse> signUp({
+  FutureEither<UserCredential> signUp({
     required String email,
     required String password,
   }) async {
     try {
-      final userCredential = await supabaseClient.auth.signUp(
+      final userCredential = await firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
       return right(userCredential);
-    } on AuthApiException catch (e, _) {
-      return left(e.message);
+    } on FirebaseAuthException catch (e, _) {
+      return left(e.message!);
     }
   }
 
   FutureEither<String> signOut() async {
     try {
-      await supabaseClient.auth.signOut();
+      await firebaseAuth.signOut();
       return right("success");
-    } on AuthApiException catch (e, _) {
-      return left(e.message);
+    } on FirebaseAuthException catch (e, _) {
+      return left(e.message!);
+    }
+  }
+
+  FutureEither<String> requestPaswordReset(String? email) async {
+    try {
+      await firebaseAuth.sendPasswordResetEmail(email: email!);
+      return right("success");
+    } on FirebaseAuthException catch (e) {
+      return left(e.message!);
     }
   }
 }

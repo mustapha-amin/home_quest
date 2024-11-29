@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:home_quest/features/user%20setup/views/user_type.dart';
+import 'package:home_quest/core/utils/image_path.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/enums.dart';
-import '../../../core/utils/image_path_gen.dart';
 import '../../../core/utils/textstyle.dart';
 import '../../../shared/spacing.dart';
 
 class UserTypeWidget extends StatelessWidget {
   final VoidCallback onTap;
-  final UserType selectedUserType;
+  final UserType? selectedUserType;
   final String name;
 
   const UserTypeWidget({
@@ -36,12 +35,14 @@ class UserTypeWidget extends StatelessWidget {
               border: Border.all(
                 color: Colors.grey,
               ),
-              color: name == selectedUserType.name
+              color: name == selectedUserType!.name
                   ? Colors.greenAccent
                   : Colors.transparent,
               image: DecorationImage(
                 image: AssetImage(
-                  genImagePath(name, ImageType.png),
+                  name == UserType.agent.name
+                      ? ImagePaths.agent
+                      : ImagePaths.client,
                 ),
               ),
             ),

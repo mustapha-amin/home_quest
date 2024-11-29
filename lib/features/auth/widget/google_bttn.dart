@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:home_quest/core/utils/image_path.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:sizer/sizer.dart';
-
-import '../../../core/utils/image_path_gen.dart';
 import '../../../core/utils/textstyle.dart';
 
 class GoogleBttn extends StatelessWidget {
@@ -25,7 +24,7 @@ class GoogleBttn extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              genImagePath("google", ImageType.png),
+              ImagePaths.google,
               width: 35,
             ),
             spaceX(10),

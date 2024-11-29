@@ -17,7 +17,7 @@ class CustomButton extends StatelessWidget {
       width: width ?? 100.w,
       height: 50,
       decoration: BoxDecoration(
-        color: color ??AppColors.brown,
+        color: color ?? AppColors.brown,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Material(
@@ -27,7 +27,7 @@ class CustomButton extends StatelessWidget {
           onTap: onTap,
           child: Center(
             child: Text(
-              label!,
+              label ?? "",
               style: kTextStyle(18, color: Colors.white),
             ),
           ),

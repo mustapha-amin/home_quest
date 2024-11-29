@@ -5,7 +5,6 @@ import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/user%20setup/views/user_data_setup.dart';
 import 'package:home_quest/features/user%20setup/views/user_type.dart';
 import '../../../core/colors.dart';
-import '../../../shared/spacing.dart';
 import 'package:flutter/services.dart';
 
 final isFirstProvider = StateProvider<bool>((ref) {

@@ -1,24 +1,38 @@
-class Agent {
+class AgentModel {
   final int phoneNumber;
-  final String agentID, name, profilePicture, email;
-  List<String> listingsIDs;
-  double rating;
+  final String agentID, name, profilePicture;
+  final List<String> listingsIDs;
+  final double rating;
 
-  Agent({
+  AgentModel({
     required this.agentID,
     required this.name,
-    required this.email,
     required this.phoneNumber,
     required this.profilePicture,
     required this.listingsIDs,
     required this.rating,
   });
 
+  @override
+  String toString() {
+    return "$phoneNumber $agentID $name $rating";
+  }
+
+  factory AgentModel.defaultInstance() {
+    return AgentModel(
+      agentID: "agentID",
+      name: 'name',
+      phoneNumber: 123,
+      profilePicture: "profilePicture",
+      listingsIDs: [],
+      rating: 0,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'agentID': agentID,
       'name': name,
-      'email': email,
       'phoneNumber': phoneNumber,
       'profilePicture': profilePicture,
       'listingsIDs': listingsIDs,
@@ -26,15 +40,32 @@ class Agent {
     };
   }
 
-  factory Agent.fromJson(Map<String, dynamic> json) {
-    return Agent(
+  factory AgentModel.fromJson(Map<String, dynamic> json) {
+    return AgentModel(
       agentID: json['agentID'],
       name: json['name'],
-      email: json['email'],
       phoneNumber: json['phoneNumber'],
       profilePicture: json['profilePicture'],
       listingsIDs: List<String>.from(json['listingsIDs']),
       rating: json['rating'].toDouble(),
+    );
+  }
+
+  AgentModel copyWith({
+    int? phoneNumber,
+    String? agentID,
+    String? name,
+    String? profilePicture,
+    List<String>? listingsIDs,
+    double? rating,
+  }) {
+    return AgentModel(
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      agentID: agentID ?? this.agentID,
+      name: name ?? this.name,
+      profilePicture: profilePicture ?? this.profilePicture,
+      listingsIDs: listingsIDs ?? this.listingsIDs,
+      rating: rating ?? this.rating,
     );
   }
 }

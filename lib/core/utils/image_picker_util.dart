@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:fpdart/fpdart.dart';
 import 'package:image_picker/image_picker.dart';

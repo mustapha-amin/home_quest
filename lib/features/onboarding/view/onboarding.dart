@@ -2,13 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/features/auth/view/auth_screen.dart';
 import 'package:home_quest/services/onboarding_settings.dart';
 import 'package:home_quest/shared/custom_button.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:home_quest/core/extensions/widget_exts.dart';
-import 'package:home_quest/core/utils/image_path_gen.dart';
+import 'package:home_quest/core/utils/image_path.dart';
 import 'package:home_quest/core/extensions/navigations.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:sizer/sizer.dart';
@@ -23,12 +22,12 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   double _opacity = 0;
-  final _image = AssetImage(genImagePath("house", ImageType.jpg));
+  final _image = const AssetImage(ImagePaths.house);
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       setState(() => _opacity = 1);
     });
   }

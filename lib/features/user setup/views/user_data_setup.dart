@@ -4,14 +4,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/colors.dart';
+import 'package:home_quest/core/enums.dart';
 import 'package:home_quest/core/extensions/widget_exts.dart';
-import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/image_picker_util.dart';
+import 'package:home_quest/features/user%20setup/views/user_type.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../core/utils/textstyle.dart';
 import '../../../shared/custom_button.dart';
+import '../controller/user_data_controller.dart';
 
 final pickedImageProvider = StateProvider<File?>((ref) {
   return null;
@@ -37,6 +39,9 @@ class _UserDataSetupState extends ConsumerState<UserDataSetup> {
 
   @override
   Widget build(BuildContext context) {
+    final agentData = ref.watch(agentDataProvider);
+    final clientData = ref.watch(clientDataProvider);
+    final pickedFile = ref.watch(pickedImageProvider);
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -107,16 +112,14 @@ class _UserDataSetupState extends ConsumerState<UserDataSetup> {
               style: kTextStyle(17),
               decoration: InputDecoration(
                 counterText: "",
-                // counterStyle: kTextStyle(12, color: Colors.white),
                 border: const OutlineInputBorder(),
                 hintText: "XXXXXXXXXX",
                 hintStyle: kTextStyle(17, color: Colors.grey),
-                //contentPadding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
                 prefixIcon:
                     Text("  +234 ", style: kTextStyle(17)).padY(18).padX(5),
                 prefixIconConstraints: const BoxConstraints(),
               ),
-              keyboardType: const TextInputType.numberWithOptions(),
+              keyboardType: TextInputType.number,
             ),
           ],
         ).padX(15),
@@ -133,8 +136,36 @@ class _UserDataSetupState extends ConsumerState<UserDataSetup> {
               width: 90.w,
               color: areBothFilled ? AppColors.brown : Colors.grey,
               onTap: () async {
-                if(areBothFilled) {
-                    
+                if (areBothFilled) {
+                  if (ref.watch(userTypeCtrl) == UserType.agent) {
+                    ref.read(agentDataProvider.notifier).updateAgentData(
+                          agentData!.copyWith(
+                            name: nameCtrl.text.trim(),
+                            phoneNumber: int.tryParse(phonNumberCtrl.text),
+                          ),
+                        );
+                    await ref
+                        .read(userRemoteDataProvider.notifier)
+                        .saveAgentData(
+                          context,
+                          ref.watch(agentDataProvider),
+                          ref.watch(pickedImageProvider)!,
+                        );
+                  } else {
+                    ref.read(clientDataProvider.notifier).updateClientData(
+                          clientData!.copyWith(
+                            name: nameCtrl.text.trim(),
+                            phoneNumber: int.tryParse(phonNumberCtrl.text),
+                          ),
+                        );
+                    await ref
+                        .read(userRemoteDataProvider.notifier)
+                        .saveClientData(
+                          context,
+                          ref.watch(clientDataProvider),
+                          ref.watch(pickedImageProvider)!,
+                        );
+                  }
                 }
               },
             ).padX(10).padY(8);
