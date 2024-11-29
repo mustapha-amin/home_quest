@@ -53,8 +53,12 @@ class _BtmNavBarState extends ConsumerState<BtmNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      ),
       body: screens[ref.watch(currentScreenProvider)],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         selectedItemColor: Colors.black,
         enableFeedback: false,
         unselectedItemColor: Colors.grey,
@@ -85,9 +89,7 @@ class _BtmNavBarState extends ConsumerState<BtmNavBar> {
                               fit: BoxFit.cover,
                               image: NetworkImage(client!.profilePicture),
                             ),
-                            
                           ),
-
                         ),
                         error: (_, __) => const HugeIcon(
                             icon: HugeIcons.strokeRoundedRssError,
