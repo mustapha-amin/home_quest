@@ -77,7 +77,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   CustomButton(
                     label: "Get Started",
                     onTap: () {
-                      
                       try {
                         ref.read(onBoardingSettingsProvider).passOnboarding();
                         context.replace(const AuthScreen());

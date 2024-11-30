@@ -1,9 +1,10 @@
+// ignore_for_file: annotate_overrides, overridden_fields
 
-// TODO Add availability
-class AgentModel {
+import 'user.dart';
+class AgentModel extends User {
   final int phoneNumber;
   final String agentID, name, profilePicture;
-  final List<String> listingsIDs;
+  final List<String> listingsIDs, appointmentIDs;
   final double rating;
 
   AgentModel({
@@ -13,7 +14,14 @@ class AgentModel {
     required this.profilePicture,
     required this.listingsIDs,
     required this.rating,
-  });
+    required this.appointmentIDs,
+  }) : super(
+          id: agentID,
+          name: name,
+          phoneNumber: phoneNumber,
+          profilePicture: profilePicture,
+          appointmentIDs: appointmentIDs,
+        );
 
   @override
   String toString() {
@@ -28,6 +36,7 @@ class AgentModel {
       profilePicture: "profilePicture",
       listingsIDs: [],
       rating: 0,
+      appointmentIDs: [],
     );
   }
 
@@ -50,6 +59,7 @@ class AgentModel {
       profilePicture: json['profilePicture'],
       listingsIDs: List<String>.from(json['listingsIDs']),
       rating: json['rating'].toDouble(),
+      appointmentIDs: List<String>.from(json['appointmentIDs']),
     );
   }
 
@@ -60,6 +70,7 @@ class AgentModel {
     String? profilePicture,
     List<String>? listingsIDs,
     double? rating,
+    List<String>? appointmentIDs
   }) {
     return AgentModel(
       phoneNumber: phoneNumber ?? this.phoneNumber,
@@ -68,6 +79,7 @@ class AgentModel {
       profilePicture: profilePicture ?? this.profilePicture,
       listingsIDs: listingsIDs ?? this.listingsIDs,
       rating: rating ?? this.rating,
+      appointmentIDs: appointmentIDs ?? this.appointmentIDs,
     );
   }
 }

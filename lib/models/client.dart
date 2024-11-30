@@ -1,8 +1,12 @@
-class ClientModel {
+// ignore_for_file: annotate_overrides, overridden_fields
+
+import 'user.dart';
+
+class ClientModel extends User {
   final int phoneNumber;
   final String clientID, name;
   final String profilePicture;
-  final List<String> bookmarks;
+  final List<String> bookmarks, appointmentIDs;
 
   ClientModel({
     required this.clientID,
@@ -10,7 +14,14 @@ class ClientModel {
     required this.phoneNumber,
     required this.profilePicture,
     required this.bookmarks,
-  });
+    required this.appointmentIDs,
+  }) : super(
+          id: clientID,
+          name: name,
+          phoneNumber: phoneNumber,
+          profilePicture: profilePicture,
+          appointmentIDs: appointmentIDs,
+        );
 
   @override
   String toString() {
@@ -24,6 +35,7 @@ class ClientModel {
       phoneNumber: 123,
       profilePicture: "profilePicture",
       bookmarks: [],
+      appointmentIDs: [],
     );
   }
 
@@ -34,6 +46,7 @@ class ClientModel {
       'phoneNumber': phoneNumber,
       'profilePicture': profilePicture,
       'bookmarks': bookmarks,
+      'appointmentIDs': appointmentIDs,
     };
   }
 
@@ -44,6 +57,7 @@ class ClientModel {
       phoneNumber: json['phoneNumber'],
       profilePicture: json['profilePicture'],
       bookmarks: List<String>.from(json['bookmarks']),
+      appointmentIDs: List<String>.from(json['appointmentIDs']),
     );
   }
 
@@ -53,6 +67,7 @@ class ClientModel {
     String? name,
     String? profilePicture,
     List<String>? bookmarks,
+    List<String>? appointmentIDs,
   }) {
     return ClientModel(
       phoneNumber: phoneNumber ?? this.phoneNumber,
@@ -60,6 +75,7 @@ class ClientModel {
       name: name ?? this.name,
       profilePicture: profilePicture ?? this.profilePicture,
       bookmarks: bookmarks ?? this.bookmarks,
+      appointmentIDs: appointmentIDs ?? this.appointmentIDs,
     );
   }
 }

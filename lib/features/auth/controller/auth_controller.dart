@@ -10,7 +10,7 @@ import 'package:home_quest/features/auth/repository/auth_repository.dart';
 import 'package:home_quest/features/auth/view/auth_screen.dart';
 import 'package:home_quest/features/user%20setup/views/user_type.dart';
 
-import '../../btm_nav_bar/nav_bar_items/home/home.dart';
+import '../../btm_nav_bar/client/home/home.dart';
 
 final authControllerProvider =
     StateNotifierProvider<AuthController, bool>((ref) {

@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions/widget_exts.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
-import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/features/user%20setup/views/user_setup.dart';
 import 'package:home_quest/features/user%20setup/widgets/user_type_widget.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:sizer/sizer.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../../core/colors.dart';
 import '../../../core/enums.dart';
@@ -27,8 +25,6 @@ class UserTypeScreen extends ConsumerStatefulWidget {
 class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
   @override
   Widget build(BuildContext context) {
-    final agentData = ref.watch(agentDataProvider);
-    final clientData = ref.watch(clientDataProvider);
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -74,16 +70,16 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
               ? Colors.grey[500]
               : AppColors.brown,
           onTap: () {
-            if (ref.watch(userTypeCtrl.notifier).state != null) {
-              updateProgressVal(ref, 1);
-              if (ref.watch(userTypeCtrl.notifier).state == UserType.agent) {
-                ref.read(agentDataProvider.notifier).updateAgentData(
-                    agentData!.copyWith(agentID: const Uuid().v4()));
-              } else {
-                ref.read(clientDataProvider.notifier).updateClientData(
-                    clientData!.copyWith(clientID: const Uuid().v4()));
-              }
-            }
+            // if (ref.watch(userTypeCtrl.notifier).state != null) {
+            //   updateProgressVal(ref, 1);
+            //   if (ref.watch(userTypeCtrl.notifier).state == UserType.agent) {
+            //     ref.read(agentDataProvider.notifier).updateAgentData(
+            //         agentData!.copyWith(agentID: const Uuid().v4()));
+            //   } else {
+            //     ref.read(clientDataProvider.notifier).updateClientData(
+            //         clientData!.copyWith(clientID: const Uuid().v4()));
+            //   }
+            // }
             ref.read(isFirstProvider.notifier).state = false;
           },
         ).padX(10).padY(8),

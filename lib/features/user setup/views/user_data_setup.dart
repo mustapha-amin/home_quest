@@ -8,6 +8,8 @@ import 'package:home_quest/core/enums.dart';
 import 'package:home_quest/core/extensions/widget_exts.dart';
 import 'package:home_quest/core/utils/image_picker_util.dart';
 import 'package:home_quest/features/user%20setup/views/user_type.dart';
+import 'package:home_quest/models/agent.dart';
+import 'package:home_quest/models/client.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:sizer/sizer.dart';
 
@@ -39,9 +41,6 @@ class _UserDataSetupState extends ConsumerState<UserDataSetup> {
 
   @override
   Widget build(BuildContext context) {
-    final agentData = ref.watch(agentDataProvider);
-    final clientData = ref.watch(clientDataProvider);
-    final pickedFile = ref.watch(pickedImageProvider);
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -138,31 +137,31 @@ class _UserDataSetupState extends ConsumerState<UserDataSetup> {
               onTap: () async {
                 if (areBothFilled) {
                   if (ref.watch(userTypeCtrl) == UserType.agent) {
-                    ref.read(agentDataProvider.notifier).updateAgentData(
-                          agentData!.copyWith(
+                    ref.read(userDataNotifierProvider.notifier).updateUserData(
+                          AgentModel.defaultInstance().copyWith(
                             name: nameCtrl.text.trim(),
                             phoneNumber: int.tryParse(phonNumberCtrl.text),
                           ),
                         );
                     await ref
                         .read(userRemoteDataProvider.notifier)
-                        .saveAgentData(
+                        .saveUserData(
                           context,
-                          ref.watch(agentDataProvider),
+                          ref.watch(userDataNotifierProvider),
                           ref.watch(pickedImageProvider)!,
                         );
                   } else {
-                    ref.read(clientDataProvider.notifier).updateClientData(
-                          clientData!.copyWith(
+                    ref.read(userDataNotifierProvider.notifier).updateUserData(
+                          ClientModel.defaultInstance().copyWith(
                             name: nameCtrl.text.trim(),
                             phoneNumber: int.tryParse(phonNumberCtrl.text),
                           ),
                         );
                     await ref
                         .read(userRemoteDataProvider.notifier)
-                        .saveClientData(
+                        .saveUserData(
                           context,
-                          ref.watch(clientDataProvider),
+                          ref.watch(userDataNotifierProvider),
                           ref.watch(pickedImageProvider)!,
                         );
                   }

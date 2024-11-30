@@ -1,7 +1,3 @@
-import 'dart:developer';
-
-import 'package:appwrite/appwrite.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,9 +17,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  Client()
-      .setEndpoint("https://cloud.appwrite.io/v1")
-      .setProject("<PROJECT_ID>");
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   runApp(
     ProviderScope(
@@ -73,6 +66,13 @@ class MyApp extends ConsumerWidget {
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
           primaryColor: AppColors.brown,
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            backgroundColor: Colors.white,
+            selectedItemColor: Colors.black,
+            enableFeedback: false,
+            unselectedItemColor: Colors.grey,
+            type: BottomNavigationBarType.fixed,
+          ),
         ),
       );
     });

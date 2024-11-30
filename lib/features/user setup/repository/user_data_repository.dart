@@ -11,6 +11,7 @@ import 'package:home_quest/core/typedefs.dart';
 import 'package:home_quest/core/utils/image_url_util.dart';
 import 'package:home_quest/models/agent.dart';
 import 'package:home_quest/models/client.dart';
+import 'package:home_quest/models/user.dart' as k;
 
 final userDataRepoProvider = Provider((ref) {
   return UserDataRepository(
@@ -30,30 +31,25 @@ class UserDataRepository {
     required this.firebaseAuth,
   });
 
-  FutureVoid saveClientData(ClientModel client, File image) async {
+  FutureVoid saveUserData(k.User user, File image) async {
     try {
       final imageUrl = await uploadImage(image, ImageBucketIDs.profilePictures);
-      ClientModel clientModel = client.copyWith(
-          profilePicture: imageUrl, clientID: firebaseAuth.currentUser!.uid);
-      await firebaseFirestore
-          .collection("clients")
-          .doc(clientModel.clientID)
-          .set(clientModel.toJson());
+      if (user is ClientModel) {
+        ClientModel clientModel = user.copyWith(
+            profilePicture: imageUrl, clientID: firebaseAuth.currentUser!.uid);
+        await firebaseFirestore
+            .collection("clients")
+            .doc(clientModel.clientID)
+            .set(clientModel.toJson());
+      } else if (user is AgentModel) {
+        AgentModel agentModel = user.copyWith(
+            profilePicture: imageUrl, agentID: firebaseAuth.currentUser!.uid);
+        await firebaseFirestore
+            .collection("agents")
+            .doc(agentModel.agentID)
+            .set(agentModel.toJson());
+      }
     } on (FirebaseException, AppwriteException) catch (e) {
-      throw Exception(e.toString());
-    }
-  }
-
-  FutureVoid saveAgentData(AgentModel agent, File image) async {
-    try {
-      final imageUrl = await uploadImage(image, ImageBucketIDs.profilePictures);
-      AgentModel agentModel = agent.copyWith(
-          profilePicture: imageUrl, agentID: firebaseAuth.currentUser!.uid);
-      await firebaseFirestore
-          .collection("agents")
-          .doc(agentModel.agentID)
-          .set(agentModel.toJson());
-    } on (FirebaseException, Exception) catch (e) {
       throw Exception(e.toString());
     }
   }
@@ -91,38 +87,43 @@ class UserDataRepository {
           .collection("clients")
           .doc(firebaseAuth.currentUser!.uid)
           .get();
-      final agentDoc = await firebaseFirestore
-          .collection("agents")
-          .doc(firebaseAuth.currentUser!.uid)
-          .get();
       if (clientDoc.exists) {
         return true;
+      } else {
+        final agentDoc = await firebaseFirestore
+            .collection("agents")
+            .doc(firebaseAuth.currentUser!.uid)
+            .get();
+        return agentDoc.exists;
       }
-      return agentDoc.exists;
     } catch (e) {
       throw Exception(e.toString());
     }
   }
 
-  Stream<ClientModel?> fetchClientData() {
+  Future<bool?> _userIsClient() async {
     try {
-      return firebaseFirestore
-          .collection("clients")
-          .doc(firebaseAuth.currentUser!.uid)
-          .snapshots()
-          .map((snap) => ClientModel.fromJson(snap.data()!));
+      final clientDoc = await firebaseFirestore
+        .collection("clients")
+        .doc(firebaseAuth.currentUser!.uid)
+        .get();
+    return clientDoc.exists;
     } catch (e) {
       throw Exception(e.toString());
     }
   }
 
-  Stream<AgentModel?> fetchAgentData() {
+  Stream<k.User?> fetchUserData() async* {
     try {
-      return firebaseFirestore
-          .collection("agents")
+      bool? isAClient = await _userIsClient();
+
+      yield* firebaseFirestore
+          .collection(isAClient! ? "clients" : "agents")
           .doc(firebaseAuth.currentUser!.uid)
           .snapshots()
-          .map((snap) => AgentModel.fromJson(snap.data()!));
+          .map((snap) => isAClient
+              ? ClientModel.fromJson(snap.data()!)
+              : AgentModel.fromJson(snap.data()!));
     } catch (e) {
       throw Exception(e.toString());
     }
