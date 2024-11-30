@@ -4,6 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:home_quest/core/extensions/navigations.dart';
 import 'package:home_quest/core/extensions/widget_exts.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
+import 'package:home_quest/features/auth/controller/auth_controller.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/account.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/widgets/contact_details.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/widgets/profile_card.dart';
@@ -97,15 +98,29 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               "Log Out",
                               style: kTextStyle(20),
                             ),
-                            content: Text("Do you want to log out?"),
+                            content: Text(
+                              "Do you want to log out?",
+                              style: kTextStyle(15),
+                            ),
                             actions: [
                               TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: Text("Yes"),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  await ref
+                                      .read(authControllerProvider.notifier)
+                                      .signOut(context);
+                                },
+                                child: Text(
+                                  "Yes",
+                                  style: kTextStyle(15, color: Colors.red),
+                                ),
                               ),
                               TextButton(
                                 onPressed: () => Navigator.of(context).pop(),
-                                child: Text("No"),
+                                child: Text(
+                                  "No",
+                                  style: kTextStyle(15),
+                                ),
                               ),
                             ],
                           );
