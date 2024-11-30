@@ -10,7 +10,6 @@ abstract class ImagePaths {
   static const homeLogo = "$_basePath/home_logo.png";
   static const house = "$_basePath/house.jpg";
 
-
   //! icons
 
   static const house_svg = "$_basePath/house.svg";
@@ -20,4 +19,6 @@ abstract class ImagePaths {
   static const search = "$_basePath/search.svg";
   static const task = "$_basePath/task.svg";
   static const task_filled = "$_basePath/task_filled.svg";
+  static const listing = "$_basePath/listing.svg";
+  static const listing_filled = "$_basePath/listing_filled.svg";
 }

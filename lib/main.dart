@@ -63,6 +63,7 @@ class MyApp extends ConsumerWidget {
                     )
                 ],
               ),
+      
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.white,
           primaryColor: AppColors.brown,

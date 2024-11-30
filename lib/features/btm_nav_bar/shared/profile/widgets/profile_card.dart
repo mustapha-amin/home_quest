@@ -5,7 +5,8 @@ import 'package:hugeicons/hugeicons.dart';
 class ProfileCard extends StatelessWidget {
   final String text;
   final IconData icon;
-  const ProfileCard({required this.text, required this.icon, super.key});
+  VoidCallback? onTap;
+  ProfileCard({required this.text, required this.icon, this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,7 @@ class ProfileCard extends StatelessWidget {
         icon: HugeIcons.strokeRoundedArrowRight01,
         color: AppColors.brown,
       ),
+      onTap: onTap,
     );
   }
 }
