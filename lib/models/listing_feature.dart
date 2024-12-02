@@ -1,6 +1,8 @@
+import 'package:home_quest/core/enums.dart';
+
 class ListingFeature {
-  final String feature;
-  final int? number;
+  final Feature feature;
+  final int number;
 
   ListingFeature({
     required this.feature,
@@ -9,14 +11,14 @@ class ListingFeature {
 
   Map<String, dynamic> toJson() {
     return {
-      'feature': feature,
+      'feature': feature.name,
       'number': number,
     };
   }
 
   factory ListingFeature.fromJson(Map<String, dynamic> json) {
     return ListingFeature(
-      feature: json['feature'],
+      feature: Feature.values.byName(json['feature']),
       number: json['number'],
     );
   }

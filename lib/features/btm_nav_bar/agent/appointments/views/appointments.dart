@@ -9,9 +9,8 @@ class Appointments extends ConsumerStatefulWidget {
 }
 
 class _AppointmentsState extends ConsumerState<Appointments> {
-
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold();
   }
 }

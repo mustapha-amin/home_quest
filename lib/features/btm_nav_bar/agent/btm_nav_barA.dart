@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_quest/core/extensions/navigations.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/appointments/views/appointments.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/dashboard/view/dashboard.dart';
-import 'package:home_quest/features/btm_nav_bar/agent/listings/views/listings.dart';
+import 'package:home_quest/features/btm_nav_bar/agent/listings/views/add_listings.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/profile.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:sizer/sizer.dart';
 
 import '../../../core/utils/image_path.dart';
 import '../../../core/utils/svg_util.dart';
-import '../../user setup/controller/user_data_controller.dart';
+import 'listings/views/listings.dart';
 
 final currentAgentScreenProvider = StateProvider<int>((ref) {
   return 0;
@@ -55,6 +55,20 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       body: screens[ref.watch(currentAgentScreenProvider)],
+      floatingActionButton: ref.watch(currentAgentScreenProvider) == 1 ||
+              ref.watch(currentAgentScreenProvider) == 2
+          ? FloatingActionButton(
+              onPressed: () {
+                if (ref.watch(currentAgentScreenProvider) == 1) {
+                  context.push(const AddListings());
+                } else {
+                  context.push(const Appointments());
+                }
+              },
+              child: const HugeIcon(
+                  icon: HugeIcons.strokeRoundedAdd01, color: Colors.black),
+            )
+          : const SizedBox(),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         selectedItemColor: Colors.black,
@@ -66,18 +80,25 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
           navigateTo(ref, value);
         },
         items: [
+          const BottomNavigationBarItem(
+            icon: HugeIcon(
+              icon: HugeIcons.strokeRoundedDashboardCircle,
+              color: Colors.black,
+              size: 26,
+            ),
+            label: "Dashboard",
+          ),
           ...screens
-              .where((screen) => screens.indexOf(screen) < 3)
+              .where((screen) =>
+                  screens.indexOf(screen) < 3 && screens.indexOf(screen) > 0)
               .map((screen) {
             return BottomNavigationBarItem(
-              icon: screens.indexOf(screen) < 3
-                  ? screens.indexOf(screen) == ref.watch(currentAgentScreenProvider)
-                      ? svgImage(
-                          btmNavBarIconsFilled[screens.indexOf(screen)], true)
-                      : svgImage(btmNavBarIcons[screens.indexOf(screen)], false)
-                  : const SizedBox(),
+              icon: screens.indexOf(screen) ==
+                      ref.watch(currentAgentScreenProvider)
+                  ? svgImage(
+                      btmNavBarIconsFilled[screens.indexOf(screen)], true)
+                  : svgImage(btmNavBarIcons[screens.indexOf(screen)], false),
               label: switch (screens.indexOf(screen)) {
-                0 => "Dashboard",
                 1 => "Listings",
                 _ => "Appointments",
               },
@@ -85,31 +106,32 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
           }),
           BottomNavigationBarItem(
             label: "Profile",
-            icon: ref.watch(userDataStreamProvider).when(
-                  data: (agent) => Container(
-                    width: 7.w,
-                    height: 7.w,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: ref.watch(currentAgentScreenProvider) == 3
-                            ? Colors.black
-                            : Colors.grey,
-                        width: 2,
-                      ),
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(agent!.profilePicture),
-                      ),
-                    ),
-                  ),
-                  error: (_, __) => const HugeIcon(
-                      icon: HugeIcons.strokeRoundedRssError, color: Colors.red),
-                  loading: () => const HugeIcon(
-                    icon: HugeIcons.strokeRoundedProfile,
-                    color: Colors.black,
-                  ),
-                ),
+            icon: Icon(Icons.person),
+            // icon: ref.watch(userDataStreamProvider).when(
+            //       data: (agent) => Container(
+            //         width: 7.w,
+            //         height: 7.w,
+            //         decoration: BoxDecoration(
+            //           border: Border.all(
+            //             color: ref.watch(currentAgentScreenProvider) == 3
+            //                 ? Colors.black
+            //                 : Colors.grey,
+            //             width: 2,
+            //           ),
+            //           shape: BoxShape.circle,
+            //           image: DecorationImage(
+            //             fit: BoxFit.cover,
+            //             image: NetworkImage(agent!.profilePicture),
+            //           ),
+            //         ),
+            //       ),
+            //       error: (_, __) => const HugeIcon(
+            //           icon: HugeIcons.strokeRoundedRssError, color: Colors.red),
+            //       loading: () => const HugeIcon(
+            //         icon: HugeIcons.strokeRoundedProfile,
+            //         color: Colors.black,
+            //       ),
+            //     ),
           )
         ],
       ),

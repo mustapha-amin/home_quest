@@ -7,15 +7,15 @@ import '../core/utils/textstyle.dart';
 class CustomButton extends StatelessWidget {
   String? label;
   VoidCallback? onTap;
-  double? width;
+  double? width, height;
   Color? color;
-  CustomButton({this.label, this.onTap, this.width, this.color, super.key});
+  CustomButton({this.label, this.onTap, this.width, this.color, this.height, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: width ?? 100.w,
-      height: 50,
+      height: height ?? 50 ,
       decoration: BoxDecoration(
         color: color ?? AppColors.brown,
         borderRadius: BorderRadius.circular(8),

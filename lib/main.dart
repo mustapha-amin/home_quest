@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/features/auth/view/auth_screen.dart';
 import 'package:home_quest/features/auth/view/home_username_wrapper.dart';
+import 'package:home_quest/features/btm_nav_bar/agent/btm_nav_barA.dart';
 import 'package:home_quest/firebase_options.dart';
 import 'package:home_quest/services/onboarding_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,7 +47,7 @@ class MyApp extends ConsumerWidget {
                           if (user != null) {
                             return const HomeUserDataWrapper();
                           } else {
-                            return const AuthScreen();
+                            return const BtmNavBarA();
                           }
                         },
                         error: (_, __) => const AuthScreen(),
@@ -63,10 +64,9 @@ class MyApp extends ConsumerWidget {
                     )
                 ],
               ),
-      
         theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.brown),
           scaffoldBackgroundColor: Colors.white,
-          primaryColor: AppColors.brown,
           bottomNavigationBarTheme: const BottomNavigationBarThemeData(
             backgroundColor: Colors.white,
             selectedItemColor: Colors.black,
