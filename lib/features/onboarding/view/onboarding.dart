@@ -75,6 +75,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   ),
                   spaceY(25),
                   CustomButton(
+                    color: Colors.brown,
                     label: "Get Started",
                     onTap: () {
                       try {

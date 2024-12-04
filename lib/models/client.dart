@@ -1,12 +1,23 @@
 // ignore_for_file: annotate_overrides, overridden_fields
-
+import 'package:hive_flutter/hive_flutter.dart';
 import 'user.dart';
 
+part 'client.g.dart';
+
+@HiveType(typeId: 1)
 class ClientModel extends User {
+  @HiveField(0)
   final int phoneNumber;
-  final String clientID, name;
+  @HiveField(1)
+  final String clientID;
+  @HiveField(2)
+  final String name;
+  @HiveField(3)
   final String profilePicture;
-  final List<String> bookmarks, appointmentIDs;
+  @HiveField(4)
+  final List<String> bookmarks;
+  @HiveField(5)
+  final List<String> appointmentIDs;
 
   ClientModel({
     required this.clientID,

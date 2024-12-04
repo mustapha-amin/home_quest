@@ -2,11 +2,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/features/auth/view/auth_screen.dart';
-import 'package:home_quest/features/auth/view/home_username_wrapper.dart';
-import 'package:home_quest/features/btm_nav_bar/agent/btm_nav_barA.dart';
+import 'package:home_quest/features/auth/view/home_user_wrapper.dart';
 import 'package:home_quest/firebase_options.dart';
+import 'package:home_quest/models/agent.dart';
+import 'package:home_quest/models/client.dart';
+import 'package:home_quest/models/user.dart';
 import 'package:home_quest/services/onboarding_settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -15,6 +18,10 @@ import 'features/onboarding/view/onboarding.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(AgentModelAdapter());
+  Hive.registerAdapter(ClientModelAdapter());
+  await Hive.openBox<User>('userBox');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

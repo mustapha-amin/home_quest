@@ -151,6 +151,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                                 context: context,
                                 email: emailContrl.text.trim(),
                                 password: passwordContrl.text.trim());
+                              
                       } else {
                         setState(() {
                           _autovalidateMode =

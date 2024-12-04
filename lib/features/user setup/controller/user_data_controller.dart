@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions/navigations.dart';
 import 'package:home_quest/core/utils/errordialog.dart';
+import 'package:home_quest/features/auth/view/home_user_wrapper.dart';
 import 'package:home_quest/features/btm_nav_bar/client/btm_nav_barC.dart';
 import 'package:home_quest/features/user%20setup/repository/user_data_repository.dart';
 
@@ -26,10 +27,6 @@ final userDataExistsProvider = FutureProvider((ref) async {
 final userDataStreamProvider = StreamProvider<User?>((ref) {
   return ref.watch(userDataRepoProvider).fetchUserData();
 });
-
-// final agentDataStreamProvider = StreamProvider<AgentModel?>((ref) {
-//   return ref.watch(userDataRepoProvider).fetchAgentData();
-// });
 
 class UserDataNotifier extends Notifier<User?> {
   @override
@@ -55,17 +52,15 @@ class UserRemoteDataNotifier extends StateNotifier<bool> {
     ref.invalidate(isLoading);
   }
 
-  FutureVoid saveUserData(
-      BuildContext context, User? user, File image) async {
+  FutureVoid saveUserData(BuildContext context, User? user, File image) async {
     try {
       await _handleOperation(() async {
         await userDataRepo.saveUserData(user!, image);
-        context.replace(const BtmNavBarC());
+        context.replace(const HomeUserDataWrapper());
       }, ref);
     } catch (e) {
       ref.invalidate(isLoading);
       showErrorDialog(context, e.toString());
     }
   }
-  
 }

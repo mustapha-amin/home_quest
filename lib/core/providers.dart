@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:appwrite/appwrite.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:home_quest/core/typedefs.dart';
 import 'package:home_quest/services/user_data_cache.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -43,6 +46,8 @@ final isLoading = StateProvider<bool>((ref) {
 final userCacheNotifierProvider =
     NotifierProvider<UserCacheNotifier, k.User?>(() => UserCacheNotifier());
 
+final hiveProvider = Provider((ref) => Hive.box<k.User>("userBox"));
+
 class UserCacheNotifier extends Notifier<k.User?> {
   late final UserDataCache userDataCache;
 
@@ -55,9 +60,11 @@ class UserCacheNotifier extends Notifier<k.User?> {
   void saveData(k.User user) async {
     await userDataCache.saveUserData(user);
     state = userDataCache.getUserData();
+    log("Saved ====> ${user.toString()}");
   }
 
   FutureVoid deleteData() async {
     await userDataCache.clearUserData();
+    log("Deleted");
   }
 }

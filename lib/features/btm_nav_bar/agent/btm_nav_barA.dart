@@ -6,9 +6,12 @@ import 'package:home_quest/features/btm_nav_bar/agent/dashboard/view/dashboard.d
 import 'package:home_quest/features/btm_nav_bar/agent/listings/views/add_listings.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/profile.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:sizer/sizer.dart';
 
+import '../../../core/providers.dart';
 import '../../../core/utils/image_path.dart';
 import '../../../core/utils/svg_util.dart';
+import '../../../shared/user_avatar.dart';
 import 'listings/views/listings.dart';
 
 final currentAgentScreenProvider = StateProvider<int>((ref) {
@@ -112,32 +115,11 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
           }),
           BottomNavigationBarItem(
             label: "Profile",
-            icon: Icon(Icons.person),
-            // icon: ref.watch(userDataStreamProvider).when(
-            //       data: (agent) => Container(
-            //         width: 7.w,
-            //         height: 7.w,
-            //         decoration: BoxDecoration(
-            //           border: Border.all(
-            //             color: ref.watch(currentAgentScreenProvider) == 3
-            //                 ? Colors.black
-            //                 : Colors.grey,
-            //             width: 2,
-            //           ),
-            //           shape: BoxShape.circle,
-            //           image: DecorationImage(
-            //             fit: BoxFit.cover,
-            //             image: NetworkImage(agent!.profilePicture),
-            //           ),
-            //         ),
-            //       ),
-            //       error: (_, __) => const HugeIcon(
-            //           icon: HugeIcons.strokeRoundedRssError, color: Colors.red),
-            //       loading: () => const HugeIcon(
-            //         icon: HugeIcons.strokeRoundedProfile,
-            //         color: Colors.black,
-            //       ),
-            //     ),
+            icon: UserAvatar(
+              url: ref.watch(userCacheNotifierProvider)!.profilePicture,
+              height: 7.w,
+              width: 7.w,
+            ),
           )
         ],
       ),

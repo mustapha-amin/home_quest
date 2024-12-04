@@ -5,7 +5,7 @@ import 'package:hugeicons/hugeicons.dart';
 import '../core/utils/textstyle.dart';
 
 class ErrorScreen extends ConsumerWidget {
-  final StreamProvider providerToRefresh;
+  final ProviderBase providerToRefresh;
   const ErrorScreen({required this.providerToRefresh, super.key});
 
   @override
@@ -36,7 +36,7 @@ class ErrorScreen extends ConsumerWidget {
             ),
             TextButton.icon(
               onPressed: () {
-                ref.invalidate(providerToRefresh);
+                ref.invalidate(providerToRefresh!);
               },
               label: Text(
                 "Refresh",

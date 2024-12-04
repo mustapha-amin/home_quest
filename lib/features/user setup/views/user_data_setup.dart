@@ -164,6 +164,8 @@ class _UserDataSetupState extends ConsumerState<UserDataSetup> {
                           ref.watch(userDataNotifierProvider),
                           ref.watch(pickedImageProvider)!,
                         );
+                    
+
                   }
                 }
               },

@@ -1,10 +1,25 @@
 // ignore_for_file: annotate_overrides, overridden_fields
+import 'package:hive_flutter/hive_flutter.dart';
 
 import 'user.dart';
+
+part 'agent.g.dart';
+
+@HiveType(typeId: 0)
 class AgentModel extends User {
+  @HiveField(0)
   final int phoneNumber;
-  final String agentID, name, profilePicture;
-  final List<String> listingsIDs, appointmentIDs;
+  @HiveField(1)
+  final String agentID;
+  @HiveField(2)
+  final String name;
+  @HiveField(3)
+  final String profilePicture;
+  @HiveField(4)
+  final List<String> listingsIDs;
+  @HiveField(5)
+  final List<String> appointmentIDs;
+  @HiveField(6)
   final double rating;
 
   AgentModel({
@@ -63,15 +78,14 @@ class AgentModel extends User {
     );
   }
 
-  AgentModel copyWith({
-    int? phoneNumber,
-    String? agentID,
-    String? name,
-    String? profilePicture,
-    List<String>? listingsIDs,
-    double? rating,
-    List<String>? appointmentIDs
-  }) {
+  AgentModel copyWith(
+      {int? phoneNumber,
+      String? agentID,
+      String? name,
+      String? profilePicture,
+      List<String>? listingsIDs,
+      double? rating,
+      List<String>? appointmentIDs}) {
     return AgentModel(
       phoneNumber: phoneNumber ?? this.phoneNumber,
       agentID: agentID ?? this.agentID,

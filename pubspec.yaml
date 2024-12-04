@@ -30,6 +30,7 @@ environment:
 dependencies:
   appwrite: ^13.0.0
   build_runner: ^2.4.13
+  cached_network_image: ^3.4.1
   cloud_firestore: ^5.5.0
   cupertino_icons: ^1.0.8
   envied: ^1.0.0
@@ -59,9 +60,9 @@ dependencies:
 
 dev_dependencies:
   flutter_lints: ^4.0.0
-  build_runner:
   flutter_test:
     sdk: flutter
+  hive_generator: null
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

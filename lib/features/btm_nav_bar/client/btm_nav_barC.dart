@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/image_path.dart';
 import 'package:home_quest/core/utils/svg_util.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/appointments/views/appointments.dart';
@@ -9,6 +11,8 @@ import 'package:home_quest/features/btm_nav_bar/shared/profile/views/profile.dar
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:sizer/sizer.dart';
+
+import '../../../shared/user_avatar.dart';
 
 final currentScreenProvider = StateProvider<int>((ref) {
   return 0;
@@ -79,31 +83,11 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC> {
           }),
           BottomNavigationBarItem(
             label: "Profile",
-            icon: ref.watch(userDataStreamProvider).when(
-                  data: (client) => Container(
-                    width: 7.w,
-                    height: 7.w,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: ref.watch(currentScreenProvider) == 3
-                            ? Colors.black
-                            : Colors.grey,
-                        width: 2,
-                      ),
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(client!.profilePicture),
-                      ),
-                    ),
-                  ),
-                  error: (_, __) => const HugeIcon(
-                      icon: HugeIcons.strokeRoundedRssError, color: Colors.red),
-                  loading: () => const HugeIcon(
-                    icon: HugeIcons.strokeRoundedProfile,
-                    color: Colors.black,
-                  ),
-                ),
+            icon: UserAvatar(
+              url: ref.watch(userCacheNotifierProvider)!.profilePicture,
+              height: 7.w,
+              width: 7.w,
+            ),
           )
         ],
       ),
