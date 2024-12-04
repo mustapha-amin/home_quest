@@ -1,11 +1,11 @@
 class Appointment {
-  final String id; // Unique identifier for the appointment
-  final String clientId; // ID of the client linked to the appointment
-  final String agentId; // ID of the agent managing the appointment
-  final String propertyId; // ID of the property linked to the appointment
-  final DateTime appointmentDate; // Date and time of the appointment
-  final String location; // Location of the appointment (optional)
-  final String status; // Status (e.g., "scheduled", "completed", "canceled")
+  final String id; 
+  final String clientId;
+  final String agentId; 
+  final String propertyId;
+  final DateTime appointmentDate;
+  final String location;
+  final String status;
 
 
   Appointment({

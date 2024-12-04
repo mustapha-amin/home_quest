@@ -1,8 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/core/enums.dart';
@@ -18,7 +17,7 @@ import 'package:hugeicons/hugeicons.dart';
 import 'package:nigerian_states_and_lga/nigerian_states_and_lga.dart';
 import 'package:sizer/sizer.dart';
 import 'package:uuid/uuid.dart';
-
+import 'package:pattern_formatter/pattern_formatter.dart';
 import '../widgets/pictures_text_header.dart';
 
 final pickedImagesCtrl = AutoDisposeStateProvider<List<File>>((ref) {
@@ -127,7 +126,15 @@ class _AddListingsState extends ConsumerState<AddListings> {
                             ),
                           ),
                         ),
-                        ImagesListView(images: ref.watch(pickedImagesCtrl))
+                        ImagesListView(
+                          images: ref.watch(pickedImagesCtrl),
+                          onCancel: (index) {
+                            ref
+                                .read(pickedImagesCtrl.notifier)
+                                .state
+                                .removeAt(index);
+                          },
+                        )
                       ],
                     ),
                   ).padY(10),
@@ -199,6 +206,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,36 +364,23 @@ class _AddListingsState extends ConsumerState<AddListings> {
                       ],
                     ),
                   ),
-                  ...Feature.values.map((feature) => Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(feature.name),
-                          spaceX(10),
-                          SizedBox(
-                            width: 50,
-                            child: TextFormField(
-                              controller: textControllers[
-                                  Feature.values.indexOf(feature)],
-                              textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                hintText: "no.",
-                                hintStyle: kTextStyle(15, color: Colors.grey),
-                              ),
-                              textAlignVertical: TextAlignVertical.bottom,
-                              keyboardType: TextInputType.numberWithOptions(),
-                              validator: (text) {
-                                if (int.parse(text!).runtimeType != int) {
-                                  return "Must be an integer";
-                                } else if (int.parse(text) < 0) {
-                                  "Can't be less than 0";
-                                }
+                  ...Feature.values.map((feature) => TextFormField(
+                        controller:
+                            textControllers[Feature.values.indexOf(feature)],
+                        decoration: _textDecoration(
+                          hintText: "No. of ${feature.name}",
+                        ),
+                        keyboardType: TextInputType.numberWithOptions(),
+                        validator: (text) {
+                          if (int.parse(text!).runtimeType != int) {
+                            return "Must be an integer";
+                          } else if (int.parse(text) < 0) {
+                            "Can't be less than 0";
+                          }
 
-                                return null;
-                              },
-                            ),
-                          )
-                        ],
-                      )),
+                          return null;
+                        },
+                      ).padY(10)),
                   Text(
                     "Payment",
                     style: kTextStyle(18, isBold: true),
@@ -395,6 +390,9 @@ class _AddListingsState extends ConsumerState<AddListings> {
                     keyboardType: TextInputType.numberWithOptions(),
                     decoration:
                         _textDecoration(hintText: "Price", prefix: '\u20A6 '),
+                    inputFormatters: [
+                      ThousandsFormatter(allowFraction: true),
+                    ],
                   ),
                   spaceY(8),
                   TextField(
@@ -402,6 +400,9 @@ class _AddListingsState extends ConsumerState<AddListings> {
                     controller: agentFeeCtrl,
                     decoration: _textDecoration(
                         hintText: "Agent fee", prefix: '\u20A6 '),
+                    inputFormatters: [
+                      ThousandsFormatter(allowFraction: true),
+                    ],
                   ),
                   spaceY(8),
                 ],

@@ -58,6 +58,7 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
       floatingActionButton: ref.watch(currentAgentScreenProvider) == 1 ||
               ref.watch(currentAgentScreenProvider) == 2
           ? FloatingActionButton(
+              elevation: 3,
               onPressed: () {
                 if (ref.watch(currentAgentScreenProvider) == 1) {
                   context.push(const AddListings());
@@ -80,11 +81,16 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
           navigateTo(ref, value);
         },
         items: [
-          const BottomNavigationBarItem(
-            icon: HugeIcon(
-              icon: HugeIcons.strokeRoundedDashboardCircle,
-              color: Colors.black,
-              size: 26,
+          BottomNavigationBarItem(
+            icon: Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: HugeIcon(
+                icon: HugeIcons.strokeRoundedDashboardSquare01,
+                color: ref.watch(currentAgentScreenProvider) == 0
+                    ? Colors.black
+                    : Colors.grey,
+                size: 25,
+              ),
             ),
             label: "Dashboard",
           ),

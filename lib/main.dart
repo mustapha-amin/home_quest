@@ -47,7 +47,7 @@ class MyApp extends ConsumerWidget {
                           if (user != null) {
                             return const HomeUserDataWrapper();
                           } else {
-                            return const BtmNavBarA();
+                            return const AuthScreen();
                           }
                         },
                         error: (_, __) => const AuthScreen(),

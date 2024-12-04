@@ -7,6 +7,7 @@ SvgPicture svgImage(String path, bool isEnabled) {
     path,
     colorFilter: ColorFilter.mode(
         isEnabled ? Colors.black : Colors.grey, BlendMode.srcIn),
-    width: 7.w,
+    width: 30,
+    height: 30,
   );
 }
