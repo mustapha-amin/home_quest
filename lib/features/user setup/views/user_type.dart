@@ -66,20 +66,11 @@ class _UserTypeScreenState extends ConsumerState<UserTypeScreen> {
         CustomButton(
           label: "Next",
           width: 90.w,
-          color: ref.watch(userTypeCtrl.notifier).state == null
+          color: ref.watch(userTypeCtrl.notifier).state == UserType.none
               ? Colors.grey[500]
               : AppColors.brown,
           onTap: () {
-            // if (ref.watch(userTypeCtrl.notifier).state != null) {
-            //   updateProgressVal(ref, 1);
-            //   if (ref.watch(userTypeCtrl.notifier).state == UserType.agent) {
-            //     ref.read(agentDataProvider.notifier).updateAgentData(
-            //         agentData!.copyWith(agentID: const Uuid().v4()));
-            //   } else {
-            //     ref.read(clientDataProvider.notifier).updateClientData(
-            //         clientData!.copyWith(clientID: const Uuid().v4()));
-            //   }
-            // }
+            updateProgressVal(ref, 1);
             ref.read(isFirstProvider.notifier).state = false;
           },
         ).padX(10).padY(8),

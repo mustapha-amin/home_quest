@@ -31,9 +31,10 @@ class UserDataRepository {
     required this.firebaseAuth,
   });
 
-  FutureVoid saveUserData(k.User user, File image) async {
+  FutureVoid saveUserData(k.User user, File? image) async {
     try {
-      final imageUrl = await uploadImage(image, ImageBucketIDs.profilePictures);
+      final imageUrl =
+          await uploadImage(image!, ImageBucketIDs.profilePictures);
       if (user is ClientModel) {
         ClientModel clientModel = user.copyWith(
             profilePicture: imageUrl, clientID: firebaseAuth.currentUser!.uid);
@@ -104,10 +105,10 @@ class UserDataRepository {
   Future<bool?> _userIsClient() async {
     try {
       final clientDoc = await firebaseFirestore
-        .collection("clients")
-        .doc(firebaseAuth.currentUser!.uid)
-        .get();
-    return clientDoc.exists;
+          .collection("clients")
+          .doc(firebaseAuth.currentUser!.uid)
+          .get();
+      return clientDoc.exists;
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -127,5 +128,16 @@ class UserDataRepository {
     } catch (e) {
       throw Exception(e.toString());
     }
+  }
+
+  Future<k.User?> fetchUserDataFuture() async {
+    bool? isAClient = await _userIsClient();
+    final doc = await firebaseFirestore
+        .collection(isAClient! ? "clients" : "agents")
+        .doc(firebaseAuth.currentUser!.uid)
+        .get();
+    return isAClient
+        ? ClientModel.fromJson(doc.data()!)
+        : AgentModel.fromJson(doc.data()!);
   }
 }

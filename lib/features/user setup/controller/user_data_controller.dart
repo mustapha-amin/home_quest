@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,10 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions/navigations.dart';
 import 'package:home_quest/core/utils/errordialog.dart';
 import 'package:home_quest/features/auth/view/home_user_wrapper.dart';
-import 'package:home_quest/features/btm_nav_bar/client/btm_nav_barC.dart';
 import 'package:home_quest/features/user%20setup/repository/user_data_repository.dart';
-
-import '../../../core/providers.dart';
 import '../../../core/typedefs.dart';
 import '../../../models/user.dart';
 
@@ -28,6 +26,10 @@ final userDataStreamProvider = StreamProvider<User?>((ref) {
   return ref.watch(userDataRepoProvider).fetchUserData();
 });
 
+final userDataFutureProvider = FutureProvider((ref) async {
+  return ref.watch(userDataRepoProvider).fetchUserDataFuture();
+});
+
 class UserDataNotifier extends Notifier<User?> {
   @override
   User? build() {
@@ -44,23 +46,35 @@ class UserRemoteDataNotifier extends StateNotifier<bool> {
   final Ref ref;
   UserRemoteDataNotifier(this.userDataRepo, this.ref) : super(false);
 
-  FutureVoid _handleOperation(FutureVoid Function() operation, Ref ref) async {
+  FutureVoid saveUserData(
+    BuildContext context,
+    User? user,
+    File? image,
+  ) async {
     state = true;
-    ref.read(isLoading.notifier).state = state;
-    await operation();
-    state = false;
-    ref.invalidate(isLoading);
-  }
-
-  FutureVoid saveUserData(BuildContext context, User? user, File image) async {
     try {
-      await _handleOperation(() async {
-        await userDataRepo.saveUserData(user!, image);
-        context.replace(const HomeUserDataWrapper());
-      }, ref);
+      await userDataRepo.saveUserData(user!, image!);
+      log("user data saved");
+      context.replace(const HomeUserDataWrapper());
     } catch (e) {
-      ref.invalidate(isLoading);
       showErrorDialog(context, e.toString());
     }
+    state = false;
+  }
+
+  FutureVoid updateField(
+    BuildContext context,
+    String collection,
+    String id,
+    Map<String, dynamic> data,
+  ) async {
+    state = true;
+    try {
+      await userDataRepo.updateField(collection, id, data);
+      log("field updated");
+    } catch (e) {
+      showErrorDialog(context, e.toString());
+    }
+    state = false;
   }
 }

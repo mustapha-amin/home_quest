@@ -55,6 +55,7 @@ class AgentModel extends User {
     );
   }
 
+   @override
   Map<String, dynamic> toJson() {
     return {
       'agentID': agentID,
@@ -63,6 +64,7 @@ class AgentModel extends User {
       'profilePicture': profilePicture,
       'listingsIDs': listingsIDs,
       'rating': rating,
+      'appointmentIDs' : appointmentIDs,
     };
   }
 

@@ -11,4 +11,7 @@ abstract class User {
     required this.appointmentIDs,
   });
 
+  User? copyWith();
+
+  Map<String, dynamic> toJson();
 }

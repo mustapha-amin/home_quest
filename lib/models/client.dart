@@ -50,6 +50,7 @@ class ClientModel extends User {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'clientID': clientID,
@@ -60,7 +61,7 @@ class ClientModel extends User {
       'appointmentIDs': appointmentIDs,
     };
   }
-
+  
   factory ClientModel.fromJson(Map<String, dynamic> json) {
     return ClientModel(
       clientID: json['clientID'],
@@ -71,7 +72,7 @@ class ClientModel extends User {
       appointmentIDs: List<String>.from(json['appointmentIDs']),
     );
   }
-
+  
   ClientModel copyWith({
     int? phoneNumber,
     String? clientID,

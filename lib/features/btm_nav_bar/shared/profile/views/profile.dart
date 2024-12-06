@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions/navigations.dart';
@@ -5,12 +7,19 @@ import 'package:home_quest/core/extensions/widget_exts.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/auth/controller/auth_controller.dart';
+import 'package:home_quest/features/auth/view/auth_screen.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/account.dart';
+import 'package:home_quest/features/btm_nav_bar/shared/profile/views/edit_profile.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/widgets/contact_details.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/widgets/profile_card.dart';
+import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
+import 'package:home_quest/main.dart';
 import 'package:home_quest/models/client.dart';
+import 'package:home_quest/services/user_data_cache.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:sizer/sizer.dart';
+
+import '../../../../../shared/user_avatar.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -28,19 +37,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Container(
-              width: 30.w,
-              height: 30.w,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.grey[200]!,
-                  width: 5,
-                ),
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: NetworkImage(user!.profilePicture),
-                  fit: BoxFit.cover,
-                ),
+            Hero(
+              tag: 'avatar',
+              flightShuttleBuilder: (context, _, flightDirection,
+                  fromHeroContext, toHeroCOntext) {
+                return Material(
+                  color: Colors.transparent,
+                  child: switch (flightDirection) {
+                    HeroFlightDirection.push => toHeroCOntext.widget,
+                    HeroFlightDirection.pop => fromHeroContext.widget
+                  },
+                );
+              },
+              child: UserAvatar(
+                url: user!.profilePicture,
+                width: 30.w,
+                height: 30.w,
               ),
             ),
             Column(
@@ -66,6 +78,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ProfileCard(
                 text: "Edit profile",
                 icon: HugeIcons.strokeRoundedEdit01,
+                onTap: () => context.push(const EditProfile()),
               ),
               ProfileCard(
                 text: "Settings",
@@ -74,13 +87,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ProfileCard(
                 text: "Help",
                 icon: HugeIcons.strokeRoundedHelpCircle,
+                onTap: () {
+                  log(ref
+                      .watch(userDataCacheProvider)
+                      .getUserData()
+                      .runtimeType
+                      .toString());
+                },
               ),
               ProfileCard(
                 text: "Account",
                 icon: HugeIcons.strokeRoundedUserAccount,
-                onTap: () {
-                  context.push(const Account());
-                },
+                onTap: () => context.push(const Account()),
               ),
               ProfileCard(
                 text: "Log out",
@@ -92,11 +110,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       return AlertDialog(
                         title: Text(
                           "Log Out",
-                          style: kTextStyle(20),
+                          style: kTextStyle(18, isBold: true),
                         ),
-                        content: Text(
-                          "Do you want to log out?",
-                          style: kTextStyle(15),
+                        content: SizedBox(
+                          width: 85.w,
+                          child: Text(
+                            "Do you want to log out?",
+                            style: kTextStyle(16),
+                          ),
                         ),
                         actions: [
                           TextButton(
@@ -104,7 +125,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               Navigator.of(context).pop();
                               await ref
                                   .read(authControllerProvider.notifier)
-                                  .signOut(context);
+                                  .signOut(context, ref, user is ClientModel);
+                              await ref
+                                  .read(userCacheNotifierProvider.notifier)
+                                  .deleteData();
                             },
                             child: Text(
                               "Yes",

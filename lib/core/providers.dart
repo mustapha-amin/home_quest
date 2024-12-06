@@ -6,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:home_quest/core/typedefs.dart';
+import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
+import 'package:home_quest/features/user%20setup/repository/user_data_repository.dart';
 import 'package:home_quest/services/user_data_cache.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user.dart' as k;
@@ -39,9 +41,6 @@ final firestoreProvider = Provider((ref) {
   return FirebaseFirestore.instance;
 });
 
-final isLoading = StateProvider<bool>((ref) {
-  return false;
-});
 
 final userCacheNotifierProvider =
     NotifierProvider<UserCacheNotifier, k.User?>(() => UserCacheNotifier());
@@ -57,14 +56,20 @@ class UserCacheNotifier extends Notifier<k.User?> {
     return userDataCache.getUserData();
   }
 
-  void saveData(k.User user) async {
-    await userDataCache.saveUserData(user);
-    state = userDataCache.getUserData();
-    log("Saved ====> ${user.toString()}");
-  }
-
   FutureVoid deleteData() async {
     await userDataCache.clearUserData();
     log("Deleted");
+  }
+
+  FutureVoid refreshFromServer() async {
+    try {
+      final user = await ref.read(userDataRepoProvider).fetchUserDataFuture();
+      await userDataCache.saveUserData(user!);
+      state = userDataCache.getUserData();
+      log("Cache updated");
+    } catch (e) {
+      log("Cache failed to update");
+      throw Exception(e.toString());
+    }
   }
 }

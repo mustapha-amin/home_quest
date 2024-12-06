@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -25,10 +27,22 @@ class AuthRepository {
         password: password,
       );
       return right(userCred);
-    } on FirebaseAuthException catch (e, _) {
-      return left(e.message!);
     }
-  }
+      on FirebaseAuthException catch (e, _) {
+      String? error;
+      if (e.code == 'user-not-found') {
+        error = "User not found";
+      } else if (e.code == "wrong-password") {
+        error = "Incorrect password";
+      } else if (e.code == "network-request-failed") {
+        error = "A network error occured, check your internet settings";
+      } else {
+        error = e.message;
+      }
+      return left(error!);
+    }
+    }
+  
 
   FutureEither<UserCredential> signUp({
     required String email,
@@ -40,8 +54,16 @@ class AuthRepository {
         password: password,
       );
       return right(userCredential);
-    } on FirebaseAuthException catch (e, _) {
-      return left(e.message!);
+    }  on FirebaseAuthException catch (e, _) {
+      String? error;
+      if (e.code == 'email-already-in-use') {
+        error = "email already in use";
+      } else if (e.code == "network-request-failed") {
+        error = "A network occured, check your internet settings";
+      } else {
+        error = e.message.toString();
+      }
+      return left(error);
     }
   }
 

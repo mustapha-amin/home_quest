@@ -16,7 +16,7 @@ class ProfileCard extends StatelessWidget {
         color: AppColors.brown,
       ),
       title: Text(text),
-      trailing: HugeIcon(
+      trailing: const HugeIcon(
         icon: HugeIcons.strokeRoundedArrowRight01,
         color: AppColors.brown,
       ),

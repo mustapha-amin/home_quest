@@ -14,7 +14,7 @@ import 'package:sizer/sizer.dart';
 
 import '../../../shared/user_avatar.dart';
 
-final currentScreenProvider = StateProvider<int>((ref) {
+final currentScreenProvider = StateProvider.autoDispose<int>((ref) {
   return 0;
 });
 

@@ -8,8 +8,6 @@ import 'package:home_quest/features/auth/view/auth_screen.dart';
 import 'package:home_quest/shared/custom_button.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:hugeicons/hugeicons.dart';
-
-import '../../../core/providers.dart';
 import '../controller/auth_controller.dart';
 
 class ForgotPassword extends ConsumerStatefulWidget {
@@ -103,7 +101,6 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                       onTap: emailController.text.isEmpty
                           ? null
                           : () async {
-                              ref.read(isLoading.notifier).state = true;
                               await ref
                                   .read(authControllerProvider.notifier)
                                   .requestPwdReset(
@@ -113,7 +110,6 @@ class _ForgotPasswordState extends ConsumerState<ForgotPassword> {
                                       passwordResetLinkSent.value = true;
                                     },
                                   );
-                              ref.invalidate(isLoading);
                             },
                     ),
                   ],

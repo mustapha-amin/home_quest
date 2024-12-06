@@ -12,7 +12,7 @@ class LoadingScreen extends StatelessWidget {
       body: const Center(
         child: SpinKitWaveSpinner(
           color: AppColors.brown,
-          size: 50,
+          size: 80,
         ),
       ),
     );

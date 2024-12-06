@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
+import 'package:sizer/sizer.dart';
 
 void showErrorDialog(BuildContext context, String error) {
   showDialog(
@@ -10,9 +11,12 @@ void showErrorDialog(BuildContext context, String error) {
           "Error",
           style: kTextStyle(20),
         ),
-        content: Text(
-          error,
-          style: kTextStyle(15),
+        content: SizedBox(
+            width: 85.w,
+          child: Text(
+            error,
+            style: kTextStyle(15),
+          ),
         ),
         actions: [
           TextButton(

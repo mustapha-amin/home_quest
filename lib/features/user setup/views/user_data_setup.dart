@@ -128,14 +128,15 @@ class _UserDataSetupState extends ConsumerState<UserDataSetup> {
             phonNumberCtrl,
           ]),
           builder: (context, _) {
-            bool areBothFilled =
-                nameCtrl.text.isNotEmpty && (phonNumberCtrl.text.length == 10);
+            bool fieldsAreFilled = nameCtrl.text.isNotEmpty &&
+                (phonNumberCtrl.text.length == 10) &&
+                ref.watch(pickedImageProvider) != null;
             return CustomButton(
               label: "Done",
               width: 90.w,
-              color: areBothFilled ? AppColors.brown : Colors.grey,
+              color: fieldsAreFilled ? AppColors.brown : Colors.grey,
               onTap: () async {
-                if (areBothFilled) {
+                if (fieldsAreFilled) {
                   if (ref.watch(userTypeCtrl) == UserType.agent) {
                     ref.read(userDataNotifierProvider.notifier).updateUserData(
                           AgentModel.defaultInstance().copyWith(
@@ -164,8 +165,6 @@ class _UserDataSetupState extends ConsumerState<UserDataSetup> {
                           ref.watch(userDataNotifierProvider),
                           ref.watch(pickedImageProvider)!,
                         );
-                    
-
                   }
                 }
               },

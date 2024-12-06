@@ -36,7 +36,7 @@ class ErrorScreen extends ConsumerWidget {
             ),
             TextButton.icon(
               onPressed: () {
-                ref.invalidate(providerToRefresh!);
+                ref.invalidate(providerToRefresh);
               },
               label: Text(
                 "Refresh",

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:home_quest/core/extensions/widget_exts.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
+import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/features/user%20setup/views/user_data_setup.dart';
 import 'package:home_quest/features/user%20setup/views/user_type.dart';
 import '../../../core/colors.dart';
@@ -66,28 +68,38 @@ class _UserSetupState extends ConsumerState<UserSetup> {
                 },
               ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+      body: Stack(
+        alignment: Alignment.center,
         children: [
-          Stack(
-            alignment: Alignment.center,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              LinearProgressIndicator(
-                value: ref.watch(progressCtrl),
-                color: AppColors.brown,
-              ).padX(10),
-              const ColoredBox(
-                color: Colors.white,
-                child: SizedBox(
-                  width: 5,
-                  height: 50,
-                ),
-              )
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  LinearProgressIndicator(
+                    value: ref.watch(progressCtrl),
+                    color: AppColors.brown,
+                  ).padX(10),
+                  const ColoredBox(
+                    color: Colors.white,
+                    child: SizedBox(
+                      width: 5,
+                      height: 50,
+                    ),
+                  )
+                ],
+              ),
+              Expanded(
+                child: isFirst ? const UserTypeScreen() : const UserDataSetup(),
+              ),
             ],
           ),
-          Expanded(
-            child: isFirst ? const UserTypeScreen() : const UserDataSetup(),
-          ),
+          if (ref.watch(userRemoteDataProvider) == true)
+            const SpinKitWaveSpinner(
+              color: AppColors.brown,
+              size: 80,
+            )
         ],
       ),
     );

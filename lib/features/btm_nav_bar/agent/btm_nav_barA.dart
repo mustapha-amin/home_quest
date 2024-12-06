@@ -14,7 +14,7 @@ import '../../../core/utils/svg_util.dart';
 import '../../../shared/user_avatar.dart';
 import 'listings/views/listings.dart';
 
-final currentAgentScreenProvider = StateProvider<int>((ref) {
+final currentAgentScreenProvider = StateProvider.autoDispose<int>((ref) {
   return 0;
 });
 
@@ -32,7 +32,7 @@ class BtmNavBarA extends ConsumerStatefulWidget {
 }
 
 class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
-  List<Widget> screens = const [
+  List<Widget> screensA = const [
     AgentDashboard(),
     Appointments(),
     Listings(),
@@ -57,7 +57,7 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
-      body: screens[ref.watch(currentAgentScreenProvider)],
+      body: screensA[ref.watch(currentAgentScreenProvider)],
       floatingActionButton: ref.watch(currentAgentScreenProvider) == 1 ||
               ref.watch(currentAgentScreenProvider) == 2
           ? FloatingActionButton(
@@ -97,17 +97,17 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
             ),
             label: "Dashboard",
           ),
-          ...screens
+          ...screensA
               .where((screen) =>
-                  screens.indexOf(screen) < 3 && screens.indexOf(screen) > 0)
+                  screensA.indexOf(screen) < 3 && screensA.indexOf(screen) > 0)
               .map((screen) {
             return BottomNavigationBarItem(
-              icon: screens.indexOf(screen) ==
+              icon: screensA.indexOf(screen) ==
                       ref.watch(currentAgentScreenProvider)
                   ? svgImage(
-                      btmNavBarIconsFilled[screens.indexOf(screen)], true)
-                  : svgImage(btmNavBarIcons[screens.indexOf(screen)], false),
-              label: switch (screens.indexOf(screen)) {
+                      btmNavBarIconsFilled[screensA.indexOf(screen)], true)
+                  : svgImage(btmNavBarIcons[screensA.indexOf(screen)], false),
+              label: switch (screensA.indexOf(screen)) {
                 1 => "Listings",
                 _ => "Appointments",
               },
