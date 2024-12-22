@@ -73,119 +73,136 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Pick location"),
-        centerTitle: true,
-        forceMaterialTransparency: true,
-      ),
-      body: ref.watch(userLocationProvider).when(
-        data: (data) {
-          currentPosition = LatLng(data.latitude!, data.longitude!);
-          locationMarkerPosStream.sink.add(
-            LocationMarkerPosition(
-              latitude: currentPosition!.latitude,
-              longitude: currentPosition!.longitude,
-              accuracy: 1,
-            ),
-          );
-          return Stack(
-            alignment: Alignment.bottomCenter,
-            children: [
-              FlutterMap(
-                mapController: mapController,
-                options: MapOptions(
-                  initialCenter: currentPosition!,
-                  initialZoom: 9,
-                  minZoom: 6,
-                  cameraConstraint:
-                      CameraConstraint.containCenter(bounds: nigeriaBounds!),
-                  onPositionChanged: (camera, _) {
-                    log(camera.center.toString());
-
-                    locationMarkerPosStream.sink.add(
-                      LocationMarkerPosition(
-                        latitude: camera.center.latitude,
-                        longitude: camera.center.longitude,
-                        accuracy: 1,
-                      ),
-                    );
-                  },
+      body: Stack(
+        alignment: Alignment.center,
+        children: [
+          ref.watch(userLocationProvider).when(
+            data: (data) {
+              currentPosition = LatLng(data.latitude!, data.longitude!);
+              locationMarkerPosStream.sink.add(
+                LocationMarkerPosition(
+                  latitude: currentPosition!.latitude,
+                  longitude: currentPosition!.longitude,
+                  accuracy: 1,
                 ),
+              );
+              return Stack(
+                alignment: Alignment.bottomCenter,
                 children: [
-                  TileLayer(
-                    urlTemplate:
-                        'https://api.mapbox.com/styles/v1/mustyameen/cm4tu2iyy002r01s18ylrerzd/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg',
-                    userAgentPackageName: 'com.mustapha.homequest',
-                    additionalOptions: const {
-                      "accessToken":
-                          "pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg",
-                      "id":
-                          "mapbox://styles/mustyameen/cm4tu2iyy002r01s18ylrerzd"
-                    },
-                  ),
-                  PolygonLayer(
-                    polygons: [
-                      ...nigerianMapBounds.map(
-                        (points) => Polygon(
-                          points: points,
-                          borderColor: Colors.green,
-                          borderStrokeWidth: 6.0,
-                          color: Colors.green.withOpacity(0.1),
-                        ),
-                      )
+                  FlutterMap(
+                    mapController: mapController,
+                    options: MapOptions(
+                      initialCenter: currentPosition!,
+                      initialZoom: 9,
+                      minZoom: 6,
+                      cameraConstraint: CameraConstraint.containCenter(
+                          bounds: nigeriaBounds!),
+                      onPositionChanged: (camera, _) {
+                        log(camera.center.toString());
+
+                        locationMarkerPosStream.sink.add(
+                          LocationMarkerPosition(
+                            latitude: camera.center.latitude,
+                            longitude: camera.center.longitude,
+                            accuracy: 1,
+                          ),
+                        );
+                      },
+                    ),
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            'https://api.mapbox.com/styles/v1/mustyameen/cm4tu2iyy002r01s18ylrerzd/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg',
+                        userAgentPackageName: 'com.mustapha.homequest',
+                        additionalOptions: const {
+                          "accessToken":
+                              "pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg",
+                          "id":
+                              "mapbox://styles/mustyameen/cm4tu2iyy002r01s18ylrerzd"
+                        },
+                      ),
+                      PolygonLayer(
+                        polygons: [
+                          ...nigerianMapBounds.map(
+                            (points) => Polygon(
+                              points: points,
+                              borderColor: Colors.green,
+                              borderStrokeWidth: 6.0,
+                              color: Colors.green.withOpacity(0.1),
+                            ),
+                          )
+                        ],
+                      ),
+                      StreamBuilder(
+                        stream: locationMarkerPosStream.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return LocationMarkerLayer(
+                              position: snapshot.data!,
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
                     ],
                   ),
-                  StreamBuilder(
-                    stream: locationMarkerPosStream.stream,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return LocationMarkerLayer(
-                          position: snapshot.data!,
-                        );
-                      } else {
-                        return const SizedBox();
-                      }
-                    },
-                  ),
+                  Positioned(
+                    bottom: 20,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.8),
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 30,
+                        vertical: 10,
+                      ),
+                      child: Text(
+                        "Move to select location",
+                        style: kTextStyle(14),
+                      ),
+                    ),
+                  )
                 ],
-              ),
-              Positioned(
-                bottom: 20,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 30,
-                    vertical: 10,
-                  ),
-                  child: Text(
-                    "Move to select location",
-                    style: kTextStyle(14),
-                  ),
+              );
+            },
+            error: (e, _) {
+              return const Center(
+                child: Text("An Error occured"),
+              );
+            },
+            loading: () {
+              return const Center(
+                child: SpinKitWaveSpinner(
+                  color: AppColors.brown,
+                  size: 80,
                 ),
-              )
-            ],
-          );
-        },
-        error: (e, _) {
-          return const Center(
-            child: Text("An Error occured"),
-          );
-        },
-        loading: () {
-          return const Center(
-            child: SpinKitWaveSpinner(
-              color: AppColors.brown,
-              size: 80,
+              );
+            },
+          ),
+          Positioned(
+            top: 70,
+            left: 20,
+            child: IconButton(
+              style: IconButton.styleFrom(
+                backgroundColor: Colors.white.withOpacity(0.7),
+              ),
+              icon: const HugeIcon(
+                icon: HugeIcons.strokeRoundedArrowLeft01,
+                color: Colors.black,
+              ),
+              iconSize: 28,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
-          );
-        },
+          )
+        ],
       ),
       floatingActionButton: SizedBox(
-        width: 80,
-        height: 80,
+        width: 70,
+        height: 70,
         child: FloatingActionButton(
             onPressed: () {
               locationMarkerPosStream.sink.add(
