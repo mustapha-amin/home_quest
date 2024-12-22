@@ -17,8 +17,6 @@ class AgentModel extends User {
   final String profilePicture;
   @HiveField(4)
   final List<String> listingsIDs;
-  @HiveField(5)
-  final List<String> appointmentIDs;
   @HiveField(6)
   final double rating;
 
@@ -29,13 +27,11 @@ class AgentModel extends User {
     required this.profilePicture,
     required this.listingsIDs,
     required this.rating,
-    required this.appointmentIDs,
   }) : super(
           id: agentID,
           name: name,
           phoneNumber: phoneNumber,
           profilePicture: profilePicture,
-          appointmentIDs: appointmentIDs,
         );
 
   @override
@@ -51,11 +47,10 @@ class AgentModel extends User {
       profilePicture: "profilePicture",
       listingsIDs: [],
       rating: 0,
-      appointmentIDs: [],
     );
   }
 
-   @override
+  @override
   Map<String, dynamic> toJson() {
     return {
       'agentID': agentID,
@@ -64,7 +59,6 @@ class AgentModel extends User {
       'profilePicture': profilePicture,
       'listingsIDs': listingsIDs,
       'rating': rating,
-      'appointmentIDs' : appointmentIDs,
     };
   }
 
@@ -76,18 +70,17 @@ class AgentModel extends User {
       profilePicture: json['profilePicture'],
       listingsIDs: List<String>.from(json['listingsIDs']),
       rating: json['rating'].toDouble(),
-      appointmentIDs: List<String>.from(json['appointmentIDs']),
     );
   }
 
-  AgentModel copyWith(
-      {int? phoneNumber,
-      String? agentID,
-      String? name,
-      String? profilePicture,
-      List<String>? listingsIDs,
-      double? rating,
-      List<String>? appointmentIDs}) {
+  AgentModel copyWith({
+    int? phoneNumber,
+    String? agentID,
+    String? name,
+    String? profilePicture,
+    List<String>? listingsIDs,
+    double? rating,
+  }) {
     return AgentModel(
       phoneNumber: phoneNumber ?? this.phoneNumber,
       agentID: agentID ?? this.agentID,
@@ -95,7 +88,6 @@ class AgentModel extends User {
       profilePicture: profilePicture ?? this.profilePicture,
       listingsIDs: listingsIDs ?? this.listingsIDs,
       rating: rating ?? this.rating,
-      appointmentIDs: appointmentIDs ?? this.appointmentIDs,
     );
   }
 }

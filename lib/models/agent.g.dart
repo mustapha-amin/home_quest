@@ -23,14 +23,13 @@ class AgentModelAdapter extends TypeAdapter<AgentModel> {
       profilePicture: fields[3] as String,
       listingsIDs: (fields[4] as List).cast<String>(),
       rating: fields[6] as double,
-      appointmentIDs: (fields[5] as List).cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, AgentModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.phoneNumber)
       ..writeByte(1)
@@ -42,8 +41,6 @@ class AgentModelAdapter extends TypeAdapter<AgentModel> {
       ..writeByte(4)
       ..write(obj.listingsIDs)
       ..writeByte(5)
-      ..write(obj.appointmentIDs)
-      ..writeByte(6)
       ..write(obj.rating);
   }
 

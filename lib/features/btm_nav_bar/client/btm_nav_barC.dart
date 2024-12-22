@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/image_path.dart';
 import 'package:home_quest/core/utils/svg_util.dart';
-import 'package:home_quest/features/btm_nav_bar/agent/appointments/views/appointments.dart';
 import 'package:home_quest/features/btm_nav_bar/client/favorites/favorites.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/home.dart';
+import 'package:home_quest/features/btm_nav_bar/client/search/search.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/profile.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -34,8 +34,8 @@ class BtmNavBarC extends ConsumerStatefulWidget {
 class _BtmNavBarState extends ConsumerState<BtmNavBarC> {
   List<Widget> screens = const [
     HomeScreen(),
+    SearchScreen(),
     FavoritesScreen(),
-    Appointments(),
     ProfileScreen(),
   ];
 
@@ -64,23 +64,22 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC> {
           navigateTo(ref, value);
         },
         items: [
-          ...screens
-              .where((screen) => screens.indexOf(screen) < 3)
-              .map((screen) {
-            return BottomNavigationBarItem(
-              icon: screens.indexOf(screen) < 3
-                  ? screens.indexOf(screen) == ref.watch(currentScreenProvider)
-                      ? svgImage(
-                          btmNavBarIconsFilled[screens.indexOf(screen)], true)
-                      : svgImage(btmNavBarIcons[screens.indexOf(screen)], false)
-                  : const SizedBox(),
-              label: switch (screens.indexOf(screen)) {
-                0 => "Home",
-                1 => "Favorites",
-                _ => "Appointments",
-              },
-            );
-          }),
+          BottomNavigationBarItem(
+            icon: ref.watch(currentScreenProvider) == 0
+                ? svgImage(btmNavBarIconsFilled[0], true)
+                : svgImage(btmNavBarIcons[0], false),
+            label: "Home",
+          ),
+           BottomNavigationBarItem(
+            icon: HugeIcon(icon: HugeIcons.strokeRoundedSearch01, color: ref.watch(currentScreenProvider) == 1 ? Colors.black : Colors.grey),
+            label: "Search",
+          ),
+           BottomNavigationBarItem(
+            icon: ref.watch(currentScreenProvider) == 2
+                ? svgImage(btmNavBarIconsFilled[1], true)
+                : svgImage(btmNavBarIcons[1], false),
+            label: "Favorite",
+          ),
           BottomNavigationBarItem(
             label: "Profile",
             icon: UserAvatar(

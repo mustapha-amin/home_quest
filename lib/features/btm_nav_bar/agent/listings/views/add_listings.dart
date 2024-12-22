@@ -5,9 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/core/enums.dart';
+import 'package:home_quest/core/extensions/navigations.dart';
 import 'package:home_quest/core/extensions/widget_exts.dart';
 import 'package:home_quest/core/utils/image_picker_util.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
+import 'package:home_quest/features/btm_nav_bar/agent/listings/views/select_location.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/widgets/images_list_view.dart';
 import 'package:home_quest/models/listing_feature.dart';
 import 'package:home_quest/models/property_listing.dart';
@@ -15,7 +17,6 @@ import 'package:home_quest/shared/custom_button.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:nigerian_states_and_lga/nigerian_states_and_lga.dart';
-import 'package:sizer/sizer.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
 import '../widgets/pictures_text_header.dart';
@@ -33,7 +34,7 @@ InputDecoration _textDecoration({
     labelText: hintText,
     prefixText: prefix,
     suffixIcon: suffix,
-    contentPadding: EdgeInsets.all(18),
+    contentPadding: const EdgeInsets.all(18),
     border: const OutlineInputBorder(),
   );
 }
@@ -72,6 +73,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         title: Text(
           "List a property",
           style: kTextStyle(20),
@@ -103,22 +105,24 @@ class _AddListingsState extends ConsumerState<AddListings> {
                               final imagesNames = ref
                                   .watch(pickedImagesCtrl)
                                   .map((image) => image.path.split('/').last);
-                              final images = ref.watch(pickedImagesCtrl);
+                              List<File> images = ref.read(pickedImagesCtrl);
                               final result = await pickImages();
                               result.fold(
                                 (l) => log(l),
                                 (r) {
                                   for (final image in r) {
                                     if (!imagesNames.contains(
-                                        image!.path.split('/').last)) {
+                                            image!.path.split('/').last) &&
+                                        ref.watch(pickedImagesCtrl).length <
+                                            10) {
                                       images.add(image);
                                     }
                                   }
+                                  images = images.take(10).toList();
                                   ref.read(pickedImagesCtrl.notifier).state =
                                       images;
                                 },
                               );
-                              setState(() {});
                             },
                             icon: const HugeIcon(
                               icon: HugeIcons.strokeRoundedAdd01,
@@ -129,73 +133,112 @@ class _AddListingsState extends ConsumerState<AddListings> {
                         ImagesListView(
                           images: ref.watch(pickedImagesCtrl),
                           onCancel: (index) {
-                            ref
-                                .read(pickedImagesCtrl.notifier)
-                                .state
-                                .removeAt(index);
+                            ref.read(pickedImagesCtrl.notifier).state = ref
+                                .watch(pickedImagesCtrl)
+                                .where((file) =>
+                                    ref.watch(pickedImagesCtrl).indexOf(file) !=
+                                    index)
+                                .toList();
                           },
                         )
                       ],
                     ),
                   ).padY(10),
                   Text(
+                    "Images count: ${ref.watch(pickedImagesCtrl).length}",
+                    style: kTextStyle(15),
+                  ),
+                  spaceY(5),
+                  Text(
                     "Location",
                     style: kTextStyle(18, isBold: true),
                   ),
-                  spaceY(10),
-                  DropdownButtonHideUnderline(
-                    child: DropdownButtonFormField(
-                      decoration: _textDecoration(),
-                      value: selectedState,
-                      items: [
-                        ...NigerianStatesAndLGA.allStates.map(
-                          (state) => DropdownMenuItem(
-                            value: state,
-                            child: Text(state),
-                          ),
-                        )
-                      ],
-                      hint: Text("Select state"),
-                      onChanged: (val) {
-                        setState(() {
-                          selectedState = val;
-                          allLGAs = NigerianStatesAndLGA.getStateLGAs(val!);
-                          selectedLGA = allLGAs[0];
-                        });
-                        log(selectedState!);
-                      },
-                    ),
-                  ),
+                  // spaceY(10),
+                  // DropdownButtonHideUnderline(
+                  //   child: DropdownButtonFormField(
+                  //     decoration: _textDecoration(),
+                  //     value: selectedState,
+                  //     items: [
+                  //       ...NigerianStatesAndLGA.allStates.map(
+                  //         (state) => DropdownMenuItem(
+                  //           value: state,
+                  //           child: Text(state),
+                  //         ),
+                  //       )
+                  //     ],
+                  //     hint: Text("Select state"),
+                  //     onChanged: (val) {
+                  //       setState(() {
+                  //         selectedState = val;
+                  //         allLGAs = NigerianStatesAndLGA.getStateLGAs(val!);
+                  //         selectedLGA = allLGAs[0];
+                  //       });
+                  //       log(selectedState!);
+                  //     },
+                  //   ),
+                  // ),
+                  // spaceY(8),
+                  // DropdownButtonHideUnderline(
+                  //   child: DropdownButtonFormField<String>(
+                  //     decoration: _textDecoration(),
+                  //     value: selectedLGA,
+                  //     hint: Text("Select LGA"),
+                  //     items: [
+                  //       ...allLGAs.map(
+                  //         (lga) => DropdownMenuItem(
+                  //           value: lga,
+                  //           child: Text(lga),
+                  //         ),
+                  //       )
+                  //     ],
+                  //     onChanged: (val) {
+                  //       setState(() {
+                  //         selectedLGA = val;
+                  //       });
+                  //     },
+                  //   ),
+                  // ),
                   spaceY(8),
-                  DropdownButtonHideUnderline(
-                    child: DropdownButtonFormField<String>(
-                      decoration: _textDecoration(),
-                      value: selectedLGA,
-                      hint: Text("Select LGA"),
-                      items: [
-                        ...allLGAs.map(
-                          (lga) => DropdownMenuItem(
-                            value: lga,
-                            child: Text(lga),
-                          ),
-                        )
-                      ],
-                      onChanged: (val) {
-                        setState(() {
-                          selectedLGA = val;
-                        });
-                      },
-                    ),
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          context.push(const SelectLocation());
+                        },
+                        borderRadius: BorderRadius.circular(8),
+                        child: Row(
+                          children: [
+                            Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: const Color(0xFFFFADDBB)),
+                                child: const HugeIcon(
+                                  icon: HugeIcons.strokeRoundedLocation01,
+                                  size: 18,
+                                  color: Colors.black,
+                                )),
+                            spaceX(6),
+                            Text(
+                              "Pick location",
+                              style: kTextStyle(15),
+                            ),
+                          ],
+                        ).padAll(7),
+                      ),
+                    ],
                   ),
                   spaceY(8),
                   TextField(
                     controller: addressCtrl,
                     decoration: _textDecoration(hintText: "Address"),
                   ),
+
                   spaceY(8),
                   TextField(
                     controller: propertySizeCtrl,
-                    keyboardType: TextInputType.numberWithOptions(),
+                    keyboardType: const TextInputType.numberWithOptions(),
                     decoration:
                         _textDecoration(hintText: "Property size (sqm)"),
                   ),
@@ -221,7 +264,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                                   (type) => ChoiceChip(
                                     label: Text(type.name),
                                     selected: propertyType == type,
-                                    onSelected: (selected) {
+                                    onSelected: (_) {
                                       setState(() {
                                         propertyType = type;
                                       });
@@ -370,7 +413,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                         decoration: _textDecoration(
                           hintText: "No. of ${feature.name}",
                         ),
-                        keyboardType: TextInputType.numberWithOptions(),
+                        keyboardType: const TextInputType.numberWithOptions(),
                         validator: (text) {
                           if (int.parse(text!).runtimeType != int) {
                             return "Must be an integer";
@@ -387,7 +430,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                   ).padY(15),
                   TextField(
                     controller: priceCtrl,
-                    keyboardType: TextInputType.numberWithOptions(),
+                    keyboardType: const TextInputType.numberWithOptions(),
                     decoration:
                         _textDecoration(hintText: "Price", prefix: '\u20A6 '),
                     inputFormatters: [
@@ -396,7 +439,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                   ),
                   spaceY(8),
                   TextField(
-                    keyboardType: TextInputType.numberWithOptions(),
+                    keyboardType: const TextInputType.numberWithOptions(),
                     controller: agentFeeCtrl,
                     decoration: _textDecoration(
                         hintText: "Agent fee", prefix: '\u20A6 '),
@@ -413,7 +456,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
             label: "List property",
             onTap: () {
               final propertyListing = PropertyListing(
-                id: Uuid().v4(),
+                id: const Uuid().v4(),
                 agentID: 'agentID',
                 address: addressCtrl.text.trim(),
                 propertyType: propertyType,

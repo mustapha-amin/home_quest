@@ -6,12 +6,10 @@ import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/features/btm_nav_bar/client/btm_nav_barC.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/features/user%20setup/views/user_setup.dart';
-import 'package:home_quest/main.dart';
 import 'package:home_quest/models/agent.dart';
 import 'package:home_quest/shared/error_screen.dart';
 import 'package:home_quest/shared/loading_screen.dart';
 
-import '../../../models/client.dart';
 import '../../btm_nav_bar/agent/btm_nav_barA.dart';
 
 class HomeUserDataWrapper extends ConsumerWidget {
@@ -24,16 +22,16 @@ class HomeUserDataWrapper extends ConsumerWidget {
         if (userExists!) {
           return ref.watch(userDataStreamProvider).when(
                 data: (user) {
-                  log(user.runtimeType.toString());
                   if (ref.read(hiveProvider).isEmpty) {
                     ref
                         .read(userCacheNotifierProvider.notifier)
-                        .refreshFromServer(); 
+                        .refreshFromServer();
                   }
-                  return switch (user.runtimeType) {
-                    AgentModel _ => const BtmNavBarA(),
-                     _ => const BtmNavBarC(),
-                  };
+                  if (user.runtimeType == AgentModel) {
+                    return const BtmNavBarA();
+                  } else {
+                    return const BtmNavBarC();
+                  }
                 },
                 error: (e, stk) {
                   log(e.toString());
@@ -43,7 +41,8 @@ class HomeUserDataWrapper extends ConsumerWidget {
                       log(ref.read(hiveProvider).isEmpty.toString());
                     },
                     child: ErrorScreen(
-                      providerToRefresh: userDataStreamProvider,
+                      errorText: e.toString(),
+                      onRefresh: () => ref.invalidate(userDataStreamProvider),
                     ),
                   );
                 },
@@ -53,8 +52,11 @@ class HomeUserDataWrapper extends ConsumerWidget {
           return const UserSetup();
         }
       },
-      error: (_, __) {
-        return ErrorScreen(providerToRefresh: userDataStreamProvider);
+      error: (e, __) {
+        return ErrorScreen(
+          errorText: e.toString(),
+          onRefresh: () => ref.invalidate(userDataExistsProvider),
+        );
       },
       loading: () {
         return const LoadingScreen();

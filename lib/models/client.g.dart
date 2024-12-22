@@ -22,14 +22,13 @@ class ClientModelAdapter extends TypeAdapter<ClientModel> {
       phoneNumber: fields[0] as int,
       profilePicture: fields[3] as String,
       bookmarks: (fields[4] as List).cast<String>(),
-      appointmentIDs: (fields[5] as List).cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, ClientModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.phoneNumber)
       ..writeByte(1)
@@ -39,9 +38,7 @@ class ClientModelAdapter extends TypeAdapter<ClientModel> {
       ..writeByte(3)
       ..write(obj.profilePicture)
       ..writeByte(4)
-      ..write(obj.bookmarks)
-      ..writeByte(5)
-      ..write(obj.appointmentIDs);
+      ..write(obj.bookmarks);
   }
 
   @override

@@ -1,10 +1,9 @@
-import 'dart:developer';
+import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:home_quest/core/providers.dart';
-
 import '../../../core/typedefs.dart';
 
 final authRepoProvider = Provider((ref) {
@@ -27,8 +26,7 @@ class AuthRepository {
         password: password,
       );
       return right(userCred);
-    }
-      on FirebaseAuthException catch (e, _) {
+    } on FirebaseAuthException catch (e, _) {
       String? error;
       if (e.code == 'user-not-found') {
         error = "User not found";
@@ -40,9 +38,11 @@ class AuthRepository {
         error = e.message;
       }
       return left(error!);
+    } on SocketException {
+      return left(
+          "No internet connection was found\nCheck your internet connection and try again");
     }
-    }
-  
+  }
 
   FutureEither<UserCredential> signUp({
     required String email,
@@ -54,7 +54,7 @@ class AuthRepository {
         password: password,
       );
       return right(userCredential);
-    }  on FirebaseAuthException catch (e, _) {
+    } on FirebaseAuthException catch (e, _) {
       String? error;
       if (e.code == 'email-already-in-use') {
         error = "email already in use";
@@ -64,6 +64,9 @@ class AuthRepository {
         error = e.message.toString();
       }
       return left(error);
+    } on SocketException {
+      return left(
+          "No internet connection was found\nCheck your internet connection and try again");
     }
   }
 
@@ -73,6 +76,9 @@ class AuthRepository {
       return right("success");
     } on FirebaseAuthException catch (e, _) {
       return left(e.message!);
+    }on SocketException {
+      return left(
+          "No internet connection was found\nCheck your internet connection and try again");
     }
   }
 
@@ -82,6 +88,9 @@ class AuthRepository {
       return right("success");
     } on FirebaseAuthException catch (e) {
       return left(e.message!);
+    } on SocketException {
+      return left(
+          "No internet connection was found\nCheck your internet connection and try again");
     }
   }
 }

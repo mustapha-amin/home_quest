@@ -16,8 +16,6 @@ class ClientModel extends User {
   final String profilePicture;
   @HiveField(4)
   final List<String> bookmarks;
-  @HiveField(5)
-  final List<String> appointmentIDs;
 
   ClientModel({
     required this.clientID,
@@ -25,13 +23,11 @@ class ClientModel extends User {
     required this.phoneNumber,
     required this.profilePicture,
     required this.bookmarks,
-    required this.appointmentIDs,
   }) : super(
           id: clientID,
           name: name,
           phoneNumber: phoneNumber,
           profilePicture: profilePicture,
-          appointmentIDs: appointmentIDs,
         );
 
   @override
@@ -46,7 +42,6 @@ class ClientModel extends User {
       phoneNumber: 123,
       profilePicture: "profilePicture",
       bookmarks: [],
-      appointmentIDs: [],
     );
   }
 
@@ -58,7 +53,6 @@ class ClientModel extends User {
       'phoneNumber': phoneNumber,
       'profilePicture': profilePicture,
       'bookmarks': bookmarks,
-      'appointmentIDs': appointmentIDs,
     };
   }
   
@@ -69,7 +63,6 @@ class ClientModel extends User {
       phoneNumber: json['phoneNumber'],
       profilePicture: json['profilePicture'],
       bookmarks: List<String>.from(json['bookmarks']),
-      appointmentIDs: List<String>.from(json['appointmentIDs']),
     );
   }
   
@@ -87,7 +80,6 @@ class ClientModel extends User {
       name: name ?? this.name,
       profilePicture: profilePicture ?? this.profilePicture,
       bookmarks: bookmarks ?? this.bookmarks,
-      appointmentIDs: appointmentIDs ?? this.appointmentIDs,
     );
   }
 }

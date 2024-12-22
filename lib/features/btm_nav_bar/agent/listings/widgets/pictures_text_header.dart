@@ -13,7 +13,7 @@ class PicturesTextHeader extends StatelessWidget {
         style: kTextStyle(18, isBold: true),
         children: [
           TextSpan(
-            text: "Add 5 - 20 pictures\nFirst picture is the cover picture",
+            text: "Add 5 - 10 pictures\nFirst picture is the cover picture",
             style: kTextStyle(15),
           ),
         ],

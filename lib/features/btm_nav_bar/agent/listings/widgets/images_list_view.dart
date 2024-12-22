@@ -3,22 +3,28 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 
-class ImagesListView extends StatelessWidget {
-  final List<File> images;
+class ImagesListView extends StatefulWidget {
+  List<File> images;
   final void Function(int index) onCancel;
-  const ImagesListView({
+  ImagesListView({
     required this.images,
     required this.onCancel,
     super.key,
   });
 
   @override
+  State<ImagesListView> createState() => _ImagesListViewState();
+}
+
+class _ImagesListViewState extends State<ImagesListView> {
+  @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView(
         scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
         children: [
-          ...images.map(
+          ...widget.images.map(
             (image) => Stack(
               alignment: Alignment.topRight,
               children: [
@@ -34,13 +40,31 @@ class ImagesListView extends StatelessWidget {
                     ),
                   ),
                 ),
-                IconButton(
-                  onPressed: () => onCancel(images.indexOf(image)),
-                  icon: HugeIcon(
-                    icon: HugeIcons.strokeRoundedCancel01,
-                    color: Colors.black.withOpacity(0.5),
+                Positioned(
+                  right: 8,
+                  top: 8,
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.onCancel(widget.images.indexOf(image));
+                      setState(() {});
+                    },
+                    child: Container(
+                      width: 25,
+                      height: 25,
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).canvasColor.withOpacity(0.7),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
+                        child: HugeIcon(
+                          icon: HugeIcons.strokeRoundedCancel01,
+                          color: Colors.black,
+                          size: 15,
+                        ),
+                      ),
+                    ),
                   ),
-                )
+                ),
               ],
             ),
           )

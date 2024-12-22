@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions/navigations.dart';
-import 'package:home_quest/features/btm_nav_bar/agent/appointments/views/appointments.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/dashboard/view/dashboard.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/views/add_listings.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/profile.dart';
@@ -34,11 +33,9 @@ class BtmNavBarA extends ConsumerStatefulWidget {
 class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
   List<Widget> screensA = const [
     AgentDashboard(),
-    Appointments(),
     Listings(),
     ProfileScreen(),
   ];
-
   List<String> btmNavBarIcons = [
     ImagePaths.house_svg,
     ImagePaths.listing,
@@ -58,16 +55,11 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
       body: screensA[ref.watch(currentAgentScreenProvider)],
-      floatingActionButton: ref.watch(currentAgentScreenProvider) == 1 ||
-              ref.watch(currentAgentScreenProvider) == 2
+      floatingActionButton: ref.watch(currentAgentScreenProvider) == 1
           ? FloatingActionButton(
               elevation: 3,
               onPressed: () {
-                if (ref.watch(currentAgentScreenProvider) == 1) {
-                  context.push(const AddListings());
-                } else {
-                  context.push(const Appointments());
-                }
+                context.push(const AddListings());
               },
               child: const HugeIcon(
                   icon: HugeIcons.strokeRoundedAdd01, color: Colors.black),
@@ -97,22 +89,11 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
             ),
             label: "Dashboard",
           ),
-          ...screensA
-              .where((screen) =>
-                  screensA.indexOf(screen) < 3 && screensA.indexOf(screen) > 0)
-              .map((screen) {
-            return BottomNavigationBarItem(
-              icon: screensA.indexOf(screen) ==
-                      ref.watch(currentAgentScreenProvider)
-                  ? svgImage(
-                      btmNavBarIconsFilled[screensA.indexOf(screen)], true)
-                  : svgImage(btmNavBarIcons[screensA.indexOf(screen)], false),
-              label: switch (screensA.indexOf(screen)) {
-                1 => "Listings",
-                _ => "Appointments",
-              },
-            );
-          }),
+          BottomNavigationBarItem(
+              icon: ref.watch(currentAgentScreenProvider) == 1
+                  ? svgImage(btmNavBarIconsFilled[1], true)
+                  : svgImage(btmNavBarIcons[1], false),
+              label: "Listings"),
           BottomNavigationBarItem(
             label: "Profile",
             icon: UserAvatar(

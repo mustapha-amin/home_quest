@@ -5,8 +5,9 @@ import 'package:hugeicons/hugeicons.dart';
 import '../core/utils/textstyle.dart';
 
 class ErrorScreen extends ConsumerWidget {
-  final ProviderBase providerToRefresh;
-  const ErrorScreen({required this.providerToRefresh, super.key});
+  final String errorText;
+  final VoidCallback onRefresh;
+  const ErrorScreen({required this.errorText, required this.onRefresh, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -16,7 +17,7 @@ class ErrorScreen extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const HugeIcon(
-              icon: HugeIcons.strokeRoundedWifiDisconnected01,
+              icon: HugeIcons.strokeRoundedWifiError01,
               color: Colors.red,
               size: 150,
             ),
@@ -27,7 +28,7 @@ class ErrorScreen extends ConsumerWidget {
                 children: [
                   TextSpan(
                     text:
-                        "No internet connection was found\nCheck your internet connection and try again",
+                       errorText,
                     style: kTextStyle(15),
                   )
                 ],
@@ -35,9 +36,7 @@ class ErrorScreen extends ConsumerWidget {
               textAlign: TextAlign.center,
             ),
             TextButton.icon(
-              onPressed: () {
-                ref.invalidate(providerToRefresh);
-              },
+              onPressed: onRefresh,
               label: Text(
                 "Refresh",
                 style: kTextStyle(16, color: Colors.blue),
