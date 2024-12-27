@@ -17,49 +17,52 @@ final isExpanded = StateProvider.autoDispose((ref) {
 });
 
 final geolocationNotifierProvider =
-    StateNotifierProvider<GeoLocationNotifier, bool>((ref) {
+    StateNotifierProvider<GeoLocationNotifier, (GeoLocation?, bool)>((ref) {
   return GeoLocationNotifier();
 });
 
-class GeoLocationNotifier extends StateNotifier<bool> {
-  GeoLocationNotifier() : super(false);
+class GeoLocationNotifier extends StateNotifier<(GeoLocation?, bool)> {
+  GeoLocationNotifier() : super((null, false));
 
-  Future<GeoLocation?> forwardCoding(BuildContext context, String query) async {
-    state = true;
+  Future<void> forwardCoding(BuildContext context, String query) async {
+    state = (null, true);
     try {
-      return await GeocodingService.forwardCoding(query);
+      final location = await GeocodingService.forwardCoding(query);
+      log(location.toString());
+      state = (location, false);
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
-      return null;
     } finally {
-      state = false;
+      state = (state.$1, false);
     }
   }
 
-  Future<GeoLocation?> reverseCoding(
-      BuildContext context, LatLng latlng) async {
-    state = true;
+  Future<void> reverseCoding(BuildContext context, LatLng latlng) async {
+    state = (null, true);
     try {
-      return await GeocodingService.reverseCoding(latlng);
+      final location = await GeocodingService.reverseCoding(latlng);
+      log(location.toString());
+      state = (location, false);
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.toString())));
-      return null;
     } finally {
-      state = false;
+      state = (state.$1, false);
     }
   }
 }
 
 class HeaderWidgets extends ConsumerWidget {
   final VoidCallback onSave;
+  final void Function(GeoLocation? geoLocation) onSearch;
   final TextEditingController searchCtrl;
   final FocusNode focusNode;
   const HeaderWidgets({
     required this.onSave,
     required this.searchCtrl,
     required this.focusNode,
+    required this.onSearch,
     super.key,
   });
 
@@ -67,7 +70,7 @@ class HeaderWidgets extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(geolocationNotifierProvider, (prev, next) {
       if (prev != next) {
-        toggleLoading(ref, next);
+        toggleLoading(ref, next.$2);
       }
     });
     return Positioned(
@@ -110,12 +113,13 @@ class HeaderWidgets extends ConsumerWidget {
                 textInputAction: TextInputAction.search,
                 onSubmitted: (value) async {
                   if (value.isNotEmpty) {
-                    try {
-                      final location = await ref
-                          .read(geolocationNotifierProvider.notifier)
-                          .forwardCoding(context, value);
-                      log(location.toString());
-                    } catch (e) {}
+                    await ref
+                        .read(geolocationNotifierProvider.notifier)
+                        .forwardCoding(context, value);
+                    ref.read(isExpanded.notifier).state = false;
+                    if (ref.watch(geolocationNotifierProvider).$1 != null) {
+                      onSearch(ref.watch(geolocationNotifierProvider).$1);
+                    }
                   }
                 },
                 hintStyle: WidgetStatePropertyAll(
@@ -130,7 +134,7 @@ class HeaderWidgets extends ConsumerWidget {
                       ref.read(isExpanded.notifier).state = false;
                       searchCtrl.clear();
                     },
-                    child: HugeIcon(
+                    child: const HugeIcon(
                       icon: HugeIcons.strokeRoundedCancel01,
                       color: AppColors.brown,
                       size: 28,
@@ -150,9 +154,9 @@ class HeaderWidgets extends ConsumerWidget {
                       Future.delayed(Duration(milliseconds: 10),
                           () => focusNode.requestFocus());
                     },
-                    icon: HugeIcon(
+                    icon: const HugeIcon(
                       icon: HugeIcons.strokeRoundedSearch01,
-                      color: const Color.fromARGB(255, 4, 4, 3),
+                      color: Color.fromARGB(255, 4, 4, 3),
                       size: 28,
                     ),
                   ),

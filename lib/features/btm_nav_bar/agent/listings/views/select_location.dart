@@ -1,17 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:home_quest/core/extensions/navigations.dart';
 import 'package:home_quest/core/extensions/widget_exts.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/widgets/header_widgets.dart';
-import 'package:home_quest/models/geolocation.dart';
-import 'package:home_quest/services/geocoding_service.dart';
-import 'package:hugeicons/hugeicons.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart' as loc;
 
@@ -86,114 +83,119 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(geolocationNotifierProvider, (prev, next) {
+      if (prev != next) {
+        toggleLoading(ref, next.$2);
+      }
+    });
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,
         children: [
-          // ref.watch(userLocationProvider).when(
-          //   data: (data) {
-          //     currentPosition = LatLng(data.latitude!, data.longitude!);
-          //     locationMarkerPosStream.sink.add(
-          //       LocationMarkerPosition(
-          //         latitude: currentPosition!.latitude,
-          //         longitude: currentPosition!.longitude,
-          //         accuracy: 1,
-          //       ),
-          //     );
-          //     return Stack(
-          //       alignment: Alignment.bottomCenter,
-          //       children: [
-          //         FlutterMap(
-          //           mapController: mapController,
-          //           options: MapOptions(
-          //               initialCenter: currentPosition!,
-          //               initialZoom: 9,
-          //               minZoom: 6,
-          //               cameraConstraint: CameraConstraint.containCenter(
-          //                   bounds: nigeriaBounds!),
-          //               onPositionChanged: (camera, moving) {
-          //                 locationMarkerPosStream.sink.add(
-          //                   LocationMarkerPosition(
-          //                     latitude: camera.center.latitude,
-          //                     longitude: camera.center.longitude,
-          //                     accuracy: 1,
-          //                   ),
-          //                 );
-          //               },
-          //               onMapEvent: (event) {
-          //                 if (event.source == MapEventSource.onDrag) {
-          //                   ref.read(mapIsMovingProvider.notifier).state = true;
-          //                   log("moving");
-          //                 } else if (event.source == MapEventSource.dragEnd) {
-          //                   ref.read(mapIsMovingProvider.notifier).state =
-          //                       false;
-          //                   log("stopped");
-          //                 }
-          //               }),
-          //           children: [
-          //             TileLayer(
-          //               urlTemplate:
-          //                   'https://api.mapbox.com/styles/v1/mustyameen/cm4tu2iyy002r01s18ylrerzd/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg',
-          //               userAgentPackageName: 'com.mustapha.homequest',
-          //               additionalOptions: const {
-          //                 "accessToken":
-          //                     "pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg",
-          //                 "id":
-          //                     "mapbox://styles/mustyameen/cm4tu2iyy002r01s18ylrerzd"
-          //               },
-          //             ),
-          //             PolygonLayer(
-          //               polygons: [
-          //                 ...nigerianMapBounds.map(
-          //                   (points) => Polygon(
-          //                     points: points,
-          //                     borderColor: Colors.green,
-          //                     borderStrokeWidth: 6.0,
-          //                     color: Colors.green.withOpacity(0.1),
-          //                   ),
-          //                 )
-          //               ],
-          //             ),
-          //             StreamBuilder(
-          //               stream: locationMarkerPosStream.stream,
-          //               builder: (context, snapshot) {
-          //                 if (snapshot.hasData) {
-          //                   return LocationMarkerLayer(
-          //                     position: snapshot.data!,
-          //                   );
-          //                 } else {
-          //                   return const SizedBox();
-          //                 }
-          //               },
-          //             ),
-          //           ],
-          //         ),
-          //         Consumer(builder: (context, ref, _) {
-          //           bool mapIsMoving = ref.watch(mapIsMovingProvider);
-          //           return !mapIsMoving
-          //               ? const Positioned(
-          //                   bottom: 20,
-          //                   child: MappingHintWidget(),
-          //                 )
-          //               : const SizedBox();
-          //         }),
-          //       ],
-          //     );
-          //   },
-          //   error: (e, _) {
-          //     return const Center(
-          //       child: Text("An Error occured"),
-          //     );
-          //   },
-          //   loading: () {
-          //     return const Center(
-          //       child: SpinKitWaveSpinner(
-          //         color: AppColors.brown,
-          //         size: 80,
-          //       ),
-          //     );
-          //   },
-          // // ),
+          ref.watch(userLocationProvider).when(
+            data: (data) {
+              currentPosition = LatLng(data.latitude!, data.longitude!);
+              locationMarkerPosStream.sink.add(
+                LocationMarkerPosition(
+                  latitude: currentPosition!.latitude,
+                  longitude: currentPosition!.longitude,
+                  accuracy: 1,
+                ),
+              );
+              return Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  FlutterMap(
+                    mapController: mapController,
+                    options: MapOptions(
+                        initialCenter: currentPosition!,
+                        initialZoom: 9,
+                        minZoom: 6,
+                        cameraConstraint: CameraConstraint.containCenter(
+                            bounds: nigeriaBounds!),
+                        onPositionChanged: (camera, moving) {
+                          locationMarkerPosStream.sink.add(
+                            LocationMarkerPosition(
+                              latitude: camera.center.latitude,
+                              longitude: camera.center.longitude,
+                              accuracy: 1,
+                            ),
+                          );
+                        },
+                        onMapEvent: (event) {
+                          if (event.source == MapEventSource.onDrag) {
+                            ref.read(mapIsMovingProvider.notifier).state = true;
+                            log("moving");
+                          } else if (event.source == MapEventSource.dragEnd) {
+                            ref.read(mapIsMovingProvider.notifier).state =
+                                false;
+                            log("stopped");
+                          }
+                        }),
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            'https://api.mapbox.com/styles/v1/mustyameen/cm4tu2iyy002r01s18ylrerzd/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg',
+                        userAgentPackageName: 'com.mustapha.homequest',
+                        additionalOptions: const {
+                          "accessToken":
+                              "pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg",
+                          "id":
+                              "mapbox://styles/mustyameen/cm4tu2iyy002r01s18ylrerzd"
+                        },
+                      ),
+                      PolygonLayer(
+                        polygons: [
+                          ...nigerianMapBounds.map(
+                            (points) => Polygon(
+                              points: points,
+                              borderColor: Colors.green,
+                              borderStrokeWidth: 6.0,
+                              color: Colors.green.withOpacity(0.1),
+                            ),
+                          )
+                        ],
+                      ),
+                      StreamBuilder(
+                        stream: locationMarkerPosStream.stream,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return LocationMarkerLayer(
+                              position: snapshot.data!,
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  Consumer(builder: (context, ref, _) {
+                    bool mapIsMoving = ref.watch(mapIsMovingProvider);
+                    return !mapIsMoving
+                        ? const Positioned(
+                            bottom: 20,
+                            child: MappingHintWidget(),
+                          )
+                        : const SizedBox();
+                  }),
+                ],
+              );
+            },
+            error: (e, _) {
+              return const Center(
+                child: Text("An Error occured"),
+              );
+            },
+            loading: () {
+              return const Center(
+                child: SpinKitWaveSpinner(
+                  color: AppColors.brown,
+                  size: 80,
+                ),
+              );
+            },
+          ),
           if (ref.watch(isLoadingProvider))
             Center(
               child: Card(
@@ -206,7 +208,24 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
           HeaderWidgets(
             searchCtrl: searchController,
             focusNode: focusNode,
-            onSave: () {},
+            onSave: () async {
+              await ref
+                  .read(geolocationNotifierProvider.notifier)
+                  .reverseCoding(context, mapController.camera.center);
+              if (ref.watch(geolocationNotifierProvider).$1 != null) {
+                context.pop();
+              }
+            },
+            onSearch: (location) {
+              mapController.move(LatLng(location!.lat!, location.lng!), 13);
+              locationMarkerPosStream.sink.add(
+                LocationMarkerPosition(
+                  latitude: location.lat!,
+                  longitude: location.lng!,
+                  accuracy: 1,
+                ),
+              );
+            },
           ),
         ],
       ),
