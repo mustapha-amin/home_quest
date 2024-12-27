@@ -2,19 +2,17 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'user.dart';
 
-part 'client.g.dart';
-
 @HiveType(typeId: 1)
 class ClientModel extends User {
-  @HiveField(0)
+  
   final int phoneNumber;
-  @HiveField(1)
+  
   final String clientID;
-  @HiveField(2)
+  
   final String name;
-  @HiveField(3)
+  
   final String profilePicture;
-  @HiveField(4)
+  
   final List<String> bookmarks;
 
   ClientModel({

@@ -22,11 +22,6 @@ class HomeUserDataWrapper extends ConsumerWidget {
         if (userExists!) {
           return ref.watch(userDataStreamProvider).when(
                 data: (user) {
-                  if (ref.read(hiveProvider).isEmpty) {
-                    ref
-                        .read(userCacheNotifierProvider.notifier)
-                        .refreshFromServer();
-                  }
                   if (user.runtimeType == AgentModel) {
                     return const BtmNavBarA();
                   } else {

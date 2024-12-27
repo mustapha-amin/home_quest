@@ -1,23 +1,18 @@
 // ignore_for_file: annotate_overrides, overridden_fields
-import 'package:hive_flutter/hive_flutter.dart';
 
 import 'user.dart';
 
-part 'agent.g.dart';
-
-@HiveType(typeId: 0)
 class AgentModel extends User {
-  @HiveField(0)
   final int phoneNumber;
-  @HiveField(1)
+  
   final String agentID;
-  @HiveField(2)
+  
   final String name;
-  @HiveField(3)
+  
   final String profilePicture;
-  @HiveField(4)
+  
   final List<String> listingsIDs;
-  @HiveField(6)
+  
   final double rating;
 
   AgentModel({

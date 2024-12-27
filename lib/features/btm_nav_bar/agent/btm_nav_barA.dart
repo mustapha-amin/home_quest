@@ -4,6 +4,7 @@ import 'package:home_quest/core/extensions/navigations.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/dashboard/view/dashboard.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/views/add_listings.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/profile.dart';
+import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:sizer/sizer.dart';
 
@@ -97,7 +98,11 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
           BottomNavigationBarItem(
             label: "Profile",
             icon: UserAvatar(
-              url: ref.watch(userCacheNotifierProvider)!.profilePicture,
+              url: ref
+                  .watch(userDataStreamProvider)
+                  .asData!
+                  .value!
+                  .profilePicture,
               height: 7.w,
               width: 7.w,
             ),

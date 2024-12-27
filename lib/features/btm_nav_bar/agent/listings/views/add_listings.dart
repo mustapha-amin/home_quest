@@ -16,13 +16,16 @@ import 'package:home_quest/models/property_listing.dart';
 import 'package:home_quest/shared/custom_button.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:nigerian_states_and_lga/nigerian_states_and_lga.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
 import '../widgets/pictures_text_header.dart';
 
 final pickedImagesCtrl = AutoDisposeStateProvider<List<File>>((ref) {
   return [];
+});
+
+final selectedLocationProvider = StateProvider<String?>((ref) {
+  return null;
 });
 
 InputDecoration _textDecoration({
@@ -153,51 +156,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                     "Location",
                     style: kTextStyle(18, isBold: true),
                   ),
-                  // spaceY(10),
-                  // DropdownButtonHideUnderline(
-                  //   child: DropdownButtonFormField(
-                  //     decoration: _textDecoration(),
-                  //     value: selectedState,
-                  //     items: [
-                  //       ...NigerianStatesAndLGA.allStates.map(
-                  //         (state) => DropdownMenuItem(
-                  //           value: state,
-                  //           child: Text(state),
-                  //         ),
-                  //       )
-                  //     ],
-                  //     hint: Text("Select state"),
-                  //     onChanged: (val) {
-                  //       setState(() {
-                  //         selectedState = val;
-                  //         allLGAs = NigerianStatesAndLGA.getStateLGAs(val!);
-                  //         selectedLGA = allLGAs[0];
-                  //       });
-                  //       log(selectedState!);
-                  //     },
-                  //   ),
-                  // ),
-                  // spaceY(8),
-                  // DropdownButtonHideUnderline(
-                  //   child: DropdownButtonFormField<String>(
-                  //     decoration: _textDecoration(),
-                  //     value: selectedLGA,
-                  //     hint: Text("Select LGA"),
-                  //     items: [
-                  //       ...allLGAs.map(
-                  //         (lga) => DropdownMenuItem(
-                  //           value: lga,
-                  //           child: Text(lga),
-                  //         ),
-                  //       )
-                  //     ],
-                  //     onChanged: (val) {
-                  //       setState(() {
-                  //         selectedLGA = val;
-                  //       });
-                  //     },
-                  //   ),
-                  // ),
+  
                   spaceY(8),
                   Row(
                     children: [
