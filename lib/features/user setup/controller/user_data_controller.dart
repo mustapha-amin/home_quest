@@ -26,9 +26,9 @@ final userDataStreamProvider = StreamProvider<User?>((ref) {
   return ref.watch(userDataRepoProvider).fetchUserData();
 });
 
-final userDataFutureProvider = FutureProvider((ref) async {
-  return ref.watch(userDataRepoProvider).fetchUserDataFuture();
-});
+// final userDataFutureProvider = FutureProvider((ref) async {
+//   return ref.watch(userDataRepoProvider).fetchUserDataFuture();
+// });
 
 class UserDataNotifier extends Notifier<User?> {
   @override

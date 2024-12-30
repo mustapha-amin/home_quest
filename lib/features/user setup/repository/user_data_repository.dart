@@ -13,6 +13,8 @@ import 'package:home_quest/models/agent.dart';
 import 'package:home_quest/models/client.dart';
 import 'package:home_quest/models/user.dart' as k;
 
+import '../../../core/utils/appwrite_image_upload.dart';
+
 final userDataRepoProvider = Provider((ref) {
   return UserDataRepository(
     firebaseFirestore: ref.watch(firestoreProvider),
@@ -34,7 +36,7 @@ class UserDataRepository {
   FutureVoid saveUserData(k.User user, File? image) async {
     try {
       final imageUrl =
-          await uploadImage(image!, ImageBucketIDs.profilePictures);
+          await uploadImage(storage, image!, ImageBucketIDs.profilePictures);
       if (user is ClientModel) {
         ClientModel clientModel = user.copyWith(
             profilePicture: imageUrl, clientID: firebaseAuth.currentUser!.uid);
@@ -64,21 +66,6 @@ class UserDataRepository {
       await firebaseFirestore.collection(collection).doc(id).update(data);
     } on FirebaseException catch (e) {
       throw Exception(e.toString());
-    }
-  }
-
-  Future<String> uploadImage(File file, String bucketId) async {
-    try {
-      final imageUrl = await storage.createFile(
-        bucketId: bucketId,
-        fileId: ID.unique(),
-        file: InputFile.fromPath(
-            path: file.path, filename: file.path.split('/').last),
-      );
-      return genImageUrl(imageUrl.$id, bucketId);
-    } on AppwriteException catch (e) {
-      log(e.toString());
-      throw Exception("Error uploading image");
     }
   }
 

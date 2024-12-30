@@ -44,22 +44,14 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   TextEditingController phoneCtrl = TextEditingController();
   File? pickedImage;
 
-  @override
-  initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      nameCtrl.text = ref.read(userCacheNotifierProvider)!.name;
-      phoneCtrl.text = "${ref.read(userCacheNotifierProvider)!.phoneNumber}";
-    });
-  }
 
   bool nameChanged() {
-    return nameCtrl.text.trim() != ref.watch(userCacheNotifierProvider)!.name;
+    return nameCtrl.text.trim() != ref.watch(userDataStreamProvider).value!.name;
   }
 
   bool phoneChanged() {
     return int.parse(phoneCtrl.text.trim()) !=
-        ref.watch(userCacheNotifierProvider)!.phoneNumber;
+        ref.watch(userDataStreamProvider).value!.phoneNumber;
   }
 
   @override
@@ -76,7 +68,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
             onPressed: () async {
               if (nameChanged() || phoneChanged() || pickedImage != null) {
                 try {
-                  User? user = ref.read(userCacheNotifierProvider);
+                  User? user = ref.read(userDataStreamProvider).value;
                   if (user is ClientModel) {
                     user = user.copyWith(
                         name: nameCtrl.text.trim(),
@@ -85,21 +77,15 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                       await ref
                           .read(userRemoteDataProvider.notifier)
                           .saveUserData(context, user, pickedImage);
-                      await ref
-                          .read(userCacheNotifierProvider.notifier)
-                          .refreshFromServer();
                     } else {
                       await ref
                           .read(userRemoteDataProvider.notifier)
                           .updateField(
                               context,
                               'clients',
-                              ref.watch(userCacheNotifierProvider)!.id,
+                              ref.watch(firebaseAuthProvider).currentUser!.uid,
                               user.toJson());
                       context.pop();
-                      await ref
-                          .read(userCacheNotifierProvider.notifier)
-                          .refreshFromServer();
                     }
                   } else {
                     user = (user as AgentModel).copyWith(
@@ -115,12 +101,9 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                           .updateField(
                               context,
                               'agents',
-                              ref.watch(userCacheNotifierProvider)!.id,
+                              ref.watch(firebaseAuthProvider).currentUser!.uid,
                               user.toJson());
                       context.pop();
-                      await ref
-                          .read(userCacheNotifierProvider.notifier)
-                          .refreshFromServer();
                     }
                   }
                 } catch (e) {
@@ -196,8 +179,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                               )
                             : UserAvatar(
                                 url: ref
-                                    .watch(userCacheNotifierProvider)!
-                                    .profilePicture,
+                                    .watch(userDataStreamProvider)
+                                    .value!.profilePicture,
                                 height: 40.w,
                                 width: 40.w,
                               ),

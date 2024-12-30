@@ -15,7 +15,6 @@ import 'package:home_quest/features/btm_nav_bar/shared/profile/widgets/profile_c
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/main.dart';
 import 'package:home_quest/models/client.dart';
-import 'package:home_quest/services/user_data_cache.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:sizer/sizer.dart';
 
@@ -91,13 +90,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ProfileCard(
                         text: "Help",
                         icon: HugeIcons.strokeRoundedHelpCircle,
-                        onTap: () {
-                          log(ref
-                              .watch(userDataCacheProvider)
-                              .getUserData()
-                              .runtimeType
-                              .toString());
-                        },
                       ),
                       ProfileCard(
                         text: "Account",
@@ -131,10 +123,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           .read(authControllerProvider.notifier)
                                           .signOut(context, ref,
                                               user is ClientModel);
-                                      await ref
-                                          .read(userCacheNotifierProvider
-                                              .notifier)
-                                          .deleteData();
+                                     
                                     },
                                     child: Text(
                                       "Yes",

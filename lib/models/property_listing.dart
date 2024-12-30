@@ -1,18 +1,19 @@
-import 'package:home_quest/models/listing_feature.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../core/enums.dart';
 
 class PropertyListing {
-  final String id, agentID, address;
+  final String id, agentID, address, state, lga;
   final double price, agentFee, propertySize;
+  final int bedrooms, kitchens, toilets, sittingRooms;
   final ListingType listingType;
   final PropertyType propertyType;
   final List<String> imagesUrls;
   final Furnishing furnishing;
   final Condition condition;
   final PropertySubtype propertySubtype;
-  final List<ListingFeature> features;
   final List<Facility> facilities;
+  final GeoPoint geoPoint;
 
   PropertyListing({
     required this.id,
@@ -24,16 +25,22 @@ class PropertyListing {
     required this.agentFee,
     required this.listingType,
     required this.imagesUrls,
-    required this.features,
+    required this.bedrooms,
+    required this.kitchens,
+    required this.toilets,
+    required this.sittingRooms,
     required this.condition,
     required this.facilities,
     required this.furnishing,
     required this.propertySubtype,
+    required this.geoPoint,
+    required this.state,
+    required this.lga,
   });
 
   @override
   String toString() {
-    return "$id $agentID $address $propertyType $propertySize $price $agentFee $listingType $imagesUrls $features $condition $facilities $furnishing $propertySubtype";
+    return "$id $agentID $address $propertyType $propertySize $state $lga $price $agentFee $listingType $imagesUrls $bedrooms $kitchens $toilets $sittingRooms $condition $facilities $furnishing $propertySubtype ${geoPoint.toString()}";
   }
 
   // Convert PropertyListing to JSON
@@ -48,11 +55,17 @@ class PropertyListing {
       'agentFee': agentFee,
       'listingType': listingType.name,
       'imagesUrls': imagesUrls,
-      'features': features.map((feature) => feature.toJson()).toList(),
+      'bedrooms': bedrooms,
+      'sittingRooms' : sittingRooms,
+      'kitchens' : kitchens,
+      'toilets' : toilets,
       'condition': condition.name,
       'facilities': facilities.map((facility) => facility).toList(),
       'furnishing': furnishing.name,
       'propertySubtype': propertySubtype.name,
+      'geoPoint' : geoPoint,
+      'state' : state,
+      'lga' : lga,
     };
   }
 
@@ -68,15 +81,64 @@ class PropertyListing {
       agentFee: json['agentFee'].toDouble(),
       listingType: ListingType.values.byName(json['listingType']),
       imagesUrls: List<String>.from(json['imagesUrls']),
-      features: (json['features'] as List)
-          .map((feature) => ListingFeature.fromJson(feature))
-          .toList(),
+      bedrooms: json['bedrooms'],
+      sittingRooms: json['sittingRooms'],
+      toilets: json['toilets'],
+      kitchens: json['kitchens'],
       condition: Condition.values.byName(json['condition']),
       facilities: (json['facilities'] as List<String>)
           .map((facility) => Facility.values.byName(facility))
           .toList(),
       furnishing: Furnishing.values.byName(json['furnishing']),
       propertySubtype: PropertySubtype.values.byName(json['propertySubtype']),
+      geoPoint: json['geoPoint'],
+      state: json['state'],
+      lga: json['lga'],
+    );
+  }
+
+  PropertyListing copyWith({
+    String? id,
+    String? agentID,
+    String? address,
+    double? price,
+    double? agentFee,
+    double? propertySize,
+    ListingType? listingType,
+    PropertyType? propertyType,
+    List<String>? imagesUrls,
+    Furnishing? furnishing,
+    Condition? condition,
+    PropertySubtype? propertySubtype,
+    int? bedrooms,
+    int? toilets,
+    int? kitchens,
+    int? sittingRooms,
+    GeoPoint? geoPoint,
+    String? state,
+    String? lga
+  }) {
+    return PropertyListing(
+      id: id ?? this.id,
+      agentID: agentID ?? this.agentID,
+      address: address ?? this.address,
+      price: price ?? this.price,
+      agentFee: agentFee ?? this.agentFee,
+      propertySize: propertySize ?? this.propertySize,
+      listingType: listingType ?? this.listingType,
+      propertyType: propertyType ?? this.propertyType,
+      imagesUrls: imagesUrls ?? this.imagesUrls,
+      furnishing: furnishing ?? this.furnishing,
+      condition: condition ?? this.condition,
+      propertySubtype: propertySubtype ?? this.propertySubtype,
+      toilets: toilets ?? this.toilets,
+      kitchens: kitchens ?? this.kitchens,
+      sittingRooms: sittingRooms ?? this.sittingRooms,
+      bedrooms: bedrooms ?? this.bedrooms,
+      facilities: facilities ?? this.facilities,
+      geoPoint: geoPoint ?? this.geoPoint,
+      state: state ?? this.state,
+      lga: lga ?? this.lga,
     );
   }
 }

@@ -83,7 +83,7 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC> {
           BottomNavigationBarItem(
             label: "Profile",
             icon: UserAvatar(
-              url: ref.watch(userCacheNotifierProvider)!.profilePicture,
+              url: ref.watch(userDataStreamProvider)!.value!.profilePicture,
               height: 7.w,
               width: 7.w,
             ),

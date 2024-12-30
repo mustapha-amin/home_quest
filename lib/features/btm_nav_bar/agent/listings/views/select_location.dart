@@ -8,7 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:home_quest/core/extensions/navigations.dart';
 import 'package:home_quest/core/extensions/widget_exts.dart';
+import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/widgets/header_widgets.dart';
+import 'package:home_quest/shared/loading_indicator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart' as loc;
 
@@ -19,14 +21,6 @@ import '../widgets/mapping_hint_widget.dart';
 final userLocationProvider = FutureProvider((ref) async {
   return await loc.Location.instance.getLocation();
 });
-
-final isLoadingProvider = StateProvider((ref) {
-  return false;
-});
-
-void toggleLoading(WidgetRef ref, bool isLoading) {
-  ref.read(isLoadingProvider.notifier).state = isLoading;
-}
 
 final mapIsMovingProvider = StateProvider.autoDispose((ref) {
   return false;
@@ -85,7 +79,7 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
   Widget build(BuildContext context) {
     ref.listen(geolocationNotifierProvider, (prev, next) {
       if (prev != next) {
-        toggleLoading(ref, next.$2);
+        toggleGlobalLoadingIndicator(ref, next.$2);
       }
     });
     return Scaffold(
@@ -196,15 +190,7 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
               );
             },
           ),
-          if (ref.watch(isLoadingProvider))
-            Center(
-              child: Card(
-                child: const SpinKitWaveSpinner(
-                  color: AppColors.brown,
-                  size: 80,
-                ).padAll(6),
-              ),
-            ),
+          if (ref.watch(isLoadingProvider)) const LoadingIndicator(),
           HeaderWidgets(
             searchCtrl: searchController,
             focusNode: focusNode,

@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/features/btm_nav_bar/client/btm_nav_barC.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/features/user%20setup/views/user_setup.dart';
@@ -31,14 +30,9 @@ class HomeUserDataWrapper extends ConsumerWidget {
                 error: (e, stk) {
                   log(e.toString());
                   log(stk.toString());
-                  return GestureDetector(
-                    onTap: () {
-                      log(ref.read(hiveProvider).isEmpty.toString());
-                    },
-                    child: ErrorScreen(
-                      errorText: e.toString(),
-                      onRefresh: () => ref.invalidate(userDataStreamProvider),
-                    ),
+                  return ErrorScreen(
+                    errorText: e.toString(),
+                    onRefresh: () => ref.invalidate(userDataStreamProvider),
                   );
                 },
                 loading: () => const LoadingScreen(),

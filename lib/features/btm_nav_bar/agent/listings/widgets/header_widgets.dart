@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions/widget_exts.dart';
+import 'package:home_quest/core/providers.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -10,7 +11,6 @@ import '../../../../../core/colors.dart';
 import '../../../../../core/utils/textstyle.dart';
 import '../../../../../models/geolocation.dart';
 import '../../../../../services/geocoding_service.dart';
-import '../views/select_location.dart';
 
 final isExpanded = StateProvider.autoDispose((ref) {
   return false;
@@ -70,7 +70,7 @@ class HeaderWidgets extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(geolocationNotifierProvider, (prev, next) {
       if (prev != next) {
-        toggleLoading(ref, next.$2);
+        toggleGlobalLoadingIndicator(ref, next.$2);
       }
     });
     return Positioned(
