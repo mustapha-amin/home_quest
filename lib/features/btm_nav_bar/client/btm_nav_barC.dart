@@ -5,7 +5,7 @@ import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/image_path.dart';
 import 'package:home_quest/core/utils/svg_util.dart';
 import 'package:home_quest/features/btm_nav_bar/client/favorites/favorites.dart';
-import 'package:home_quest/features/btm_nav_bar/client/home/home.dart';
+import 'package:home_quest/features/btm_nav_bar/client/home/views/home.dart';
 import 'package:home_quest/features/btm_nav_bar/client/search/search.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/profile.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';

@@ -17,7 +17,6 @@ final appWriteClientProvider = Provider((ref) {
 
 final appwriteStorageProvider = Provider((ref) {
   final storage = Storage(ref.watch(appWriteClientProvider));
-
   return storage;
 });
 
@@ -33,7 +32,7 @@ final firestoreProvider = Provider((ref) {
   return FirebaseFirestore.instance;
 });
 
-final isLoadingProvider = StateProvider.autoDispose((ref) {
+final isLoadingProvider = StateProvider((ref) {
   return false;
 });
 

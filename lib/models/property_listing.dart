@@ -60,7 +60,7 @@ class PropertyListing {
       'kitchens' : kitchens,
       'toilets' : toilets,
       'condition': condition.name,
-      'facilities': facilities.map((facility) => facility).toList(),
+      'facilities': facilities.map((facility) => facility.name).toList(),
       'furnishing': furnishing.name,
       'propertySubtype': propertySubtype.name,
       'geoPoint' : geoPoint,

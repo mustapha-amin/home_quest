@@ -15,7 +15,7 @@ import 'package:home_quest/features/btm_nav_bar/client/btm_nav_barC.dart';
 import 'package:home_quest/features/user%20setup/views/user_type.dart';
 
 import '../../../main.dart';
-import '../../btm_nav_bar/client/home/home.dart';
+import '../../btm_nav_bar/client/home/views/home.dart';
 
 final authControllerProvider =
     StateNotifierProvider<AuthController, bool>((ref) {

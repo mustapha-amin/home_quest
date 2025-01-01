@@ -55,9 +55,18 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    User? user = ref.read(userDataStreamProvider).value;
+    nameCtrl.text = user!.name;
+    phoneCtrl.text = user.phoneNumber.toString();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text(
           "Edit profile",
           style: kTextStyle(20),

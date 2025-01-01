@@ -7,7 +7,6 @@ import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:home_quest/core/extensions/navigations.dart';
-import 'package:home_quest/core/extensions/widget_exts.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/widgets/header_widgets.dart';
 import 'package:home_quest/shared/loading_indicator.dart';
@@ -77,11 +76,6 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen(geolocationNotifierProvider, (prev, next) {
-      if (prev != next) {
-        toggleGlobalLoadingIndicator(ref, next.$2);
-      }
-    });
     return Scaffold(
       body: Stack(
         alignment: Alignment.center,
