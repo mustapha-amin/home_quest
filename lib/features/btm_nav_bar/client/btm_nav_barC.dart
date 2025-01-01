@@ -4,11 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/image_path.dart';
 import 'package:home_quest/core/utils/svg_util.dart';
+import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/btm_nav_bar/client/favorites/favorites.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/views/home.dart';
 import 'package:home_quest/features/btm_nav_bar/client/search/search.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/profile.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
+import 'package:home_quest/shared/spacing.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:sizer/sizer.dart';
 
@@ -56,8 +58,20 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        forceMaterialTransparency: true,
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text("HomeQuest", style: kTextStyle(18)),
+            spaceX(4),
+            Image.asset(ImagePaths.homeLogo, height: 30),
+          ],
+        ),
       ),
-      body: screens[ref.watch(currentScreenProvider)],
+      body: IndexedStack(
+        index: ref.watch(currentScreenProvider),
+        children: screens,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: ref.watch(currentScreenProvider),
         onTap: (value) {
@@ -70,11 +84,15 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC> {
                 : svgImage(btmNavBarIcons[0], false),
             label: "Home",
           ),
-           BottomNavigationBarItem(
-            icon: HugeIcon(icon: HugeIcons.strokeRoundedSearch01, color: ref.watch(currentScreenProvider) == 1 ? Colors.black : Colors.grey),
+          BottomNavigationBarItem(
+            icon: HugeIcon(
+                icon: HugeIcons.strokeRoundedSearch01,
+                color: ref.watch(currentScreenProvider) == 1
+                    ? Colors.black
+                    : Colors.grey),
             label: "Search",
           ),
-           BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: ref.watch(currentScreenProvider) == 2
                 ? svgImage(btmNavBarIconsFilled[1], true)
                 : svgImage(btmNavBarIcons[1], false),

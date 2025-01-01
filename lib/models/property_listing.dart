@@ -56,16 +56,16 @@ class PropertyListing {
       'listingType': listingType.name,
       'imagesUrls': imagesUrls,
       'bedrooms': bedrooms,
-      'sittingRooms' : sittingRooms,
-      'kitchens' : kitchens,
-      'toilets' : toilets,
+      'sittingRooms': sittingRooms,
+      'kitchens': kitchens,
+      'toilets': toilets,
       'condition': condition.name,
       'facilities': facilities.map((facility) => facility.name).toList(),
       'furnishing': furnishing.name,
       'propertySubtype': propertySubtype.name,
-      'geoPoint' : geoPoint,
-      'state' : state,
-      'lga' : lga,
+      'geoPoint': geoPoint,
+      'state': state,
+      'lga': lga,
     };
   }
 
@@ -86,9 +86,13 @@ class PropertyListing {
       toilets: json['toilets'],
       kitchens: json['kitchens'],
       condition: Condition.values.byName(json['condition']),
-      facilities: (json['facilities'] as List<String>)
-          .map((facility) => Facility.values.byName(facility))
-          .toList(),
+      facilities: (json['facilities'] as List?)
+              ?.map((facilityString) => Facility.values.firstWhere(
+                  (facility) => facility.name == facilityString,
+                  orElse: () => Facility.values.first // Provide a default value
+                  ))
+              .toList() ??
+          [],
       furnishing: Furnishing.values.byName(json['furnishing']),
       propertySubtype: PropertySubtype.values.byName(json['propertySubtype']),
       geoPoint: json['geoPoint'],
@@ -97,27 +101,26 @@ class PropertyListing {
     );
   }
 
-  PropertyListing copyWith({
-    String? id,
-    String? agentID,
-    String? address,
-    double? price,
-    double? agentFee,
-    double? propertySize,
-    ListingType? listingType,
-    PropertyType? propertyType,
-    List<String>? imagesUrls,
-    Furnishing? furnishing,
-    Condition? condition,
-    PropertySubtype? propertySubtype,
-    int? bedrooms,
-    int? toilets,
-    int? kitchens,
-    int? sittingRooms,
-    GeoPoint? geoPoint,
-    String? state,
-    String? lga
-  }) {
+  PropertyListing copyWith(
+      {String? id,
+      String? agentID,
+      String? address,
+      double? price,
+      double? agentFee,
+      double? propertySize,
+      ListingType? listingType,
+      PropertyType? propertyType,
+      List<String>? imagesUrls,
+      Furnishing? furnishing,
+      Condition? condition,
+      PropertySubtype? propertySubtype,
+      int? bedrooms,
+      int? toilets,
+      int? kitchens,
+      int? sittingRooms,
+      GeoPoint? geoPoint,
+      String? state,
+      String? lga}) {
     return PropertyListing(
       id: id ?? this.id,
       agentID: agentID ?? this.agentID,

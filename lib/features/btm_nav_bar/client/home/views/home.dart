@@ -15,15 +15,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: ref.watch(fetchListingsProvider).when(
         data: (listings) {
           return SingleChildScrollView(
             child: Column(
               children: [
-                ...listings.map(
-                  (listing) => ListingWidget(propertyListing: listing),
-                )
+                for (int i = 0; i < 10; i++)
+                  ListingWidget(propertyListing: listings[0]),
               ],
             ),
           );
