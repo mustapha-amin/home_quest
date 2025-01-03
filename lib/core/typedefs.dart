@@ -6,7 +6,6 @@ typedef FutureEither<T> = Future<Either<String, T>>;
 
 typedef FutureVoid = Future<void>;
 
-
 typedef PropertyFilter = ({
   double? minPrice,
   double? maxPrice,
@@ -19,7 +18,7 @@ typedef PropertyFilter = ({
   double minPropertySize,
   double maxPropertySize,
   int? bedrooms,
-  int? toilets,
+  int? bathrooms,
   int? kitchens,
   int? sittingRooms,
 });

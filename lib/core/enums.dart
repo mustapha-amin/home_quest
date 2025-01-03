@@ -16,14 +16,22 @@ enum Furnishing {
 }
 
 enum Condition {
-  old,
-  newly_built,
-  renovated,
+  old('old'),
+  newly_built('Newly built'),
+  renovated('Renovated');
+
+  final String name;
+
+  const Condition(this.name);
 }
 
 enum PropertySubtype {
-  detached,
-  semi_detached,
+  detached('detached'),
+  semi_detached('semi detached');
+
+  final String name;
+
+  const PropertySubtype(this.name);
 }
 
 enum Facility {

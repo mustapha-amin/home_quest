@@ -5,7 +5,7 @@ import '../core/enums.dart';
 class PropertyListing {
   final String id, agentID, address, state, lga;
   final double price, agentFee, propertySize;
-  final int bedrooms, kitchens, toilets, sittingRooms;
+  final int bedrooms, kitchens, bathrooms, sittingRooms;
   final ListingType listingType;
   final PropertyType propertyType;
   final List<String> imagesUrls;
@@ -27,7 +27,7 @@ class PropertyListing {
     required this.imagesUrls,
     required this.bedrooms,
     required this.kitchens,
-    required this.toilets,
+    required this.bathrooms,
     required this.sittingRooms,
     required this.condition,
     required this.facilities,
@@ -40,7 +40,7 @@ class PropertyListing {
 
   @override
   String toString() {
-    return "$id $agentID $address $propertyType $propertySize $state $lga $price $agentFee $listingType $imagesUrls $bedrooms $kitchens $toilets $sittingRooms $condition $facilities $furnishing $propertySubtype ${geoPoint.toString()}";
+    return "$id $agentID $address $propertyType $propertySize $state $lga $price $agentFee $listingType $imagesUrls $bedrooms $kitchens $bathrooms $sittingRooms $condition $facilities $furnishing $propertySubtype ${geoPoint.toString()}";
   }
 
   // Convert PropertyListing to JSON
@@ -58,7 +58,7 @@ class PropertyListing {
       'bedrooms': bedrooms,
       'sittingRooms': sittingRooms,
       'kitchens': kitchens,
-      'toilets': toilets,
+      'bathrooms': bathrooms,
       'condition': condition.name,
       'facilities': facilities.map((facility) => facility.name).toList(),
       'furnishing': furnishing.name,
@@ -83,7 +83,7 @@ class PropertyListing {
       imagesUrls: List<String>.from(json['imagesUrls']),
       bedrooms: json['bedrooms'],
       sittingRooms: json['sittingRooms'],
-      toilets: json['toilets'],
+      bathrooms: json['bathrooms'],
       kitchens: json['kitchens'],
       condition: Condition.values.byName(json['condition']),
       facilities: (json['facilities'] as List?)
@@ -101,26 +101,27 @@ class PropertyListing {
     );
   }
 
-  PropertyListing copyWith(
-      {String? id,
-      String? agentID,
-      String? address,
-      double? price,
-      double? agentFee,
-      double? propertySize,
-      ListingType? listingType,
-      PropertyType? propertyType,
-      List<String>? imagesUrls,
-      Furnishing? furnishing,
-      Condition? condition,
-      PropertySubtype? propertySubtype,
-      int? bedrooms,
-      int? toilets,
-      int? kitchens,
-      int? sittingRooms,
-      GeoPoint? geoPoint,
-      String? state,
-      String? lga}) {
+  PropertyListing copyWith({
+    String? id,
+    String? agentID,
+    String? address,
+    double? price,
+    double? agentFee,
+    double? propertySize,
+    ListingType? listingType,
+    PropertyType? propertyType,
+    List<String>? imagesUrls,
+    Furnishing? furnishing,
+    Condition? condition,
+    PropertySubtype? propertySubtype,
+    int? bedrooms,
+    int? bathrooms,
+    int? kitchens,
+    int? sittingRooms,
+    GeoPoint? geoPoint,
+    String? state,
+    String? lga,
+  }) {
     return PropertyListing(
       id: id ?? this.id,
       agentID: agentID ?? this.agentID,
@@ -134,7 +135,7 @@ class PropertyListing {
       furnishing: furnishing ?? this.furnishing,
       condition: condition ?? this.condition,
       propertySubtype: propertySubtype ?? this.propertySubtype,
-      toilets: toilets ?? this.toilets,
+      bathrooms: bathrooms ?? this.bathrooms,
       kitchens: kitchens ?? this.kitchens,
       sittingRooms: sittingRooms ?? this.sittingRooms,
       bedrooms: bedrooms ?? this.bedrooms,

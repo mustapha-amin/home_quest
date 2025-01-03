@@ -89,11 +89,11 @@ class UserDataRepository {
     }
   }
 
-  Future<bool?> _userIsClient() async {
+  Future<bool?> _userIsClient([String? id]) async {
     try {
       final clientDoc = await firebaseFirestore
           .collection("clients")
-          .doc(firebaseAuth.currentUser!.uid)
+          .doc(id ?? firebaseAuth.currentUser!.uid)
           .get();
       return clientDoc.exists;
     } catch (e) {
@@ -101,13 +101,13 @@ class UserDataRepository {
     }
   }
 
-  Stream<k.User?> fetchUserData() async* {
+  Stream<k.User?> fetchUserData([String? id]) async* {
     try {
-      bool? isAClient = await _userIsClient();
+      bool? isAClient = await _userIsClient(id);
 
       yield* firebaseFirestore
           .collection(isAClient! ? "clients" : "agents")
-          .doc(firebaseAuth.currentUser!.uid)
+          .doc(id ?? firebaseAuth.currentUser!.uid)
           .snapshots()
           .map((snap) => isAClient
               ? ClientModel.fromJson(snap.data()!)

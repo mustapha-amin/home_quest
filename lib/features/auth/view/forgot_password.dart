@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/colors.dart';
-import 'package:home_quest/core/extensions/navigations.dart';
-import 'package:home_quest/core/extensions/widget_exts.dart';
+
+import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/auth/view/auth_screen.dart';
 import 'package:home_quest/shared/custom_button.dart';

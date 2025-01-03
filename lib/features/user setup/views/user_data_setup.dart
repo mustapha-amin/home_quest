@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/core/enums.dart';
-import 'package:home_quest/core/extensions/widget_exts.dart';
+import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/utils/image_picker_util.dart';
 import 'package:home_quest/features/user%20setup/views/user_type.dart';
 import 'package:home_quest/models/agent.dart';

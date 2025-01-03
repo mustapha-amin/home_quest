@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:home_quest/core/extensions/widget_exts.dart';
+import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/widgets/profile_card.dart';
 import 'package:hugeicons/hugeicons.dart';
 

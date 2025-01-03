@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/core/enums.dart';
-import 'package:home_quest/core/extensions/navigations.dart';
-import 'package:home_quest/core/extensions/widget_exts.dart';
+
+import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/image_picker_util.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
@@ -405,7 +405,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                             },
                           ).padY(10)),
                       Text(
-                        "Payment (per annum)",
+                        "Payment ${listingType == ListingType.rent ? '(per annum)' : ''}",
                         style: kTextStyle(18, isBold: true),
                       ).padY(15),
                       TextField(
@@ -434,7 +434,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
               ),
               CustomButton(
                 label: "List property",
-                onTap: () {
+                onTap: () async {
                   log(selectedFacilities.toString());
                   if (canUploadListing()) {
                     final propertyListing = PropertyListing(
@@ -444,8 +444,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                       propertyType: propertyType,
                       propertySize: double.parse(
                           propertySizeCtrl.text.split(',').join('')),
-                      price: double.parse(
-                          propertySizeCtrl.text.split(',').join('')),
+                      price: double.parse(priceCtrl.text.split(',').join('')),
                       agentFee:
                           double.parse(agentFeeCtrl.text.split(',').join('')),
                       listingType: listingType,
@@ -464,37 +463,40 @@ class _AddListingsState extends ConsumerState<AddListings> {
                       state: ref.watch(geolocationNotifierProvider).$1!.state!,
                       lga: ref.watch(geolocationNotifierProvider).$1!.county!,
                       bedrooms: int.parse(textControllers[0].text),
-                      toilets: int.parse(textControllers[1].text),
+                      bathrooms: int.parse(textControllers[1].text),
                       kitchens: int.parse(textControllers[2].text),
                       sittingRooms: int.parse(textControllers[3].text),
                     );
                     log(propertyListing.toJson().toString());
-                    ref.read(createListingProvider(propertyListing)).when(
-                      data: (_) {
-                        toggleGlobalLoadingIndicator(ref, false);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Property listed successfully"),
-                            duration: Duration(milliseconds: 500),
-                          ),
-                        );
-                        Navigator.pop(context);
-                      },
-                      error: (e, _) {
-                        toggleGlobalLoadingIndicator(ref, false);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(e.toString()),
-                            duration: Duration(milliseconds: 500),
-                          ),
-                        );
-                      },
-                      loading: () {
-                        toggleGlobalLoadingIndicator(ref, true);
-                      },
-                    );
+                    try {
+                      ref
+                          .read(globalLoadingProvider.notifier)
+                          .toggleGlobalLoadingIndicator(true);
 
-                    // context.pop();
+                      await ref
+                          .read(createListingProvider(propertyListing).future);
+
+                      ref
+                          .read(globalLoadingProvider.notifier)
+                          .toggleGlobalLoadingIndicator(false);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Property listed successfully"),
+                          duration: Duration(milliseconds: 500),
+                        ),
+                      );
+                      Navigator.pop(context);
+                    } catch (e) {
+                      ref
+                          .read(globalLoadingProvider.notifier)
+                          .toggleGlobalLoadingIndicator(false);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(e.toString()),
+                          duration: const Duration(milliseconds: 500),
+                        ),
+                      );
+                    }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -502,12 +504,13 @@ class _AddListingsState extends ConsumerState<AddListings> {
                         duration: Duration(milliseconds: 500),
                       ),
                     );
+                    // context.pop()
                   }
                 },
               ).padAll(8),
             ],
           ),
-          if (ref.watch(isLoadingProvider)) const LoadingIndicator(),
+          if (ref.watch(globalLoadingProvider)) const LoadingIndicator(),
         ],
       ),
     );

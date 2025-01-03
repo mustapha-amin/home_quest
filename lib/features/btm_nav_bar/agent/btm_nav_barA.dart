@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:home_quest/core/extensions/navigations.dart';
+import 'package:home_quest/core/extensions.dart';
+
 import 'package:home_quest/features/btm_nav_bar/agent/dashboard/view/dashboard.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/views/add_listings.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/profile.dart';

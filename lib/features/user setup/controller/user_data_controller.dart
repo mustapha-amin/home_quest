@@ -3,7 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:home_quest/core/extensions/navigations.dart';
+import 'package:home_quest/core/extensions.dart';
+
 import 'package:home_quest/core/utils/errordialog.dart';
 import 'package:home_quest/features/auth/view/home_user_wrapper.dart';
 import 'package:home_quest/features/user%20setup/repository/user_data_repository.dart';
@@ -24,6 +25,11 @@ final userDataExistsProvider = FutureProvider((ref) async {
 
 final userDataStreamProvider = StreamProvider<User?>((ref) {
   return ref.watch(userDataRepoProvider).fetchUserData();
+});
+
+final userDataStreamIDProvider =
+    StreamProvider.family<User?, String>((ref, id) {
+  return ref.watch(userDataRepoProvider).fetchUserData(id);
 });
 
 // final userDataFutureProvider = FutureProvider((ref) async {

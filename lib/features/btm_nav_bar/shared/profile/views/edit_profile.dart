@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:home_quest/core/extensions/navigations.dart';
-import 'package:home_quest/core/extensions/widget_exts.dart';
+
+import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/errordialog.dart';
 import 'package:home_quest/core/utils/image_picker_util.dart';
@@ -44,9 +44,9 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   TextEditingController phoneCtrl = TextEditingController();
   File? pickedImage;
 
-
   bool nameChanged() {
-    return nameCtrl.text.trim() != ref.watch(userDataStreamProvider).value!.name;
+    return nameCtrl.text.trim() !=
+        ref.watch(userDataStreamProvider).value!.name;
   }
 
   bool phoneChanged() {
@@ -189,7 +189,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                             : UserAvatar(
                                 url: ref
                                     .watch(userDataStreamProvider)
-                                    .value!.profilePicture,
+                                    .value!
+                                    .profilePicture,
                                 height: 40.w,
                                 width: 40.w,
                               ),

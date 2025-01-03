@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/image_path.dart';
 import 'package:home_quest/core/utils/svg_util.dart';
@@ -33,7 +34,19 @@ class BtmNavBarC extends ConsumerStatefulWidget {
   ConsumerState<BtmNavBarC> createState() => _BtmNavBarState();
 }
 
-class _BtmNavBarState extends ConsumerState<BtmNavBarC> {
+class _BtmNavBarState extends ConsumerState<BtmNavBarC>
+    with SingleTickerProviderStateMixin {
+  late AnimationController? _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    );
+  }
+
   List<Widget> screens = const [
     HomeScreen(),
     SearchScreen(),
@@ -60,11 +73,39 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         forceMaterialTransparency: true,
         title: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("HomeQuest", style: kTextStyle(18)),
-            spaceX(4),
-            Image.asset(ImagePaths.homeLogo, height: 30),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text("HomeQuest", style: kTextStyle(20)),
+                spaceX(4),
+                Image.asset(ImagePaths.homeLogo, height: 30),
+              ],
+            ),
+            if (ref.watch(currentScreenProvider) == 1)
+              IconButton(
+                icon: HugeIcon(
+                  icon: HugeIcons.strokeRoundedSearch01,
+                  color: AppColors.brown,
+                  size: 20,
+                ),
+                onPressed: () {
+                  showModalBottomSheet(
+                      context: context,
+                      builder: (context) {
+                        return BottomSheet(
+                          animationController: _controller!,
+                          onClosing: () {},
+                          builder: (context) {
+                            return Column(
+                              children: [],
+                            );
+                          },
+                        );
+                      });
+                },
+              ),
           ],
         ),
       ),

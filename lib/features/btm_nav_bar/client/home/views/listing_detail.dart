@@ -1,38 +1,399 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_quest/core/extensions.dart';
+
+import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/models/property_listing.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:sizer/sizer.dart';
 
-class ListingDetail extends StatelessWidget {
+import '../../../../../core/enums.dart';
+import '../../../../../core/utils/safety_tips_text.dart';
+import '../../../../../core/utils/textstyle.dart';
+import '../../../../../shared/spacing.dart';
+import 'package:intl/intl.dart';
+
+class ListingDetail extends ConsumerStatefulWidget {
   final PropertyListing propertyListing;
   const ListingDetail({required this.propertyListing, super.key});
 
   @override
+  ConsumerState<ListingDetail> createState() => _ListingDetailState();
+}
+
+class _ListingDetailState extends ConsumerState<ListingDetail> {
+  PageController pageController = PageController();
+  int _currentIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 28.h,
-            leading: const HugeIcon(icon: HugeIcons.strokeRoundedArrowLeft01, color: Colors.black),
-            flexibleSpace: FlexibleSpaceBar(
-                background: CarouselView(
-              itemExtent: double.infinity,
-              children: [
-                ...propertyListing.imagesUrls.map(
-                  (url) => Image.network(url),
+      body: Column(
+        children: [
+          Expanded(
+            child: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  pinned: true,
+                  expandedHeight: 28.h,
+                  toolbarHeight: 5.h,
+                  backgroundColor: Colors.white,
+                  leading: IconButton.filledTonal(
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
+                    onPressed: () {
+                      context.pop();
+                    },
+                    icon: const HugeIcon(
+                        icon: HugeIcons.strokeRoundedArrowLeft01,
+                        color: Colors.black),
+                  ),
+                  actions: [
+                    IconButton(
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      onPressed: () {},
+                      icon: Icon(
+                        Icons.favorite_border,
+                        color: Colors.red,
+                        size: 30,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      icon: Icon(
+                        Icons.more_horiz,
+                        color: Colors.black,
+                        size: 30,
+                      ),
+                    ),
+                  ],
+                  flexibleSpace: FlexibleSpaceBar(
+                      background: Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      PageView(
+                        scrollDirection: Axis.horizontal,
+                        controller: pageController,
+                        onPageChanged: (index) {
+                          setState(() {
+                            _currentIndex = index;
+                          });
+                        },
+                        children: [
+                          ...widget.propertyListing.imagesUrls.map(
+                            (url) => Image.network(
+                              url,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        ],
+                      ),
+                      Badge(
+                        backgroundColor: Colors.black.withOpacity(0.6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 8),
+                        label: Text(
+                          '${_currentIndex + 1} / ${widget.propertyListing.imagesUrls.length}',
+                          style: kTextStyle(13, color: Colors.white),
+                        ),
+                      ).padAll(8)
+                    ],
+                  )),
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate(
+                      [
+                        ref
+                            .watch(userDataStreamIDProvider(
+                                widget.propertyListing.agentID))
+                            .when(data: (agent) {
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text("By " + agent!.name, style: kTextStyle(18)),
+                              CircleAvatar(
+                                radius: 20,
+                                backgroundImage:
+                                    NetworkImage(agent.profilePicture),
+                              ).padX(5),
+                              spaceX(5),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.black),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Text(
+                                  "View profile",
+                                  style: kTextStyle(15),
+                                ).padX(8).padY(5),
+                              )
+                            ],
+                          );
+                        }, error: (e, stk) {
+                          log(e.toString(), stackTrace: stk);
+                          return Text("An error occured");
+                        }, loading: () {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }),
+                        spaceY(10),
+                        Row(
+                          children: [
+                            Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                color: widget.propertyListing.listingType ==
+                                        ListingType.rent
+                                    ? Colors.green
+                                    : Colors.blue,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            spaceX(5),
+                            Text(
+                              "For ${widget.propertyListing.listingType.name}",
+                              style: kTextStyle(15),
+                            ),
+                          ],
+                        ),
+                        spaceY(20),
+                        Text(
+                          "${widget.propertyListing.price.toMoney} ${widget.propertyListing.listingType == ListingType.rent ? ' / Year' : ''}",
+                          style: kTextStyle(18,
+                              isBold: true, color: Colors.grey[800]!),
+                        ),
+                        Text(
+                            "Agent fee: ${widget.propertyListing.agentFee.toMoney}",
+                            style: kTextStyle(15, color: Colors.grey[800]!)),
+                        spaceY(10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              color: Colors.red,
+                              size: 20,
+                            ),
+                            Text(
+                              "${widget.propertyListing.address} ${widget.propertyListing.lga}, ${widget.propertyListing.state}",
+                              style: kTextStyle(15, color: Colors.grey[700]!),
+                            ),
+                          ],
+                        ),
+                        spaceY(10),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.grey[200],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                children: [
+                                  HugeIcon(
+                                    icon: HugeIcons.strokeRoundedBedSingle02,
+                                    color: Colors.blue,
+                                    size: 20,
+                                  ),
+                                  Text(
+                                    widget.propertyListing.bedrooms.toString() +
+                                        " Bedrooms",
+                                    style: kTextStyle(15, color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  HugeIcon(
+                                      icon: HugeIcons.strokeRoundedBathtub01,
+                                      color: Colors.blue,
+                                      size: 20),
+                                  Text(
+                                    widget.propertyListing.bathrooms
+                                            .toString() +
+                                        " Bathrooms",
+                                    style: kTextStyle(15, color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  HugeIcon(
+                                      icon: HugeIcons
+                                          .strokeRoundedKitchenUtensils,
+                                      color: Colors.blue,
+                                      size: 20),
+                                  Text(
+                                    widget.propertyListing.kitchens.toString() +
+                                        " Kitchens",
+                                    style: kTextStyle(15, color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  HugeIcon(
+                                    icon: HugeIcons.strokeRoundedSofa01,
+                                    color: Colors.blue,
+                                    size: 20,
+                                  ),
+                                  Text(
+                                    widget.propertyListing.sittingRooms
+                                            .toString() +
+                                        " Sitting Room${widget.propertyListing.sittingRooms == 1 ? '' : 's'}",
+                                    style: kTextStyle(15, color: Colors.black),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ).padY(20),
+                        ),
+                        spaceY(10),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.grey[200],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                children: [
+                                  _buildFeature(
+                                      "Subtype",
+                                      widget.propertyListing.propertySubtype
+                                          .name),
+                                  _buildFeature(
+                                      "Subtype",
+                                      widget.propertyListing.propertySubtype
+                                          .name),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  _buildFeature("Size",
+                                      "${widget.propertyListing.propertySize} sqm"),
+                                  _buildFeature("Furnishing",
+                                      widget.propertyListing.furnishing.name),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  _buildFeature("Condition",
+                                      widget.propertyListing.condition.name),
+                                  _buildFeature(
+                                      "Facilities",
+                                      widget.propertyListing.facilities
+                                          .map((fac) => fac.name)
+                                          .join(", ")),
+                                ],
+                              ),
+                            ],
+                          ).padY(20).padX(10),
+                        ),
+                        spaceY(10),
+                        Container(
+                          width: double.infinity,
+                          height: 30.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.grey[200],
+                          ),
+                          child: Icon(
+                            Icons.map,
+                            size: 80,
+                            color: Colors.grey,
+                          ),
+                        ),
+                        Text(
+                          "Safety tips",
+                          style: kTextStyle(20, isBold: true),
+                        ),
+                        spaceY(10),
+                        Text(
+                          safetyTipsText,
+                          style: kTextStyle(15),
+                        ),
+                      ],
+                    ),
+                  ),
                 )
               ],
-            )),
+            ),
           ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [],
+          Container(
+            height: 8.h,
+            color: Colors.white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: 40.w,
+                  child: OutlinedButton.icon(
+                    onPressed: () {},
+                    label: Text(
+                      "Message Agent",
+                      style: kTextStyle(15, color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      backgroundColor: Colors.green,
+                    ),
+                    icon: HugeIcon(
+                      icon: HugeIcons.strokeRoundedWhatsapp,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 40.w,
+                  child: OutlinedButton.icon(
+                    onPressed: () {},
+                    label: Text(
+                      "Call Agent",
+                      style: kTextStyle(15),
+                    ),
+                    icon: HugeIcon(
+                        icon: HugeIcons.strokeRoundedCall, color: Colors.black),
+                    style: ElevatedButton.styleFrom(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    ),
+                  ),
+                ),
+              ],
             ),
           )
         ],
       ),
     );
   }
+}
+
+Widget _buildFeature(String title, String value) {
+  return SizedBox(
+    width: 40.w,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: kTextStyle(15, isBold: true)),
+        spaceX(5),
+        Text(value, style: kTextStyle(15, color: Colors.grey[700]!)),
+      ],
+    ).padY(5),
+  );
 }

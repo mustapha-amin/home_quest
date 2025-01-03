@@ -36,6 +36,15 @@ final isLoadingProvider = StateProvider((ref) {
   return false;
 });
 
-void toggleGlobalLoadingIndicator(WidgetRef ref, bool isLoading) {
-  ref.read(isLoadingProvider.notifier).state = isLoading;
+final globalLoadingProvider = StateNotifierProvider<GloabalLoadingNotifier, bool>((ref) {
+  return GloabalLoadingNotifier();
+});
+
+class GloabalLoadingNotifier extends StateNotifier<bool> {
+  GloabalLoadingNotifier(): super(false);
+
+  void toggleGlobalLoadingIndicator(bool isLoading) {
+    state = isLoading;
+  }
 }
+

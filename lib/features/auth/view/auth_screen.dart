@@ -1,15 +1,14 @@
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:home_quest/core/extensions/navigations.dart';
+
 import 'package:home_quest/features/auth/controller/auth_controller.dart';
 import 'package:home_quest/features/auth/view/forgot_password.dart';
 import 'package:home_quest/features/auth/widget/google_bttn.dart';
 import 'package:home_quest/main.dart';
 import 'package:home_quest/shared/custom_button.dart';
 import 'package:home_quest/shared/spacing.dart';
-import 'package:home_quest/core/extensions/widget_exts.dart';
+import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/utils/image_path.dart';
 import 'package:home_quest/core/utils/regex.dart';
 import 'package:sizer/sizer.dart';

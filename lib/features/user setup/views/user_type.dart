@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:home_quest/core/extensions/widget_exts.dart';
+import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/user%20setup/views/user_setup.dart';
 import 'package:home_quest/features/user%20setup/widgets/user_type_widget.dart';

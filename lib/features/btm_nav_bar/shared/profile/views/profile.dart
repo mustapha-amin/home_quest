@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:home_quest/core/extensions/navigations.dart';
-import 'package:home_quest/core/extensions/widget_exts.dart';
+
+import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/auth/controller/auth_controller.dart';
@@ -123,7 +123,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                           .read(authControllerProvider.notifier)
                                           .signOut(context, ref,
                                               user is ClientModel);
-                                     
                                     },
                                     child: Text(
                                       "Yes",

@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:home_quest/core/extensions/navigations.dart';
+import 'package:home_quest/core/extensions.dart';
+
+import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/typedefs.dart';
 import 'package:home_quest/core/utils/errordialog.dart';
 import 'package:home_quest/features/auth/repository/auth_repository.dart';
@@ -65,7 +67,10 @@ class AuthController extends StateNotifier<bool> {
     result = await authService.signOut();
     state = false;
     result.fold((l) => showErrorDialog(context, l), (r) {
-    ref.invalidate(isClient ? currentScreenProvider : currentAgentScreenProvider);
+      ref.invalidate(
+          isClient ? currentScreenProvider : currentAgentScreenProvider);
+      ref.invalidate(authControllerProvider);
+      ref.invalidate(firebaseAuthProvider);
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const MyApp()),

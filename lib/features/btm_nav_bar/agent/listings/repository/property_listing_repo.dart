@@ -100,7 +100,7 @@ class PropertyListingRepo {
           .where('propertyType', isEqualTo: filter.propertyType!.name)
           .where('propertySize', isGreaterThanOrEqualTo: filter.minPropertySize)
           .where('propertySize', isLessThanOrEqualTo: filter.maxPropertySize)
-          .where('toilets', isEqualTo: filter.toilets)
+          .where('bathrooms', isEqualTo: filter.bathrooms)
           .where('bedrooms', isEqualTo: filter.bedrooms)
           .where('kitchens', isEqualTo: filter.kitchens)
           .where('sittingRooms', isEqualTo: filter.sittingRooms)

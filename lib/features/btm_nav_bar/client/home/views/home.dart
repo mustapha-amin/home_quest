@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/controller/property_listing_ctrl.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/widgets/listing_widget.dart';
 import 'package:home_quest/shared/loading_indicator.dart';
@@ -20,8 +21,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           return SingleChildScrollView(
             child: Column(
               children: [
-                for (int i = 0; i < 10; i++)
-                  ListingWidget(propertyListing: listings[0]),
+                ...listings.map((listing) =>
+                    ListingWidget(propertyListing: listing).padX(10)),
               ],
             ),
           );

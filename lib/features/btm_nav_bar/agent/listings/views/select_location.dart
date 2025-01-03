@@ -6,7 +6,8 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:home_quest/core/extensions/navigations.dart';
+import 'package:home_quest/core/extensions.dart';
+
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/widgets/header_widgets.dart';
 import 'package:home_quest/shared/loading_indicator.dart';
