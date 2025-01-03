@@ -63,17 +63,26 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                         size: 30,
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {},
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.white,
-                      ),
-                      icon: Icon(
-                        Icons.more_horiz,
-                        color: Colors.black,
-                        size: 30,
-                      ),
-                    ),
+                    PopupMenuButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                        ),
+                        elevation: 1,
+                        color: Colors.white,
+                        menuPadding:
+                            EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+                        icon: Icon(
+                          Icons.more_horiz,
+                          color: Colors.black,
+                          size: 30,
+                        ),
+                        itemBuilder: (context) {
+                          return [
+                            PopupMenuItem(
+                              child: Text("Report"),
+                            ),
+                          ];
+                        })
                   ],
                   flexibleSpace: FlexibleSpaceBar(
                       background: Stack(
