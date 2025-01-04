@@ -12,8 +12,10 @@ import '../../../../../core/enums.dart';
 
 class ListingWidget extends StatefulWidget {
   final PropertyListing propertyListing;
+  final bool isViewDetails;
   const ListingWidget({
     required this.propertyListing,
+    this.isViewDetails = false,
     super.key,
   });
 
@@ -25,8 +27,12 @@ class _ListingWidgetState extends State<ListingWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () =>
-          context.push(ListingDetail(propertyListing: widget.propertyListing)),
+      onTap: () => context.push(
+        ListingDetail(
+          propertyListing: widget.propertyListing,
+          isViewDetails: widget.isViewDetails,
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -101,8 +107,10 @@ class _ListingWidgetState extends State<ListingWidget> {
               ),
               OutlinedButton(
                 onPressed: () {
-                  context.push(
-                      ListingDetail(propertyListing: widget.propertyListing));
+                  context.push(ListingDetail(
+                    propertyListing: widget.propertyListing,
+                    isViewDetails: widget.isViewDetails,
+                  ));
                 },
                 child: Text(
                   "View details",

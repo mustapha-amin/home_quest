@@ -27,46 +27,39 @@ Future<void> main() async {
   );
 }
 
-ValueNotifier<Key> myAppKey = ValueNotifier(UniqueKey());
-
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Sizer(builder: (___, _, __) {
-      return ValueListenableBuilder(
-          valueListenable: myAppKey,
-          builder: (context, keyVal, _) {
-            return MaterialApp(
-              key: keyVal,
-              debugShowCheckedModeBanner: false,
-              home: ref.watch(onBoardingSettingsProvider).isFirstTime()
-                  ? const OnboardingScreen()
-                  : ref.watch(authChangesProvider).when(
-                        data: (user) {
-                          if (user != null) {
-                            return const HomeUserDataWrapper();
-                          } else {
-                            return const AuthScreen();
-                          }
-                        },
-                        error: (_, __) => const AuthScreen(),
-                        loading: () => const SizedBox(),
-                      ),
-              theme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(seedColor: AppColors.brown),
-                scaffoldBackgroundColor: Colors.white,
-                bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-                  backgroundColor: Colors.white,
-                  selectedItemColor: Colors.black,
-                  enableFeedback: false,
-                  unselectedItemColor: Colors.grey,
-                  type: BottomNavigationBarType.fixed,
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: ref.watch(onBoardingSettingsProvider).isFirstTime()
+            ? const OnboardingScreen()
+            : ref.watch(authChangesProvider).when(
+                  data: (user) {
+                    if (user != null) {
+                      return const HomeUserDataWrapper();
+                    } else {
+                      return const AuthScreen();
+                    }
+                  },
+                  error: (_, __) => const AuthScreen(),
+                  loading: () => const SizedBox(),
                 ),
-              ),
-            );
-          });
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.brown),
+          scaffoldBackgroundColor: Colors.white,
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            backgroundColor: Colors.white,
+            selectedItemColor: Colors.black,
+            enableFeedback: false,
+            unselectedItemColor: Colors.grey,
+            type: BottomNavigationBarType.fixed,
+          ),
+        ),
+      );
     });
   }
 }

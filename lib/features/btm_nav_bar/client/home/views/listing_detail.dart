@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions.dart';
+import 'package:home_quest/features/btm_nav_bar/client/home/views/agent_detail.dart';
 
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/models/property_listing.dart';
@@ -17,7 +18,9 @@ import 'package:intl/intl.dart';
 
 class ListingDetail extends ConsumerStatefulWidget {
   final PropertyListing propertyListing;
-  const ListingDetail({required this.propertyListing, super.key});
+  final bool isViewDetails;
+  const ListingDetail(
+      {required this.propertyListing, this.isViewDetails = false, super.key});
 
   @override
   ConsumerState<ListingDetail> createState() => _ListingDetailState();
@@ -122,39 +125,46 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                   sliver: SliverList(
                     delegate: SliverChildListDelegate(
                       [
-                        ref
-                            .watch(userDataStreamIDProvider(
-                                widget.propertyListing.agentID))
-                            .when(data: (agent) {
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text("By " + agent!.name, style: kTextStyle(18)),
-                              CircleAvatar(
-                                radius: 20,
-                                backgroundImage:
-                                    NetworkImage(agent.profilePicture),
-                              ).padX(5),
-                              spaceX(5),
-                              Container(
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.black),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Text(
-                                  "View profile",
-                                  style: kTextStyle(15),
-                                ).padX(8).padY(5),
-                              )
-                            ],
-                          );
-                        }, error: (e, stk) {
-                          log(e.toString(), stackTrace: stk);
-                          return Text("An error occured");
-                        }, loading: () {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }),
+                        if (!widget.isViewDetails)
+                          ref
+                              .watch(userDataStreamIDProvider(
+                                  widget.propertyListing.agentID))
+                              .when(data: (agent) {
+                            return Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text("By " + agent!.name,
+                                    style: kTextStyle(18)),
+                                CircleAvatar(
+                                  radius: 20,
+                                  backgroundImage:
+                                      NetworkImage(agent.profilePicture),
+                                ).padX(5),
+                                spaceX(5),
+                                InkWell(
+                                  onTap: () {
+                                    context.push(AgentDetail(id: agent.id));
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.black),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text(
+                                      "View profile",
+                                      style: kTextStyle(15),
+                                    ).padX(8).padY(5),
+                                  ),
+                                )
+                              ],
+                            );
+                          }, error: (e, stk) {
+                            log(e.toString(), stackTrace: stk);
+                            return Text("An error occured");
+                          }, loading: () {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }),
                         spaceY(10),
                         Row(
                           children: [

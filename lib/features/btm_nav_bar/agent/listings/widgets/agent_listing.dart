@@ -72,7 +72,7 @@ class AgentListing extends StatelessWidget {
                                       .toLowerCase(),
                               style: kTextStyle(20,
                                   isBold: true, color: Colors.black)),
-                          Icon(Icons.more_horiz, color: Colors.black, size: 28),
+                          Icon(Icons.delete, color: Colors.red, size: 28),
                         ],
                       ),
                       spaceY(8),

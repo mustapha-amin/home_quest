@@ -27,9 +27,11 @@ class Listings extends ConsumerWidget {
               return ListView.separated(
                 itemCount: listings.length,
                 itemBuilder: (context, index) {
-                  return AgentListing(listing: listings[index]).padX(5).padY(8);
+                  return AgentListing(listing: listings[index])
+                      .padX(10)
+                      .padY(8);
                 },
-                separatorBuilder: (context, index) => Divider(
+                separatorBuilder: (context, index) => const Divider(
                   color: Colors.grey,
                   height: 1,
                 ),

@@ -18,6 +18,7 @@ import 'package:home_quest/features/user%20setup/views/user_type.dart';
 
 import '../../../main.dart';
 import '../../btm_nav_bar/client/home/views/home.dart';
+import '../../user setup/controller/user_data_controller.dart';
 
 final authControllerProvider =
     StateNotifierProvider<AuthController, bool>((ref) {
@@ -71,6 +72,10 @@ class AuthController extends StateNotifier<bool> {
           isClient ? currentScreenProvider : currentAgentScreenProvider);
       ref.invalidate(authControllerProvider);
       ref.invalidate(firebaseAuthProvider);
+    ref.invalidate(userDataStreamProvider);
+    ref.invalidate(currentScreenProvider);
+    ref.invalidate(currentAgentScreenProvider);
+    ref.invalidate(userDataExistsProvider);
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const MyApp()),
@@ -90,4 +95,5 @@ class AuthController extends StateNotifier<bool> {
       (r) => operation(),
     );
   }
+
 }
