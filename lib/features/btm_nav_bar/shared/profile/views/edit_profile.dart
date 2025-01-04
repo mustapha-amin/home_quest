@@ -7,7 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/providers.dart';
-import 'package:home_quest/core/utils/errordialog.dart';
+import 'package:home_quest/core/utils/app_snackbar.dart';
 import 'package:home_quest/core/utils/image_picker_util.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
@@ -116,7 +116,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                     }
                   }
                 } catch (e) {
-                  showErrorDialog(context, e.toString());
+                  showSnackBar(context, e.toString());
                 }
               } else {
                 context.pop();

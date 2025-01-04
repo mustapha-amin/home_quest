@@ -63,7 +63,7 @@ class UserDataRepository {
     Map<String, dynamic> data,
   ) async {
     try {
-      await firebaseFirestore.collection(collection).doc(id).update(data);
+      await firebaseFirestore.collection(collection).doc(id).set(data, SetOptions(merge: true));
     } on FirebaseException catch (e) {
       throw Exception(e.toString());
     }

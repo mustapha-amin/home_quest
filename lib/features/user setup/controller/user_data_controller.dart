@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions.dart';
 
-import 'package:home_quest/core/utils/errordialog.dart';
+import 'package:home_quest/core/utils/app_snackbar.dart';
 import 'package:home_quest/features/auth/view/home_user_wrapper.dart';
 import 'package:home_quest/features/user%20setup/repository/user_data_repository.dart';
 import '../../../core/typedefs.dart';
@@ -63,7 +63,7 @@ class UserRemoteDataNotifier extends StateNotifier<bool> {
       log("user data saved");
       context.replace(const HomeUserDataWrapper());
     } catch (e) {
-      showErrorDialog(context, e.toString());
+      showSnackBar(context, e.toString());
     }
     state = false;
   }
@@ -79,7 +79,7 @@ class UserRemoteDataNotifier extends StateNotifier<bool> {
       await userDataRepo.updateField(collection, id, data);
       log("field updated");
     } catch (e) {
-      showErrorDialog(context, e.toString());
+      showSnackBar(context, e.toString());
     }
     state = false;
   }

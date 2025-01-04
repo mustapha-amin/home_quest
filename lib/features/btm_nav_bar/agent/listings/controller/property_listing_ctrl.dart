@@ -16,8 +16,8 @@ final deleteListingProvider = FutureProvider.family<void, String?>((ref, id) asy
   await ref.read(propertyListingRepoProvider).deleteListing(id);
 });
 
-final fetchListingsProvider = FutureProvider.autoDispose<List<PropertyListing>>((ref) async {
-  return await ref.read(propertyListingRepoProvider).fetchListings();
+final fetchListingsProvider = StreamProvider.autoDispose<List<PropertyListing>?>((ref) {
+  return ref.read(propertyListingRepoProvider).fetchListings();
 });
 
 final fetchListingsByAgentIDProvider = FutureProvider.family<List<PropertyListing>, String>((ref, agentID) async {

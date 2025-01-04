@@ -70,12 +70,13 @@ class PropertyListingRepo {
     }
   }
 
-  Future<List<PropertyListing>> fetchListings() async {
+  Stream<List<PropertyListing>?> fetchListings() {
     try {
-      final result = await firebaseFirestore.collection('listings').get();
-      return result.docs
-          .map((doc) => PropertyListing.fromJson(doc.data()))
-          .toList();
+      return firebaseFirestore.collection('listings').snapshots().map(
+            (snap) => snap.docs
+                .map((e) => PropertyListing.fromJson(e.data()))
+                .toList(),
+          );
     } on FirebaseException catch (e) {
       throw Exception(e.toString());
     } on SocketException catch (_) {

@@ -21,7 +21,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           return SingleChildScrollView(
             child: Column(
               children: [
-                ...listings.map((listing) =>
+                ...listings!.map((listing) =>
                     ListingWidget(propertyListing: listing).padX(10)),
               ],
             ),

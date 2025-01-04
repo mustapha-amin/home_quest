@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
+import 'package:home_quest/features/btm_nav_bar/client/home/controllers/controllers.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/views/listing_detail.dart';
+import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
+import 'package:home_quest/models/client.dart';
 import 'package:home_quest/models/property_listing.dart';
+import 'package:home_quest/shared/loading_indicator.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:sizer/sizer.dart';
-import 'package:intl/intl.dart';
 
+import '../../../../../core/colors.dart';
 import '../../../../../core/enums.dart';
 
-class ListingWidget extends StatefulWidget {
+class ListingWidget extends ConsumerStatefulWidget {
   final PropertyListing propertyListing;
   final bool isViewDetails;
   const ListingWidget({
@@ -20,10 +25,10 @@ class ListingWidget extends StatefulWidget {
   });
 
   @override
-  State<ListingWidget> createState() => _ListingWidgetState();
+  ConsumerState<ListingWidget> createState() => _ListingWidgetState();
 }
 
-class _ListingWidgetState extends State<ListingWidget> {
+class _ListingWidgetState extends ConsumerState<ListingWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -54,13 +59,100 @@ class _ListingWidgetState extends State<ListingWidget> {
               Positioned(
                 bottom: 5,
                 right: 5,
-                child: IconButton.filledTonal(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.favorite,
-                    color: Colors.red,
-                  ),
-                ),
+                child: ref.watch(userDataStreamProvider).when(
+                      data: (userFromStream) {
+                        if ((userFromStream as ClientModel)
+                            .bookmarks
+                            .contains(widget.propertyListing.id)) {
+                          return IconButton.filledTonal(
+                            onPressed: () {
+                              ref.read(
+                                removeFavsProvider(
+                                  (
+                                    ctx: context,
+                                    id: widget.propertyListing.id,
+                                    user: userFromStream
+                                  ),
+                                ),
+                              );
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  padding: EdgeInsets.all(6),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.white,
+                                  content: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 10.w,
+                                        height: 10.w,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                              widget.propertyListing
+                                                  .imagesUrls[0],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Text("Removed from bookmarks", style: kTextStyle(16),)
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.bookmark,
+                              color: AppColors.brown,
+                            ),
+                          );
+                        }
+                        return IconButton.filledTonal(
+                          onPressed: () {
+                            ref.read(
+                              addToFavsProvider(
+                                (
+                                  ctx: context,
+                                  id: widget.propertyListing.id,
+                                  user: userFromStream
+                                ),
+                              ),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  padding: EdgeInsets.all(6),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.white,
+                                  content: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        width: 10.w,
+                                        height: 10.w,
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                              widget.propertyListing
+                                                  .imagesUrls[0],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Text("Added to bookmarks", style: kTextStyle(16),)
+                                    ],
+                                  ),
+                                ),
+                              );
+                          },
+                          icon: const Icon(Icons.bookmark_outline),
+                        );
+                      },
+                      error: (e, s) => IconButton.filledTonal(
+                        onPressed: () {},
+                        icon: const Icon(Icons.bookmark_outline),
+                      ),
+                      loading: () => const LoadingIndicator(),
+                    ),
               ),
             ],
           ),

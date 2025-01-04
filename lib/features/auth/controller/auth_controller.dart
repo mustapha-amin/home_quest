@@ -8,7 +8,7 @@ import 'package:home_quest/core/extensions.dart';
 
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/typedefs.dart';
-import 'package:home_quest/core/utils/errordialog.dart';
+import 'package:home_quest/core/utils/app_snackbar.dart';
 import 'package:home_quest/features/auth/repository/auth_repository.dart';
 import 'package:home_quest/features/auth/view/auth_screen.dart';
 import 'package:home_quest/features/auth/view/home_user_wrapper.dart';
@@ -42,7 +42,7 @@ class AuthController extends StateNotifier<bool> {
     result = await authService.signIn(email: email, password: password);
     state = false;
     result.fold(
-      (l) => showErrorDialog(context, l),
+      (l) => showSnackBar(context, l),
       (r) => context.replace(const HomeUserDataWrapper()),
     );
   }
@@ -57,7 +57,7 @@ class AuthController extends StateNotifier<bool> {
     result = await authService.signUp(email: email, password: password);
     state = false;
     result.fold(
-      (l) => showErrorDialog(context, l),
+      (l) => showSnackBar(context, l),
       (r) => context.replace(const UserTypeScreen()),
     );
   }
@@ -67,15 +67,15 @@ class AuthController extends StateNotifier<bool> {
     state = true;
     result = await authService.signOut();
     state = false;
-    result.fold((l) => showErrorDialog(context, l), (r) {
+    result.fold((l) => showSnackBar(context, l), (r) {
       ref.invalidate(
           isClient ? currentScreenProvider : currentAgentScreenProvider);
       ref.invalidate(authControllerProvider);
       ref.invalidate(firebaseAuthProvider);
-    ref.invalidate(userDataStreamProvider);
-    ref.invalidate(currentScreenProvider);
-    ref.invalidate(currentAgentScreenProvider);
-    ref.invalidate(userDataExistsProvider);
+      ref.invalidate(userDataStreamProvider);
+      ref.invalidate(currentScreenProvider);
+      ref.invalidate(currentAgentScreenProvider);
+      ref.invalidate(userDataExistsProvider);
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const MyApp()),
@@ -91,9 +91,8 @@ class AuthController extends StateNotifier<bool> {
   }) async {
     final result = await authService.requestPaswordReset(email);
     result.fold(
-      (l) => showErrorDialog(context, l),
+      (l) => showSnackBar(context, l),
       (r) => operation(),
     );
   }
-
 }
