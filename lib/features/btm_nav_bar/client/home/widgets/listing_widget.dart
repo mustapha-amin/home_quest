@@ -1,9 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
-import 'package:home_quest/features/btm_nav_bar/client/home/controllers/controllers.dart';
+import 'package:home_quest/features/btm_nav_bar/client/home/controllers/favorite_controllers.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/views/listing_detail.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/models/client.dart';
@@ -29,6 +31,34 @@ class ListingWidget extends ConsumerStatefulWidget {
 }
 
 class _ListingWidgetState extends ConsumerState<ListingWidget> {
+  void displaySnackbar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      padding: EdgeInsets.all(6),
+      behavior: SnackBarBehavior.floating,
+      backgroundColor: Colors.white,
+      content: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 10.w,
+            height: 10.w,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: NetworkImage(
+                  widget.propertyListing.imagesUrls[0],
+                ),
+              ),
+            ),
+          ),
+          Text(
+            "Added to bookmarks",
+            style: kTextStyle(16),
+          )
+        ],
+      ),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -61,90 +91,40 @@ class _ListingWidgetState extends ConsumerState<ListingWidget> {
                 right: 5,
                 child: ref.watch(userDataStreamProvider).when(
                       data: (userFromStream) {
-                        if ((userFromStream as ClientModel)
-                            .bookmarks
-                            .contains(widget.propertyListing.id)) {
-                          return IconButton.filledTonal(
-                            onPressed: () {
-                              ref.read(
-                                removeFavsProvider(
-                                  (
-                                    ctx: context,
-                                    id: widget.propertyListing.id,
-                                    user: userFromStream
-                                  ),
-                                ),
-                              );
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  padding: EdgeInsets.all(6),
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.white,
-                                  content: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 10.w,
-                                        height: 10.w,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                              widget.propertyListing
-                                                  .imagesUrls[0],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Text("Removed from bookmarks", style: kTextStyle(16),)
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                            icon: const Icon(
-                              Icons.bookmark,
-                              color: AppColors.brown,
-                            ),
-                          );
-                        }
+                        ClientModel user = userFromStream as ClientModel;
+                        bool isBookmarked =
+                            user.bookmarks.contains(widget.propertyListing.id);
                         return IconButton.filledTonal(
                           onPressed: () {
-                            ref.read(
-                              addToFavsProvider(
-                                (
+                            if (isBookmarked) {
+                              try {
+                                ref.read(removeFavsProvider((
                                   ctx: context,
                                   id: widget.propertyListing.id,
-                                  user: userFromStream
-                                ),
-                              ),
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  padding: EdgeInsets.all(6),
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.white,
-                                  content: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 10.w,
-                                        height: 10.w,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                              widget.propertyListing
-                                                  .imagesUrls[0],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Text("Added to bookmarks", style: kTextStyle(16),)
-                                    ],
-                                  ),
-                                ),
-                              );
+                                  user: user
+                                )));
+                                displaySnackbar("Removed from bookmarks");
+                              } on Exception catch (e) {
+                                log(e.toString());
+                              }
+                            } else {
+                              try {
+                                ref.read(addToFavsProvider((
+                                  ctx: context,
+                                  id: widget.propertyListing.id,
+                                  user: user
+                                )));
+                                displaySnackbar("Added to bookmarks");
+                              } on Exception catch (e) {
+                                log(e.toString());
+                              }
+                            }
                           },
-                          icon: const Icon(Icons.bookmark_outline),
+                          icon: Icon(
+                            isBookmarked
+                                ? Icons.bookmark
+                                : Icons.bookmark_outline,
+                          ),
                         );
                       },
                       error: (e, s) => IconButton.filledTonal(
@@ -153,7 +133,7 @@ class _ListingWidgetState extends ConsumerState<ListingWidget> {
                       ),
                       loading: () => const LoadingIndicator(),
                     ),
-              ),
+              )
             ],
           ),
           spaceY(10),

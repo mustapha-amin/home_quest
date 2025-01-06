@@ -70,6 +70,35 @@ class PropertyListingRepo {
     }
   }
 
+  Future<List<PropertyListing>> fetchListingsByIDs(List<String> ids) async {
+    try {
+      List<List<String>> chunkedIds = [];
+      for (int i = 0; i < ids.length; i += 10) {
+        chunkedIds
+            .add(ids.sublist(i, i + 10 > ids.length ? ids.length : i + 10));
+      }
+
+      List<DocumentSnapshot<Map<String, dynamic>>> documents = [];
+
+      for (List<String> chunk in chunkedIds) {
+        final querySnapshot = await firebaseFirestore
+            .collection('listings')
+            .where(FieldPath.documentId, whereIn: chunk)
+            .get();
+        documents.addAll(querySnapshot.docs);
+      }
+
+      return documents
+          .map((doc) => PropertyListing.fromJson(doc.data()!))
+          .toList();
+    } on FirebaseException catch (e) {
+      throw Exception(e.toString());
+    } on SocketException catch (_) {
+      throw Exception(
+          "A network error occured. Please check your internet connection and try again");
+    }
+  }
+
   Stream<List<PropertyListing>?> fetchListings() {
     try {
       return firebaseFirestore.collection('listings').snapshots().map(
