@@ -11,6 +11,7 @@ import 'package:sizer/sizer.dart';
 import 'core/providers.dart';
 import 'features/onboarding/view/onboarding.dart';
 
+final GlobalKey<ScaffoldMessengerState> scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -34,6 +35,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Sizer(builder: (___, _, __) {
       return MaterialApp(
+        scaffoldMessengerKey: scaffoldKey,
         debugShowCheckedModeBanner: false,
         home: ref.watch(onBoardingSettingsProvider).isFirstTime()
             ? const OnboardingScreen()

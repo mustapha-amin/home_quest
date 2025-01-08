@@ -63,7 +63,7 @@ class UserRemoteDataNotifier extends StateNotifier<bool> {
       log("user data saved");
       context.replace(const HomeUserDataWrapper());
     } catch (e) {
-      showSnackBar(context, e.toString());
+      showSnackBar(e.toString());
     }
     state = false;
   }
@@ -79,7 +79,7 @@ class UserRemoteDataNotifier extends StateNotifier<bool> {
       await userDataRepo.updateField(collection, id, data);
       log("field updated");
     } catch (e) {
-      showSnackBar(context, e.toString());
+      showSnackBar(e.toString());
     }
     state = false;
   }

@@ -42,9 +42,10 @@ class AuthController extends StateNotifier<bool> {
     result = await authService.signIn(email: email, password: password);
     state = false;
     result.fold(
-      (l) => showSnackBar(context, l),
+      (l) => showSnackBar(l),
       (r) => context.replace(const HomeUserDataWrapper()),
     );
+    return null;
   }
 
   FutureVoid signUp({
@@ -57,9 +58,10 @@ class AuthController extends StateNotifier<bool> {
     result = await authService.signUp(email: email, password: password);
     state = false;
     result.fold(
-      (l) => showSnackBar(context, l),
+      (l) => showSnackBar(l),
       (r) => context.replace(const UserTypeScreen()),
     );
+    return null;
   }
 
   FutureVoid signOut(BuildContext context, WidgetRef ref, bool isClient) async {
@@ -67,7 +69,7 @@ class AuthController extends StateNotifier<bool> {
     state = true;
     result = await authService.signOut();
     state = false;
-    result.fold((l) => showSnackBar(context, l), (r) {
+    result.fold((l) => showSnackBar(l), (r) {
       ref.invalidate(
           isClient ? currentScreenProvider : currentAgentScreenProvider);
       ref.invalidate(authControllerProvider);
@@ -82,6 +84,7 @@ class AuthController extends StateNotifier<bool> {
         (route) => false,
       );
     });
+    return null;
   }
 
   FutureVoid requestPwdReset({
@@ -91,8 +94,9 @@ class AuthController extends StateNotifier<bool> {
   }) async {
     final result = await authService.requestPaswordReset(email);
     result.fold(
-      (l) => showSnackBar(context, l),
+      (l) => showSnackBar(l),
       (r) => operation(),
     );
+    return null;
   }
 }

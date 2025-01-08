@@ -3,9 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions.dart';
+import 'package:home_quest/features/btm_nav_bar/client/home/controllers/favorite_controllers.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/views/agent_detail.dart';
 
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
+import 'package:home_quest/main.dart';
+import 'package:home_quest/models/client.dart';
 import 'package:home_quest/models/property_listing.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:sizer/sizer.dart';
@@ -13,8 +16,8 @@ import 'package:sizer/sizer.dart';
 import '../../../../../core/enums.dart';
 import '../../../../../core/utils/safety_tips_text.dart';
 import '../../../../../core/utils/textstyle.dart';
+import '../../../../../shared/loading_indicator.dart';
 import '../../../../../shared/spacing.dart';
-import 'package:intl/intl.dart';
 
 class ListingDetail extends ConsumerStatefulWidget {
   final PropertyListing propertyListing;
@@ -29,6 +32,7 @@ class ListingDetail extends ConsumerStatefulWidget {
 class _ListingDetailState extends ConsumerState<ListingDetail> {
   PageController pageController = PageController();
   int _currentIndex = 0;
+  bool canPop = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +52,7 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                       backgroundColor: Colors.white,
                     ),
                     onPressed: () {
+                      scaffoldKey.currentState!.clearSnackBars();
                       context.pop();
                     },
                     icon: const HugeIcon(
@@ -55,33 +60,56 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                         color: Colors.black),
                   ),
                   actions: [
-                    IconButton(
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.white,
-                      ),
-                      onPressed: () {},
-                      icon: Icon(
-                        Icons.favorite_border,
-                        color: Colors.red,
-                        size: 30,
-                      ),
-                    ),
+                    ref.watch(userDataStreamProvider).when(
+                          data: (userFromStream) {
+                            ClientModel user = userFromStream as ClientModel;
+                            bool isBookmarked = user.bookmarks
+                                .contains(widget.propertyListing.id);
+                            return IconButton.filledTonal(
+                              style: IconButton.styleFrom(
+                                backgroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                ref.read(updateBookmarksProv((
+                                  listing: widget.propertyListing,
+                                  bookmarks: user.bookmarks,
+                                  id: widget.propertyListing.id,
+                                  isAddition: !isBookmarked,
+                                )));
+                              },
+                              icon: Icon(
+                                isBookmarked
+                                    ? Icons.bookmark
+                                    : Icons.bookmark_outline,
+                                size: 30,
+                              ),
+                            );
+                          },
+                          error: (e, s) => IconButton.filledTonal(
+                            onPressed: () {},
+                            icon: const Icon(
+                              Icons.bookmark_outline,
+                              size: 30,
+                            ),
+                          ),
+                          loading: () => const LoadingIndicator(),
+                        ),
                     PopupMenuButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.white,
                         ),
                         elevation: 1,
                         color: Colors.white,
-                        menuPadding:
-                            EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-                        icon: Icon(
+                        menuPadding: const EdgeInsets.symmetric(
+                            horizontal: 2, vertical: 2),
+                        icon: const Icon(
                           Icons.more_horiz,
                           color: Colors.black,
                           size: 30,
                         ),
                         itemBuilder: (context) {
                           return [
-                            PopupMenuItem(
+                            const PopupMenuItem(
                               child: Text("Report"),
                             ),
                           ];
@@ -121,7 +149,8 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                   )),
                 ),
                 SliverPadding(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                   sliver: SliverList(
                     delegate: SliverChildListDelegate(
                       [
@@ -133,7 +162,7 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                             return Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text("By " + agent!.name,
+                                Text("By ${agent!.name}",
                                     style: kTextStyle(18)),
                                 CircleAvatar(
                                   radius: 20,
@@ -160,7 +189,7 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                             );
                           }, error: (e, stk) {
                             log(e.toString(), stackTrace: stk);
-                            return Text("An error occured");
+                            return const Text("An error occured");
                           }, loading: () {
                             return const Center(
                                 child: CircularProgressIndicator());
@@ -199,7 +228,7 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.location_on,
                               color: Colors.red,
                               size: 20,
@@ -221,57 +250,51 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                             children: [
                               Row(
                                 children: [
-                                  HugeIcon(
+                                  const HugeIcon(
                                     icon: HugeIcons.strokeRoundedBedSingle02,
                                     color: Colors.blue,
                                     size: 20,
                                   ),
                                   Text(
-                                    widget.propertyListing.bedrooms.toString() +
-                                        " Bedrooms",
+                                    "${widget.propertyListing.bedrooms} Bedrooms",
                                     style: kTextStyle(15, color: Colors.black),
                                   ),
                                 ],
                               ),
                               Row(
                                 children: [
-                                  HugeIcon(
+                                  const HugeIcon(
                                       icon: HugeIcons.strokeRoundedBathtub01,
                                       color: Colors.blue,
                                       size: 20),
                                   Text(
-                                    widget.propertyListing.bathrooms
-                                            .toString() +
-                                        " Bathrooms",
+                                    "${widget.propertyListing.bathrooms} Bathrooms",
                                     style: kTextStyle(15, color: Colors.black),
                                   ),
                                 ],
                               ),
                               Row(
                                 children: [
-                                  HugeIcon(
+                                  const HugeIcon(
                                       icon: HugeIcons
                                           .strokeRoundedKitchenUtensils,
                                       color: Colors.blue,
                                       size: 20),
                                   Text(
-                                    widget.propertyListing.kitchens.toString() +
-                                        " Kitchens",
+                                    "${widget.propertyListing.kitchens} Kitchens",
                                     style: kTextStyle(15, color: Colors.black),
                                   ),
                                 ],
                               ),
                               Row(
                                 children: [
-                                  HugeIcon(
+                                  const HugeIcon(
                                     icon: HugeIcons.strokeRoundedSofa01,
                                     color: Colors.blue,
                                     size: 20,
                                   ),
                                   Text(
-                                    widget.propertyListing.sittingRooms
-                                            .toString() +
-                                        " Sitting Room${widget.propertyListing.sittingRooms == 1 ? '' : 's'}",
+                                    "${widget.propertyListing.sittingRooms} Sitting Room${widget.propertyListing.sittingRooms == 1 ? '' : 's'}",
                                     style: kTextStyle(15, color: Colors.black),
                                   ),
                                 ],
@@ -330,7 +353,7 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.grey[200],
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.map,
                             size: 80,
                             color: Colors.grey,
@@ -368,11 +391,11 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                       style: kTextStyle(15, color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                       backgroundColor: Colors.green,
                     ),
-                    icon: HugeIcon(
+                    icon: const HugeIcon(
                       icon: HugeIcons.strokeRoundedWhatsapp,
                       color: Colors.white,
                     ),
@@ -386,11 +409,11 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                       "Call Agent",
                       style: kTextStyle(15),
                     ),
-                    icon: HugeIcon(
+                    icon: const HugeIcon(
                         icon: HugeIcons.strokeRoundedCall, color: Colors.black),
                     style: ElevatedButton.styleFrom(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                     ),
                   ),
                 ),

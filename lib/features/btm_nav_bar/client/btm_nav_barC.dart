@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/colors.dart';
+import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/image_path.dart';
 import 'package:home_quest/core/utils/svg_util.dart';
@@ -11,6 +12,7 @@ import 'package:home_quest/features/btm_nav_bar/client/home/views/home.dart';
 import 'package:home_quest/features/btm_nav_bar/client/search/search.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/profile.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
+import 'package:home_quest/main.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:sizer/sizer.dart';
@@ -82,7 +84,7 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
                 spaceX(4),
                 Image.asset(ImagePaths.homeLogo, height: 30),
               ],
-            ),
+            ).padX(10),
             if (ref.watch(currentScreenProvider) == 1)
               IconButton(
                 icon: HugeIcon(
@@ -116,6 +118,7 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: ref.watch(currentScreenProvider),
         onTap: (value) {
+          scaffoldKey.currentState!.hideCurrentSnackBar();
           navigateTo(ref, value);
         },
         items: [
@@ -135,14 +138,20 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
           ),
           BottomNavigationBarItem(
             icon: ref.watch(currentScreenProvider) == 2
-                ? svgImage(btmNavBarIconsFilled[1], true)
-                : svgImage(btmNavBarIcons[1], false),
-            label: "Favorite",
+                ? const Icon(
+                    Icons.bookmark,
+                    size: 26,
+                  )
+                : const Icon(
+                    Icons.bookmark_outline,
+                    size: 26,
+                  ),
+            label: "Bookmarks",
           ),
           BottomNavigationBarItem(
             label: "Profile",
             icon: UserAvatar(
-              url: ref.watch(userDataStreamProvider)!.value!.profilePicture,
+              url: ref.watch(userDataStreamProvider).value!.profilePicture,
               height: 7.w,
               width: 7.w,
             ),

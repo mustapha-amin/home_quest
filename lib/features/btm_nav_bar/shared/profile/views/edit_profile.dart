@@ -116,7 +116,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                     }
                   }
                 } catch (e) {
-                  showSnackBar(context, e.toString());
+                  showSnackBar(e.toString());
                 }
               } else {
                 context.pop();

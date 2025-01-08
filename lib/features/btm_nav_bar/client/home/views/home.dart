@@ -15,27 +15,26 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ref.watch(fetchListingsProvider).when(
-        data: (listings) {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                ...listings!.map((listing) =>
-                    ListingWidget(propertyListing: listing).padX(10)),
-              ],
-            ),
-          );
-        },
-        error: (e, _) {
-          return const Center(
-            child: Text("An error occured"),
-          );
-        },
-        loading: () {
-          return const Center(child: LoadingIndicator());
-        },
-      ),
+    return ref.watch(fetchListingsProvider).when(
+      data: (listings) {
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              ...listings!.map((listing) =>
+                  ListingWidget(propertyListing: listing).padX(10)),
+            ],
+          ),
+        );
+      },
+      error: (e, _) {
+        return const Center(
+          child: Text("An error occured"),
+        );
+      },
+      loading: () {
+        return const Center(child: LoadingIndicator());
+      },
     );
   }
 }

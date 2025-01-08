@@ -57,16 +57,31 @@ class UserDataRepository {
     }
   }
 
+  FutureVoid updateBookmarks(List<String> bookmarks) async {
+    try {
+      await firebaseFirestore.collection('clients').doc(firebaseAuth.currentUser!.uid).update({
+        'bookmarks': bookmarks
+      });
+    } on FirebaseException catch (e) {
+      log(e.toString());
+      throw Exception(e.toString());
+    }
+  }
+
   FutureVoid updateField(
     String collection,
     String id,
     Map<String, dynamic> data,
   ) async {
     try {
-      await firebaseFirestore.collection(collection).doc(id).set(data, SetOptions(merge: true));
+      await firebaseFirestore
+          .collection(collection)
+          .doc(id)
+          .set(data, SetOptions(merge: true));
     } on FirebaseException catch (e) {
       throw Exception(e.toString());
     }
+    return null;
   }
 
   Future<bool?> userDataExists() async {

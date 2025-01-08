@@ -18,6 +18,7 @@ class OnboardingSettings {
 
   FutureVoid passOnboarding() async {
     await sharedPreferences!.setBool(onboardKey, false);
+    return null;
   }
 
   bool isFirstTime() {

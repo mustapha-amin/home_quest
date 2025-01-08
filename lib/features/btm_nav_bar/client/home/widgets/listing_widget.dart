@@ -13,11 +13,9 @@ import 'package:home_quest/models/property_listing.dart';
 import 'package:home_quest/shared/loading_indicator.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:sizer/sizer.dart';
-
-import '../../../../../core/colors.dart';
 import '../../../../../core/enums.dart';
 
-class ListingWidget extends ConsumerStatefulWidget {
+class ListingWidget extends ConsumerWidget {
   final PropertyListing propertyListing;
   final bool isViewDetails;
   const ListingWidget({
@@ -27,45 +25,12 @@ class ListingWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ListingWidget> createState() => _ListingWidgetState();
-}
-
-class _ListingWidgetState extends ConsumerState<ListingWidget> {
-  void displaySnackbar(String text) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      padding: EdgeInsets.all(6),
-      behavior: SnackBarBehavior.floating,
-      backgroundColor: Colors.white,
-      content: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 10.w,
-            height: 10.w,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                  widget.propertyListing.imagesUrls[0],
-                ),
-              ),
-            ),
-          ),
-          Text(
-            "Added to bookmarks",
-            style: kTextStyle(16),
-          )
-        ],
-      ),
-    ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () => context.push(
         ListingDetail(
-          propertyListing: widget.propertyListing,
-          isViewDetails: widget.isViewDetails,
+          propertyListing: propertyListing,
+          isViewDetails: isViewDetails,
         ),
       ),
       child: Column(
@@ -80,7 +45,7 @@ class _ListingWidgetState extends ConsumerState<ListingWidget> {
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(
-                      widget.propertyListing.imagesUrls[0],
+                      propertyListing.imagesUrls[0],
                     ),
                   ),
                   borderRadius: BorderRadius.circular(20),
@@ -93,32 +58,15 @@ class _ListingWidgetState extends ConsumerState<ListingWidget> {
                       data: (userFromStream) {
                         ClientModel user = userFromStream as ClientModel;
                         bool isBookmarked =
-                            user.bookmarks.contains(widget.propertyListing.id);
+                            user.bookmarks.contains(propertyListing.id);
                         return IconButton.filledTonal(
                           onPressed: () {
-                            if (isBookmarked) {
-                              try {
-                                ref.read(removeFavsProvider((
-                                  ctx: context,
-                                  id: widget.propertyListing.id,
-                                  user: user
-                                )));
-                                displaySnackbar("Removed from bookmarks");
-                              } on Exception catch (e) {
-                                log(e.toString());
-                              }
-                            } else {
-                              try {
-                                ref.read(addToFavsProvider((
-                                  ctx: context,
-                                  id: widget.propertyListing.id,
-                                  user: user
-                                )));
-                                displaySnackbar("Added to bookmarks");
-                              } on Exception catch (e) {
-                                log(e.toString());
-                              }
-                            }
+                            ref.read(updateBookmarksProv((
+                              listing: propertyListing,
+                              bookmarks: user.bookmarks,
+                              id: propertyListing.id,
+                              isAddition: !isBookmarked,
+                            )));
                           },
                           icon: Icon(
                             isBookmarked
@@ -127,10 +75,7 @@ class _ListingWidgetState extends ConsumerState<ListingWidget> {
                           ),
                         );
                       },
-                      error: (e, s) => IconButton.filledTonal(
-                        onPressed: () {},
-                        icon: const Icon(Icons.bookmark_outline),
-                      ),
+                      error: (e, s) => Text("Error"),
                       loading: () => const LoadingIndicator(),
                     ),
               )
@@ -150,8 +95,7 @@ class _ListingWidgetState extends ConsumerState<ListingWidget> {
                         width: 10,
                         height: 10,
                         decoration: BoxDecoration(
-                          color: widget.propertyListing.listingType ==
-                                  ListingType.rent
+                          color: propertyListing.listingType == ListingType.rent
                               ? Colors.green
                               : Colors.blue,
                           shape: BoxShape.circle,
@@ -159,36 +103,24 @@ class _ListingWidgetState extends ConsumerState<ListingWidget> {
                       ),
                       spaceX(5),
                       Text(
-                        "For ${widget.propertyListing.listingType.name}",
+                        "For ${propertyListing.listingType.name}",
                         style: kTextStyle(15),
                       ),
                     ],
                   ),
                   Text(
-                    "${widget.propertyListing.price.toMoney} ${widget.propertyListing.listingType == ListingType.rent ? ' / Year' : ''}",
+                    "${propertyListing.price.toMoney} ${propertyListing.listingType == ListingType.rent ? ' / Year' : ''}",
                     style: kTextStyle(18, isBold: true),
                   ),
                   SizedBox(
                     width: 35.w,
                     child: Text(
-                      widget.propertyListing.address,
+                      propertyListing.address,
                       style: kTextStyle(15),
                     ),
                   ),
                 ],
               ),
-              OutlinedButton(
-                onPressed: () {
-                  context.push(ListingDetail(
-                    propertyListing: widget.propertyListing,
-                    isViewDetails: widget.isViewDetails,
-                  ));
-                },
-                child: Text(
-                  "View details",
-                  style: kTextStyle(17),
-                ),
-              )
             ],
           )
         ],

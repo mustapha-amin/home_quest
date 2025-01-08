@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_quest/core/extensions.dart';
+import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/controller/property_listing_ctrl.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/controllers/favorite_controllers.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/widgets/listing_widget.dart';
@@ -20,39 +22,43 @@ class FavoritesScreen extends ConsumerStatefulWidget {
 class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ref.watch(userDataStreamProvider).when(
-        data: (user) {
-          
-          return ref
-              .watch(fetchFavsProvider((user as ClientModel).bookmarks))
-              .when(
-            data: (listings) {
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ...listings.map(
-                        (listing) => ListingWidget(propertyListing: listing))
-                  ],
-                ),
-              );
-            },
-            error: (e, stk) {
-              log(e.toString(), stackTrace: stk);
-              return Text(e.toString());
-            },
-            loading: () {
-              return const LoadingIndicator();
-            },
-          );
-        },
-        error: (e, stk) {
-          return const Text("Error fetching user data");
-        },
-        loading: () {
-          return const LoadingIndicator();
-        },
-      ),
+    return ref.watch(userDataStreamProvider).when(
+      data: (user) {
+        return ref
+            .watch(fetchFavsProvider((user as ClientModel).bookmarks))
+            .when(
+          data: (listings) {
+            return listings.isEmpty
+                ? Center(
+                    child: Text(
+                    "No bookmarks yet",
+                    style: kTextStyle(20, isBold: true),
+                  ))
+                : SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: [
+                        ...listings.map((listing) =>
+                            ListingWidget(propertyListing: listing))
+                      ],
+                    ).padX(10),
+                  );
+          },
+          error: (e, stk) {
+            log(e.toString(), stackTrace: stk);
+            return Text(e.toString());
+          },
+          loading: () {
+            return const LoadingIndicator();
+          },
+        );
+      },
+      error: (e, stk) {
+        return const Text("Error fetching user data");
+      },
+      loading: () {
+        return const LoadingIndicator();
+      },
     );
   }
 }
