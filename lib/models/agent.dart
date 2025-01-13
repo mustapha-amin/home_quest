@@ -1,19 +1,23 @@
 // ignore_for_file: annotate_overrides, overridden_fields
 
+import 'package:home_quest/models/review.dart';
+
 import 'user.dart';
 
 class AgentModel extends User {
   final int phoneNumber;
-  
+
   final String agentID;
-  
+
   final String name;
-  
+
   final String profilePicture;
-  
+
   final List<String> listingsIDs;
-  
+
   final double rating;
+
+  final List<Review> reviews;
 
   AgentModel({
     required this.agentID,
@@ -22,6 +26,7 @@ class AgentModel extends User {
     required this.profilePicture,
     required this.listingsIDs,
     required this.rating,
+    required this.reviews,
   }) : super(
           id: agentID,
           name: name,
@@ -42,6 +47,7 @@ class AgentModel extends User {
       profilePicture: "profilePicture",
       listingsIDs: [],
       rating: 0,
+      reviews: [],
     );
   }
 
@@ -54,6 +60,7 @@ class AgentModel extends User {
       'profilePicture': profilePicture,
       'listingsIDs': listingsIDs,
       'rating': rating,
+      'reviews' : reviews,
     };
   }
 
@@ -65,6 +72,7 @@ class AgentModel extends User {
       profilePicture: json['profilePicture'],
       listingsIDs: List<String>.from(json['listingsIDs']),
       rating: json['rating'].toDouble(),
+      reviews: (json['reviews'] as List<dynamic>).map((review) => Review.fromJson(review)).toList(),
     );
   }
 
@@ -75,6 +83,7 @@ class AgentModel extends User {
     String? profilePicture,
     List<String>? listingsIDs,
     double? rating,
+    List<Review>? reviews
   }) {
     return AgentModel(
       phoneNumber: phoneNumber ?? this.phoneNumber,
@@ -83,6 +92,7 @@ class AgentModel extends User {
       profilePicture: profilePicture ?? this.profilePicture,
       listingsIDs: listingsIDs ?? this.listingsIDs,
       rating: rating ?? this.rating,
+      reviews: reviews ?? this.reviews
     );
   }
 }

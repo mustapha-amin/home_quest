@@ -118,15 +118,32 @@ class _AgentDetailState extends ConsumerState<AgentDetail> {
                                 return LoadingIndicator();
                               },
                             ),
-                            ListView.builder(
-                              itemCount: 20,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  title: Text('Review ${index + 1}'),
-                                  subtitle: Text(
-                                      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio vitae libero.'),
-                                );
-                              },
+                            Column(
+                              children: [
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: 20,
+                                    itemBuilder: (context, index) {
+                                      return ListTile(
+                                        title: Text('Review ${index + 1}'),
+                                        subtitle: Text(
+                                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec nec odio vitae libero.'),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(),
+                                    ),
+                                    IconButton.filled(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.send),
+                                    ),
+                                  ],
+                                )
+                              ],
                             )
                           ],
                         ),

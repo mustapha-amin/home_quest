@@ -73,7 +73,6 @@ class AuthController extends StateNotifier<bool> {
       ref.invalidate(
           isClient ? currentScreenProvider : currentAgentScreenProvider);
       ref.invalidate(authControllerProvider);
-      ref.invalidate(firebaseAuthProvider);
       ref.invalidate(userDataStreamProvider);
       ref.invalidate(currentScreenProvider);
       ref.invalidate(currentAgentScreenProvider);

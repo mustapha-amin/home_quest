@@ -237,7 +237,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                                 Wrap(
                                   spacing: 5,
                                   children: [
-                                    ...PropertyType.values.map(
+                                    ...PropertyType.values.where((value) => value.index != 0).map(
                                       (type) => ChoiceChip(
                                         label: Text(type.name),
                                         selected: propertyType == type,
@@ -251,7 +251,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                                   ],
                                 ),
                                 Wrap(spacing: 5, children: [
-                                  ...PropertySubtype.values.map(
+                                  ...PropertySubtype.values.where((value) => value.index != 0).map(
                                     (type) => ChoiceChip(
                                       label: Text(type.name),
                                       selected: propertySubtype == type,
@@ -266,7 +266,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                                 Wrap(
                                   spacing: 5,
                                   children: [
-                                    ...Condition.values.map(
+                                    ...Condition.values.where((value) => value.index != 0).map(
                                       (type) => ChoiceChip(
                                         label: Text(type.name),
                                         selected: condition == type,
@@ -414,7 +414,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                         decoration: _textDecoration(
                             hintText: "Price", prefix: '\u20A6 '),
                         inputFormatters: [
-                          ThousandsFormatter(allowFraction: true),
+                          ThousandsFormatter(),
                         ],
                       ),
                       spaceY(8),
@@ -424,7 +424,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                         decoration: _textDecoration(
                             hintText: "Agent fee", prefix: '\u20A6 '),
                         inputFormatters: [
-                          ThousandsFormatter(allowFraction: true),
+                          ThousandsFormatter(),
                         ],
                       ),
                       spaceY(8),
