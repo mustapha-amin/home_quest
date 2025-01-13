@@ -33,10 +33,18 @@ extension WidgetExts on Widget {
         padding: EdgeInsets.all(size),
         child: this,
       );
+
+  Widget centeralize() => Center(
+        child: this,
+      );
 }
 
 extension MoneyExts on num {
   String get toMoney {
-    return NumberFormat.currency(symbol: 'N', decimalDigits: 0).format(this);
+    return NumberFormat.currency(symbol: '₦', decimalDigits: 0).format(this);
   }
+}
+
+extension StringExts on String {
+  String get captializeFirst => this[0].toUpperCase() + substring(1);
 }

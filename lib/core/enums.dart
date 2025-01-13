@@ -3,6 +3,7 @@ enum ListingType { rent, sale }
 enum UserType { agent, client, none }
 
 enum PropertyType {
+  all,
   apartment,
   mansion,
   bungalow,
@@ -16,9 +17,10 @@ enum Furnishing {
 }
 
 enum Condition {
+  all('all'),
   old('old'),
-  newly_built('Newly built'),
-  renovated('Renovated');
+  newly_built('newly built'),
+  renovated('renovated');
 
   final String name;
 
@@ -26,6 +28,7 @@ enum Condition {
 }
 
 enum PropertySubtype {
+  all('all'),
   detached('detached'),
   semi_detached('semi detached');
 

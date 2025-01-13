@@ -33,6 +33,7 @@ dependencies:
   cached_network_image: ^3.4.1
   cloud_firestore: ^5.5.0
   cupertino_icons: ^1.0.8
+  dropdown_button2: ^2.3.9
   envied: ^1.0.0
   firebase_auth: ^5.3.3
   firebase_core: ^3.8.0

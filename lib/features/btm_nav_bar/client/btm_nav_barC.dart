@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/colors.dart';
+import 'package:home_quest/core/enums.dart';
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/image_path.dart';
@@ -9,7 +10,9 @@ import 'package:home_quest/core/utils/svg_util.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/btm_nav_bar/client/favorites/favorites.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/views/home.dart';
+import 'package:home_quest/features/btm_nav_bar/client/search/controller/search_filter_ctrl.dart';
 import 'package:home_quest/features/btm_nav_bar/client/search/search.dart';
+import 'package:home_quest/features/btm_nav_bar/client/search/widgets/modal_sheet.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/profile.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/main.dart';
@@ -39,6 +42,7 @@ class BtmNavBarC extends ConsumerStatefulWidget {
 class _BtmNavBarState extends ConsumerState<BtmNavBarC>
     with SingleTickerProviderStateMixin {
   late AnimationController? _controller;
+  ListingType listingType = ListingType.rent;
 
   @override
   void initState() {
@@ -87,27 +91,31 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
             ).padX(10),
             if (ref.watch(currentScreenProvider) == 1)
               IconButton(
-                icon: HugeIcon(
+                icon: const HugeIcon(
                   icon: HugeIcons.strokeRoundedSearch01,
                   color: AppColors.brown,
-                  size: 20,
+                  size: 30,
                 ),
                 onPressed: () {
+                  ref.invalidate(searchFilterProvider);
                   showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return BottomSheet(
-                          animationController: _controller!,
-                          onClosing: () {},
-                          builder: (context) {
-                            return Column(
-                              children: [],
-                            );
-                          },
-                        );
-                      });
+                    isScrollControlled: true,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(35),
+                        topRight: Radius.circular(35),
+                      ),
+                    ),
+                    context: context,
+                    builder: (context) {
+                      return SizedBox(
+                        height: 95.h,
+                        child: const AppBottomSheet(),
+                      );
+                    },
+                  );
                 },
-              ),
+              )
           ],
         ),
       ),
