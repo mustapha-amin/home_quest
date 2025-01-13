@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions.dart';
+import 'package:home_quest/features/btm_nav_bar/client/search/widgets/modal_sheet.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
