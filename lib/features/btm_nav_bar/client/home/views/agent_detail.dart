@@ -135,7 +135,9 @@ class _AgentDetailState extends ConsumerState<AgentDetail> {
                                 Row(
                                   children: [
                                     Expanded(
-                                      child: TextField(),
+                                      child: TextField(
+                                        
+                                      ),
                                     ),
                                     IconButton.filled(
                                       onPressed: () {},
