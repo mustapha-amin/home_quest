@@ -15,7 +15,6 @@ class AgentModel extends User {
 
   final List<String> listingsIDs;
 
-  final double rating;
 
   final List<Review> reviews;
 
@@ -25,7 +24,6 @@ class AgentModel extends User {
     required this.phoneNumber,
     required this.profilePicture,
     required this.listingsIDs,
-    required this.rating,
     required this.reviews,
   }) : super(
           id: agentID,
@@ -36,7 +34,7 @@ class AgentModel extends User {
 
   @override
   String toString() {
-    return "$phoneNumber $agentID $name $rating";
+    return "$phoneNumber $agentID $name";
   }
 
   factory AgentModel.defaultInstance() {
@@ -46,7 +44,6 @@ class AgentModel extends User {
       phoneNumber: 123,
       profilePicture: "profilePicture",
       listingsIDs: [],
-      rating: 0,
       reviews: [],
     );
   }
@@ -59,7 +56,6 @@ class AgentModel extends User {
       'phoneNumber': phoneNumber,
       'profilePicture': profilePicture,
       'listingsIDs': listingsIDs,
-      'rating': rating,
       'reviews' : reviews,
     };
   }
@@ -71,7 +67,6 @@ class AgentModel extends User {
       phoneNumber: json['phoneNumber'],
       profilePicture: json['profilePicture'],
       listingsIDs: List<String>.from(json['listingsIDs']),
-      rating: json['rating'].toDouble(),
       reviews: (json['reviews'] as List<dynamic>).map((review) => Review.fromJson(review)).toList(),
     );
   }
@@ -82,7 +77,6 @@ class AgentModel extends User {
     String? name,
     String? profilePicture,
     List<String>? listingsIDs,
-    double? rating,
     List<Review>? reviews
   }) {
     return AgentModel(
@@ -91,7 +85,6 @@ class AgentModel extends User {
       name: name ?? this.name,
       profilePicture: profilePicture ?? this.profilePicture,
       listingsIDs: listingsIDs ?? this.listingsIDs,
-      rating: rating ?? this.rating,
       reviews: reviews ?? this.reviews
     );
   }

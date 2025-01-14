@@ -98,8 +98,16 @@ class _AgentDetailState extends ConsumerState<AgentDetail> {
                                                   MainAxisAlignment.center,
                                               children: [
                                                 Text(
-                                                  user.rating
-                                                      .toStringAsFixed(1),
+                                                  (user.reviews
+                                                              .map((review) =>
+                                                                  review.rating)
+                                                              .fold(
+                                                                  0,
+                                                                  (prev, next) =>
+                                                                      prev +
+                                                                      next) /
+                                                          user.reviews.length)
+                                                      .toString(),
                                                   style: kTextStyle(20),
                                                 ),
                                                 const Icon(
