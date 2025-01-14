@@ -72,11 +72,9 @@ class AuthController extends StateNotifier<bool> {
     result.fold((l) => showSnackBar(l), (r) {
       ref.invalidate(
           isClient ? currentScreenProvider : currentAgentScreenProvider);
-      ref.invalidate(authControllerProvider);
       ref.invalidate(userDataStreamProvider);
       ref.invalidate(currentScreenProvider);
       ref.invalidate(currentAgentScreenProvider);
-      ref.invalidate(userDataExistsProvider);
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const MyApp()),

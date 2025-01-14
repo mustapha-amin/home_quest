@@ -9,6 +9,7 @@ import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/controller/property_listing_ctrl.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/controllers/controllers.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/views/image_full_screen.dart';
+import 'package:home_quest/features/btm_nav_bar/client/home/widgets/agent_data_widget.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/widgets/agent_details_tab_bar.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/widgets/listing_widget.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
@@ -65,218 +66,95 @@ class _AgentDetailState extends ConsumerState<AgentDetail> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Column(
-                                      children: [
-                                        Hero(
-                                          tag: user.profilePicture,
-                                          child: GestureDetector(
-                                            onTap: () => context.push(
-                                              ImageFullScreen(
-                                                  url: user.profilePicture),
-                                            ),
-                                            child: CircleAvatar(
-                                              radius: 80,
-                                              backgroundImage: NetworkImage(
-                                                  user.profilePicture),
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          user.name,
-                                          style: kTextStyle(30, isBold: true)
-                                              .copyWith(
-                                            letterSpacing: 2,
-                                          ),
-                                        ),
-                                        spaceY(20),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  (user.reviews
-                                                              .map((review) =>
-                                                                  review.rating)
-                                                              .fold(
-                                                                  0,
-                                                                  (prev, next) =>
-                                                                      prev +
-                                                                      next) /
-                                                          user.reviews.length)
-                                                      .toString(),
-                                                  style: kTextStyle(20),
+                                    AgentDataWidget(
+                                      id: widget.id,
+                                      user: user,
+                                      onPressed: (value) {
+                                        ref
+                                            .read(ratingProvider.notifier)
+                                            .state = value + 1;
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: const Text(
+                                                    "Write a review"),
+                                                content: SizedBox(
+                                                  width: 70.w,
+                                                  child: TextField(
+                                                    controller: reviewCtrl,
+                                                    maxLines: 5,
+                                                    minLines: 1,
+                                                    maxLength: 500,
+                                                    textCapitalization:
+                                                        TextCapitalization
+                                                            .sentences,
+                                                    decoration: InputDecoration(
+                                                      border:
+                                                          OutlineInputBorder(),
+                                                    ),
+                                                  ),
                                                 ),
-                                                const Icon(
-                                                  Icons.star,
-                                                  size: 18,
-                                                  color: Colors.amber,
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(
-                                              width: 0.5,
-                                              height: 20,
-                                              child: ColoredBox(
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            ref
-                                                .watch(
-                                                    fetchListingsByAgentIDProvider(
-                                                        widget.id))
-                                                .when(data: (listings) {
-                                              return Text(
-                                                "${listings.length} listing${listings.length == 1 ? '' : 's'}",
-                                                style: kTextStyle(20),
-                                              );
-                                            }, error: (_, __) {
-                                              return const Text(
-                                                  "An error occured");
-                                            }, loading: () {
-                                              return const Text('......');
-                                            }),
-                                            const SizedBox(
-                                              width: 0.5,
-                                              height: 20,
-                                              child: ColoredBox(
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            Text(
-                                              "${user.reviews.length} review${user.reviews.length == 1 ? '' : 's'}",
-                                              style: kTextStyle(20),
-                                            )
-                                          ],
-                                        ),
-                                        spaceY(50),
-                                        if (user.reviews
-                                            .where((review) =>
-                                                review.userID ==
-                                                ref
-                                                    .watch(firebaseAuthProvider)
-                                                    .currentUser!
-                                                    .uid)
-                                            .isEmpty)
-                                          Column(
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Rate this agent",
-                                                    style: kTextStyle(22,
-                                                        isBold: true),
+                                                actions: [
+                                                  TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                      child: Text(
+                                                        "Cancel",
+                                                        style: kTextStyle(15),
+                                                      )),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      final uid = ref
+                                                          .watch(
+                                                              firebaseAuthProvider)
+                                                          .currentUser!
+                                                          .uid;
+                                                      final review = Review(
+                                                          userID: uid,
+                                                          reviewID:
+                                                              const Uuid().v4(),
+                                                          text: reviewCtrl.text
+                                                              .trim(),
+                                                          rating: ref.watch(
+                                                              ratingProvider));
+                                                      try {
+                                                        setState(() {
+                                                          submisionLoading =
+                                                              true;
+                                                        });
+                                                        ref.watch(
+                                                            updateReviewsProvider((
+                                                          review,
+                                                          widget.id
+                                                        )));
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                                const SnackBar(
+                                                                    content: Text(
+                                                                        "Review submitted")));
+                                                      } on Exception catch (_) {
+                                                        showSnackBar(
+                                                            "Failed to submit review");
+                                                      } finally {
+                                                        submisionLoading =
+                                                            false;
+                                                      }
+                                                    },
+                                                    child: Text(
+                                                      "Submit",
+                                                      style: kTextStyle(15),
+                                                    ),
                                                   ),
                                                 ],
-                                              ).padX(23),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  for (int i = 0; i < 5; i++)
-                                                    IconButton(
-                                                        onPressed: () {
-                                                          setState(() {
-                                                            rating = i + 1;
-                                                          });
-                                                          showDialog(
-                                                              context: context,
-                                                              builder:
-                                                                  (context) {
-                                                                return AlertDialog(
-                                                                  title: const Text(
-                                                                      "Write a review"),
-                                                                  content:
-                                                                      SizedBox(
-                                                                    width: 70.w,
-                                                                    child:
-                                                                        const TextField(
-                                                                      maxLines:
-                                                                          5,
-                                                                      minLines:
-                                                                          1,
-                                                                      maxLength:
-                                                                          500,
-                                                                      textCapitalization:
-                                                                          TextCapitalization
-                                                                              .sentences,
-                                                                      decoration:
-                                                                          InputDecoration(
-                                                                        border:
-                                                                            OutlineInputBorder(),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                  actions: [
-                                                                    TextButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          Navigator.of(context)
-                                                                              .pop();
-                                                                        },
-                                                                        child:
-                                                                            Text(
-                                                                          "Cancel",
-                                                                          style:
-                                                                              kTextStyle(15),
-                                                                        )),
-                                                                    TextButton(
-                                                                        onPressed:
-                                                                            () {
-                                                                          final uid = ref
-                                                                              .watch(firebaseAuthProvider)
-                                                                              .currentUser!
-                                                                              .uid;
-                                                                          final review = Review(
-                                                                              userID: uid,
-                                                                              reviewID: const Uuid().v4(),
-                                                                              text: reviewCtrl.text.trim(),
-                                                                              rating: rating);
-                                                                          try {
-                                                                            setState(() {
-                                                                              submisionLoading = true;
-                                                                            });
-                                                                            ref.watch(updateReviewsProvider((
-                                                                              review,
-                                                                              widget.id
-                                                                            )));
-                                                                            Navigator.of(context).pop();
-                                                                            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Review submitted")));
-                                                                          } on Exception catch (_) {
-                                                                            showSnackBar("Failed to submit review");
-                                                                          } finally {
-                                                                            submisionLoading =
-                                                                                false;
-                                                                          }
-                                                                        },
-                                                                        child:
-                                                                            Text(
-                                                                          "Submit",
-                                                                          style:
-                                                                              kTextStyle(15),
-                                                                        )),
-                                                                  ],
-                                                                );
-                                                              });
-                                                          log(rating
-                                                              .toString());
-                                                        },
-                                                        icon: Icon(
-                                                          Icons.star,
-                                                          color: i < rating
-                                                              ? Colors.amber
-                                                              : Colors.grey,
-                                                          size: 35,
-                                                        ))
-                                                ],
-                                              ).padX(10),
-                                            ],
-                                          ),
-                                      ],
+                                              );
+                                            });
+                                      },
                                     ),
                                     spaceY(10),
                                     TabBar(
