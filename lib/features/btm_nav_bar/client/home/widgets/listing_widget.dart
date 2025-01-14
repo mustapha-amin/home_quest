@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
-import 'package:home_quest/features/btm_nav_bar/client/home/controllers/favorite_controllers.dart';
+import 'package:home_quest/features/btm_nav_bar/client/home/controllers/controllers.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/views/listing_detail.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/models/client.dart';
@@ -14,6 +14,7 @@ import 'package:home_quest/shared/loading_indicator.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../../core/enums.dart';
+import '../../bookmarks/controllers/bookmark_ctrl.dart';
 
 class ListingWidget extends ConsumerWidget {
   final PropertyListing propertyListing;

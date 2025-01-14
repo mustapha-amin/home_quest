@@ -8,9 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/bucket_ids.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/typedefs.dart';
-import 'package:home_quest/core/utils/image_url_util.dart';
 import 'package:home_quest/models/agent.dart';
 import 'package:home_quest/models/client.dart';
+import 'package:home_quest/models/review.dart';
 import 'package:home_quest/models/user.dart' as k;
 
 import '../../../core/utils/appwrite_image_upload.dart';
@@ -59,8 +59,20 @@ class UserDataRepository {
 
   FutureVoid updateBookmarks(List<String> bookmarks) async {
     try {
-      await firebaseFirestore.collection('clients').doc(firebaseAuth.currentUser!.uid).update({
-        'bookmarks': bookmarks
+      await firebaseFirestore
+          .collection('clients')
+          .doc(firebaseAuth.currentUser!.uid)
+          .update({'bookmarks': bookmarks});
+    } on FirebaseException catch (e) {
+      log(e.toString());
+      throw Exception(e.toString());
+    }
+  }
+
+  FutureVoid updateReviews(Review review, String agentID) async {
+    try {
+      await firebaseFirestore.collection('agents').doc(agentID).update({
+        'reviews': FieldValue.arrayUnion([review.toJson()])
       });
     } on FirebaseException catch (e) {
       log(e.toString());
@@ -81,7 +93,6 @@ class UserDataRepository {
     } on FirebaseException catch (e) {
       throw Exception(e.toString());
     }
-    return null;
   }
 
   Future<bool?> userDataExists() async {

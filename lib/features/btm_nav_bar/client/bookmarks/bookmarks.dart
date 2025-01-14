@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
-import 'package:home_quest/features/btm_nav_bar/agent/listings/controller/property_listing_ctrl.dart';
-import 'package:home_quest/features/btm_nav_bar/client/home/controllers/favorite_controllers.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/widgets/listing_widget.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/models/client.dart';
 import 'package:home_quest/shared/loading_indicator.dart';
+
+import 'controllers/bookmark_ctrl.dart';
 
 class FavoritesScreen extends ConsumerStatefulWidget {
   const FavoritesScreen({super.key});

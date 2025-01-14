@@ -26,10 +26,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               children: [
                 ...listings!.map((listing) =>
                     ListingWidget(propertyListing: listing).padX(10)),
-                ...listings.map((listing) =>
-                    ListingWidget(propertyListing: listing).padX(10)),
-                ...listings.map((listing) =>
-                    ListingWidget(propertyListing: listing).padX(10)),
               ],
             ),
           ),

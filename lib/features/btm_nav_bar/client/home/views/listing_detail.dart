@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions.dart';
-import 'package:home_quest/features/btm_nav_bar/client/home/controllers/favorite_controllers.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/views/agent_detail.dart';
 
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
@@ -19,6 +18,7 @@ import '../../../../../core/utils/safety_tips_text.dart';
 import '../../../../../core/utils/textstyle.dart';
 import '../../../../../shared/loading_indicator.dart';
 import '../../../../../shared/spacing.dart';
+import '../../bookmarks/controllers/bookmark_ctrl.dart';
 
 class ListingDetail extends ConsumerStatefulWidget {
   final PropertyListing propertyListing;
@@ -33,11 +33,11 @@ class ListingDetail extends ConsumerStatefulWidget {
 class _ListingDetailState extends ConsumerState<ListingDetail> {
   PageController pageController = PageController();
   int _currentIndex = 0;
-  bool canPop = false;
 
   String whatsappMsgGen() {
     return "Hi! I'm interested in ${widget.propertyListing.listingType == ListingType.rent ? "renting " : "buying "}"
-        "the house situated at ${widget.propertyListing.address} and listed at ${widget.propertyListing.price.toMoney}/${widget.propertyListing.listingType == ListingType.rent ? '/year' : ''}."
+        "the house situated at ${widget.propertyListing.address} and listed at ${widget.propertyListing.price.toMoney}${widget.propertyListing.listingType == ListingType.rent ? '/year' : ''} "
+        "on the HomeQuest app. "
         "Could you tell me about availability and scheduling a viewing?";
   }
 

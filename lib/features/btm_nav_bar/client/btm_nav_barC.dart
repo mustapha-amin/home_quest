@@ -8,7 +8,7 @@ import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/image_path.dart';
 import 'package:home_quest/core/utils/svg_util.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
-import 'package:home_quest/features/btm_nav_bar/client/favorites/favorites.dart';
+import 'package:home_quest/features/btm_nav_bar/client/bookmarks/bookmarks.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/views/home.dart';
 import 'package:home_quest/features/btm_nav_bar/client/search/controller/search_filter_ctrl.dart';
 import 'package:home_quest/features/btm_nav_bar/client/search/search.dart';
@@ -82,11 +82,11 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("HomeQuest", style: kTextStyle(20)),
+                Text("HomeQuest", style: kTextStyle(30)),
                 spaceX(4),
-                Image.asset(ImagePaths.homeLogo, height: 30),
+                Image.asset(ImagePaths.homeLogo, height: 25),
               ],
             ).padX(10),
             if (ref.watch(currentScreenProvider) == 1)
