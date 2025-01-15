@@ -73,8 +73,6 @@ class AuthController extends StateNotifier<bool> {
       ref.invalidate(
           isClient ? currentScreenProvider : currentAgentScreenProvider);
       ref.invalidate(userDataStreamProvider);
-      ref.invalidate(currentScreenProvider);
-      ref.invalidate(currentAgentScreenProvider);
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const MyApp()),

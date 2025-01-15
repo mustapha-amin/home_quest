@@ -40,7 +40,8 @@ class PropertyListing {
 
   @override
   String toString() {
-    return "$id $agentID $address $propertyType $propertySize $state $lga $price $agentFee $listingType $imagesUrls $bedrooms $kitchens $bathrooms $sittingRooms $condition $facilities $furnishing $propertySubtype ${geoPoint.toString()}";
+    return "$id $agentID $address $propertyType $propertySize $state $lga $price $agentFee $listingType $imagesUrls"
+        "$bedrooms $kitchens $bathrooms $sittingRooms $condition $facilities $furnishing $propertySubtype ${geoPoint.toString()} $price $agentFee";
   }
 
   // Convert PropertyListing to JSON

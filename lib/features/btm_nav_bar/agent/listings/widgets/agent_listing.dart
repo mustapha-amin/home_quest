@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:home_quest/core/enums.dart';
+import 'package:home_quest/core/extensions.dart';
+import 'package:home_quest/features/btm_nav_bar/agent/listings/views/add_listings.dart';
 import 'package:home_quest/models/property_listing.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -134,13 +136,16 @@ class AgentListing extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        NumberFormat.currency(symbol: 'N', decimalDigits: 0)
-                            .format(listing.price),
+                        listing.price.toMoney,
                         style:
                             kTextStyle(18, isBold: true, color: Colors.black),
                       ),
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          context.push(AddListings(
+                            propertyListingArg: listing,
+                          ));
+                        },
                         child: Text(
                           'View Details',
                           style: kTextStyle(16, color: Colors.blue),

@@ -61,7 +61,7 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
           ? FloatingActionButton(
               elevation: 3,
               onPressed: () {
-                context.push(const AddListings());
+                context.push(AddListings());
               },
               child: const HugeIcon(
                   icon: HugeIcons.strokeRoundedAdd01, color: Colors.black),
@@ -95,7 +95,7 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
               icon: ref.watch(currentAgentScreenProvider) == 1
                   ? svgImage(btmNavBarIconsFilled[1], true)
                   : svgImage(btmNavBarIcons[1], false),
-              label: "Listings"),
+              label: "My Listings"),
           BottomNavigationBarItem(
             label: "Profile",
             icon: UserAvatar(

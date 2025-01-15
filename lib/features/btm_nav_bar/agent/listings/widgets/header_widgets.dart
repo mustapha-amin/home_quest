@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions.dart';
@@ -50,6 +51,10 @@ class GeoLocationNotifier extends StateNotifier<(GeoLocation?, bool)> {
     } finally {
       state = (state.$1, false);
     }
+  }
+
+  void updateLocation(GeoLocation geoLoc) {
+    state = (geoLoc, false);
   }
 }
 

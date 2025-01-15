@@ -43,6 +43,10 @@ extension MoneyExts on num {
   String get toMoney {
     return NumberFormat.currency(symbol: '₦', decimalDigits: 0).format(this);
   }
+
+  String get toMoneyNoSymb {
+    return NumberFormat.currency(symbol: '', decimalDigits: 0).format(this);
+  }
 }
 
 extension StringExts on String {

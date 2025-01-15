@@ -13,6 +13,7 @@ import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/controller/property_listing_ctrl.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/views/select_location.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/widgets/images_list_view.dart';
+import 'package:home_quest/models/geolocation.dart';
 import 'package:home_quest/models/property_listing.dart';
 import 'package:home_quest/shared/custom_button.dart';
 import 'package:home_quest/shared/loading_indicator.dart';
@@ -46,7 +47,8 @@ InputDecoration _textDecoration({
 }
 
 class AddListings extends ConsumerStatefulWidget {
-  const AddListings({super.key});
+  PropertyListing? propertyListingArg;
+  AddListings({this.propertyListingArg, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _AddListingsState();
@@ -65,10 +67,13 @@ class _AddListingsState extends ConsumerState<AddListings> {
   Furnishing furnishing = Furnishing.unfurnished;
   ListingType listingType = ListingType.rent;
   List<Facility>? selectedFacilities = [];
+  List<String> propertyImages = [];
 
   bool canUploadListing() {
-    return ref.watch(pickedImagesCtrl).length > 4 &&
+    return (ref.watch(pickedImagesCtrl).length > 4 ||
+            propertyImages.isNotEmpty) &&
         ref.watch(geolocationNotifierProvider).$1 != null &&
+        propertyImages.isNotEmpty &&
         addressCtrl.text.isNotEmpty &&
         propertySizeCtrl.text.isNotEmpty &&
         priceCtrl.text.isNotEmpty &&
@@ -80,13 +85,55 @@ class _AddListingsState extends ConsumerState<AddListings> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    if (widget.propertyListingArg != null) {
+      addressCtrl.text = widget.propertyListingArg!.address;
+      propertySizeCtrl.text =
+          widget.propertyListingArg!.propertySize.toString();
+      priceCtrl.text = widget.propertyListingArg!.price.toMoneyNoSymb;
+      agentFeeCtrl.text = widget.propertyListingArg!.agentFee.toMoneyNoSymb;
+      condition = widget.propertyListingArg!.condition;
+      propertySubtype = widget.propertyListingArg!.propertySubtype;
+      furnishing = widget.propertyListingArg!.furnishing;
+      listingType = widget.propertyListingArg!.listingType;
+      selectedFacilities = widget.propertyListingArg!.facilities;
+      textControllers[0].text = widget.propertyListingArg!.bedrooms.toString();
+      textControllers[1].text = widget.propertyListingArg!.bathrooms.toString();
+      textControllers[2].text = widget.propertyListingArg!.kitchens.toString();
+      textControllers[3].text =
+          widget.propertyListingArg!.sittingRooms.toString();
+      propertyImages = widget.propertyListingArg!.imagesUrls;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(geolocationNotifierProvider.notifier).updateLocation(
+            GeoLocation(
+              city: widget.propertyListingArg!.state,
+              county: widget.propertyListingArg!.lga,
+              state: widget.propertyListingArg!.state,
+              lat: widget.propertyListingArg!.geoPoint.latitude,
+              lng: widget.propertyListingArg!.geoPoint.longitude,
+            ),
+          );
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
-        title: Text(
-          "List a property",
-          style: kTextStyle(20),
+        title: InkWell(
+          onTap: () {
+            log(widget.propertyListingArg.toString());
+          },
+          child: Text(
+            widget.propertyListingArg != null
+                ? "Edit listing"
+                : "List a property",
+            style: kTextStyle(20),
+          ),
         ),
         centerTitle: true,
       ),
@@ -147,16 +194,28 @@ class _AddListingsState extends ConsumerState<AddListings> {
                               ),
                             ),
                             ImagesListView(
-                              images: ref.watch(pickedImagesCtrl),
-                              onCancel: (index) {
-                                ref.read(pickedImagesCtrl.notifier).state = ref
+                              images: (
+                                propertyImages,
+                                ref
                                     .watch(pickedImagesCtrl)
-                                    .where((file) =>
-                                        ref
-                                            .watch(pickedImagesCtrl)
-                                            .indexOf(file) !=
-                                        index)
-                                    .toList();
+                                    .map((image) => image.path)
+                                    .toList()
+                              ),
+                              onCancel: (index, isNetorkimg) {
+                                if (isNetorkimg) {
+                                  propertyImages.removeAt(index);
+                                } else {
+                                  log("Hello");
+                                  ref.read(pickedImagesCtrl.notifier).state =
+                                      ref
+                                          .watch(pickedImagesCtrl)
+                                          .where((file) =>
+                                              ref
+                                                  .watch(pickedImagesCtrl)
+                                                  .indexOf(file) !=
+                                              index)
+                                          .toList();
+                                }
                               },
                             )
                           ],
@@ -194,7 +253,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                                         ref.watch(geolocationNotifierProvider);
                                     return selectedlocation.$1 != null
                                         ? Text(
-                                            '${selectedlocation.$1!.city} ${selectedlocation.$1!.county} ${selectedlocation.$1!.state}')
+                                            '${selectedlocation.$1!.county}, ${selectedlocation.$1!.state}')
                                         : Text("Pick location",
                                             style: kTextStyle(15));
                                   },
@@ -237,46 +296,52 @@ class _AddListingsState extends ConsumerState<AddListings> {
                                 Wrap(
                                   spacing: 5,
                                   children: [
-                                    ...PropertyType.values.where((value) => value.index != 0).map(
-                                      (type) => ChoiceChip(
-                                        label: Text(type.name),
-                                        selected: propertyType == type,
-                                        onSelected: (_) {
-                                          setState(() {
-                                            propertyType = type;
-                                          });
-                                        },
-                                      ),
-                                    ),
+                                    ...PropertyType.values
+                                        .where((value) => value.index != 0)
+                                        .map(
+                                          (type) => ChoiceChip(
+                                            label: Text(type.name),
+                                            selected: propertyType == type,
+                                            onSelected: (_) {
+                                              setState(() {
+                                                propertyType = type;
+                                              });
+                                            },
+                                          ),
+                                        ),
                                   ],
                                 ),
                                 Wrap(spacing: 5, children: [
-                                  ...PropertySubtype.values.where((value) => value.index != 0).map(
-                                    (type) => ChoiceChip(
-                                      label: Text(type.name),
-                                      selected: propertySubtype == type,
-                                      onSelected: (selected) {
-                                        setState(() {
-                                          propertySubtype = type;
-                                        });
-                                      },
-                                    ),
-                                  )
+                                  ...PropertySubtype.values
+                                      .where((value) => value.index != 0)
+                                      .map(
+                                        (type) => ChoiceChip(
+                                          label: Text(type.name),
+                                          selected: propertySubtype == type,
+                                          onSelected: (selected) {
+                                            setState(() {
+                                              propertySubtype = type;
+                                            });
+                                          },
+                                        ),
+                                      )
                                 ]),
                                 Wrap(
                                   spacing: 5,
                                   children: [
-                                    ...Condition.values.where((value) => value.index != 0).map(
-                                      (type) => ChoiceChip(
-                                        label: Text(type.name),
-                                        selected: condition == type,
-                                        onSelected: (selected) {
-                                          setState(() {
-                                            condition = type;
-                                          });
-                                        },
-                                      ),
-                                    ),
+                                    ...Condition.values
+                                        .where((value) => value.index != 0)
+                                        .map(
+                                          (type) => ChoiceChip(
+                                            label: Text(type.name),
+                                            selected: condition == type,
+                                            onSelected: (selected) {
+                                              setState(() {
+                                                condition = type;
+                                              });
+                                            },
+                                          ),
+                                        ),
                                   ],
                                 ),
                                 Wrap(
@@ -433,48 +498,54 @@ class _AddListingsState extends ConsumerState<AddListings> {
                 ),
               ),
               CustomButton(
-                label: "List property",
+                label: widget.propertyListingArg != null
+                    ? "Update property"
+                    : "List property",
                 onTap: () async {
-                  log(selectedFacilities.toString());
+                  final propertyListing = PropertyListing(
+                    id: const Uuid().v4(),
+                    agentID: ref.watch(firebaseAuthProvider).currentUser!.uid,
+                    address: addressCtrl.text.trim(),
+                    propertyType: propertyType,
+                    propertySize:
+                        double.parse(propertySizeCtrl.text.split(',').join('')),
+                    price: double.parse(priceCtrl.text.split(',').join('')),
+                    agentFee:
+                        double.parse(agentFeeCtrl.text.split(',').join('')),
+                    listingType: listingType,
+                    imagesUrls: ref.watch(pickedImagesCtrl).isEmpty
+                        ? []
+                        : ref
+                            .watch(pickedImagesCtrl)
+                            .map((image) => image.path)
+                            .toList(),
+                    condition: condition,
+                    facilities: selectedFacilities!,
+                    furnishing: furnishing,
+                    propertySubtype: propertySubtype,
+                    geoPoint: GeoPoint(
+                        ref.watch(geolocationNotifierProvider).$1!.lat!,
+                        ref.watch(geolocationNotifierProvider).$1!.lat!),
+                    state: ref.watch(geolocationNotifierProvider).$1!.state!,
+                    lga: ref.watch(geolocationNotifierProvider).$1!.county!,
+                    bedrooms: int.parse(textControllers[0].text),
+                    bathrooms: int.parse(textControllers[1].text),
+                    kitchens: int.parse(textControllers[2].text),
+                    sittingRooms: int.parse(textControllers[3].text),
+                  );
+                  log(propertyListing.toString());
                   if (canUploadListing()) {
-                    final propertyListing = PropertyListing(
-                      id: const Uuid().v4(),
-                      agentID: ref.watch(firebaseAuthProvider).currentUser!.uid,
-                      address: addressCtrl.text.trim(),
-                      propertyType: propertyType,
-                      propertySize: double.parse(
-                          propertySizeCtrl.text.split(',').join('')),
-                      price: double.parse(priceCtrl.text.split(',').join('')),
-                      agentFee:
-                          double.parse(agentFeeCtrl.text.split(',').join('')),
-                      listingType: listingType,
-                      imagesUrls: ref
-                          .watch(pickedImagesCtrl.notifier)
-                          .state
-                          .map((image) => image.path)
-                          .toList(),
-                      condition: condition,
-                      facilities: selectedFacilities!,
-                      furnishing: furnishing,
-                      propertySubtype: propertySubtype,
-                      geoPoint: GeoPoint(
-                          ref.watch(geolocationNotifierProvider).$1!.lat!,
-                          ref.watch(geolocationNotifierProvider).$1!.lat!),
-                      state: ref.watch(geolocationNotifierProvider).$1!.state!,
-                      lga: ref.watch(geolocationNotifierProvider).$1!.county!,
-                      bedrooms: int.parse(textControllers[0].text),
-                      bathrooms: int.parse(textControllers[1].text),
-                      kitchens: int.parse(textControllers[2].text),
-                      sittingRooms: int.parse(textControllers[3].text),
-                    );
                     log(propertyListing.toJson().toString());
                     try {
                       ref
                           .read(globalLoadingProvider.notifier)
                           .toggleGlobalLoadingIndicator(true);
 
-                      await ref
-                          .read(createListingProvider(propertyListing).future);
+                      ref.read(createListingProvider((
+                        listing: propertyListing,
+                        existingImages: propertyImages,
+                        isUpdate: widget.propertyListingArg != null
+                      )));
 
                       ref
                           .read(globalLoadingProvider.notifier)
@@ -486,10 +557,11 @@ class _AddListingsState extends ConsumerState<AddListings> {
                         ),
                       );
                       Navigator.pop(context);
-                    } catch (e) {
+                    } catch (e, stk) {
                       ref
                           .read(globalLoadingProvider.notifier)
                           .toggleGlobalLoadingIndicator(false);
+                      log(e.toString(), stackTrace: stk);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(e.toString()),

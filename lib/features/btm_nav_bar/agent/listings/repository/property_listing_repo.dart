@@ -30,12 +30,16 @@ class PropertyListingRepo {
     required this.firebaseAuth,
   });
 
-  FutureVoid createListing(PropertyListing propertyListing) async {
+  FutureVoid createListing(
+      PropertyListing propertyListing, List<String>? existingImages, bool? isUpdate) async {
     List<String> urls = [];
     try {
-      urls = await Future.wait(propertyListing.imagesUrls.map(
-          (url) => uploadImage(storage, File(url), ImageBucketIDs.listings)));
-      PropertyListing newProperty = propertyListing.copyWith(imagesUrls: urls);
+      if (!isUpdate! || propertyListing.imagesUrls.isNotEmpty) {
+        urls = await Future.wait(propertyListing.imagesUrls.map(
+            (url) => uploadImage(storage, File(url), ImageBucketIDs.listings)));
+      }
+      PropertyListing newProperty =
+          propertyListing.copyWith(imagesUrls: [...?existingImages, ...urls]);
       await firebaseFirestore
           .collection('listings')
           .doc(newProperty.id)
