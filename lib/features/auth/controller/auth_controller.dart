@@ -6,18 +6,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:home_quest/core/extensions.dart';
 
-import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/typedefs.dart';
 import 'package:home_quest/core/utils/app_snackbar.dart';
 import 'package:home_quest/features/auth/repository/auth_repository.dart';
-import 'package:home_quest/features/auth/view/auth_screen.dart';
 import 'package:home_quest/features/auth/view/home_user_wrapper.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/btm_nav_barA.dart';
 import 'package:home_quest/features/btm_nav_bar/client/btm_nav_barC.dart';
 import 'package:home_quest/features/user%20setup/views/user_type.dart';
+import 'package:restart_app/restart_app.dart';
 
 import '../../../main.dart';
-import '../../btm_nav_bar/client/home/views/home.dart';
 import '../../user setup/controller/user_data_controller.dart';
 
 final authControllerProvider =
@@ -42,7 +40,7 @@ class AuthController extends StateNotifier<bool> {
     result = await authService.signIn(email: email, password: password);
     state = false;
     result.fold(
-      (l) => showSnackBar(l),
+      (l) => showSnackBar(l, context),
       (r) => context.replace(const HomeUserDataWrapper()),
     );
     return null;
@@ -58,7 +56,7 @@ class AuthController extends StateNotifier<bool> {
     result = await authService.signUp(email: email, password: password);
     state = false;
     result.fold(
-      (l) => showSnackBar(l),
+      (l) => showSnackBar(l, context),
       (r) => context.replace(const UserTypeScreen()),
     );
     return null;
@@ -68,18 +66,18 @@ class AuthController extends StateNotifier<bool> {
     Either<String, String>? result;
     state = true;
     result = await authService.signOut();
-    state = false;
-    result.fold((l) => showSnackBar(l), (r) {
+
+    result.fold((l) {
+      state = false;
+      showSnackBar(l, context);
+    }, (r) {
+      log("Signed out");
+
+      Restart.restartApp();
+      state = false;
       ref.invalidate(
           isClient ? currentScreenProvider : currentAgentScreenProvider);
-      ref.invalidate(userDataStreamProvider);
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const MyApp()),
-        (route) => false,
-      );
     });
-    return null;
   }
 
   FutureVoid requestPwdReset({
@@ -89,9 +87,8 @@ class AuthController extends StateNotifier<bool> {
   }) async {
     final result = await authService.requestPaswordReset(email);
     result.fold(
-      (l) => showSnackBar(l),
+      (l) => showSnackBar(l, context),
       (r) => operation(),
     );
-    return null;
   }
 }

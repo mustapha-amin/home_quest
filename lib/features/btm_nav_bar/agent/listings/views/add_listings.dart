@@ -503,7 +503,9 @@ class _AddListingsState extends ConsumerState<AddListings> {
                     : "List property",
                 onTap: () async {
                   final propertyListing = PropertyListing(
-                    id: const Uuid().v4(),
+                    id: widget.propertyListingArg != null
+                        ? widget.propertyListingArg!.id
+                        : const Uuid().v4(),
                     agentID: ref.watch(firebaseAuthProvider).currentUser!.uid,
                     address: addressCtrl.text.trim(),
                     propertyType: propertyType,
@@ -544,7 +546,6 @@ class _AddListingsState extends ConsumerState<AddListings> {
                       ref.read(createListingProvider((
                         listing: propertyListing,
                         existingImages: propertyImages,
-                        isUpdate: widget.propertyListingArg != null
                       )));
 
                       ref
@@ -579,7 +580,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                     // context.pop()
                   }
                 },
-              ).padAll(8),
+              ).padX(8).padY(12),
             ],
           ),
           if (ref.watch(globalLoadingProvider)) const LoadingIndicator(),

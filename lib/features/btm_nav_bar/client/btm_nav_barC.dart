@@ -126,7 +126,6 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: ref.watch(currentScreenProvider),
         onTap: (value) {
-          scaffoldKey.currentState!.hideCurrentSnackBar();
           navigateTo(ref, value);
         },
         items: [

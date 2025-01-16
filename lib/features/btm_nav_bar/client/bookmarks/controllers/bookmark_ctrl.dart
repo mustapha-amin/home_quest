@@ -5,16 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/utils/app_snackbar.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/repository/property_listing_repo.dart';
 import 'package:home_quest/features/user%20setup/repository/user_data_repository.dart';
-import 'package:home_quest/main.dart';
 import 'package:home_quest/models/property_listing.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../../../../core/providers.dart';
 import '../../../../../core/utils/textstyle.dart';
 
-void displaySnackbar(PropertyListing propertyListing, bool added) {
+void displaySnackbar(BuildContext context, PropertyListing propertyListing, bool added) {
   try {
-    scaffoldKey.currentState!
+    ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
         duration: const Duration(milliseconds: 700),
@@ -60,6 +58,7 @@ final fetchFavsProvider =
 final updateBookmarksProv = FutureProvider.family<
     void,
     ({
+      BuildContext context,
       PropertyListing listing,
       List<String> bookmarks,
       String id,
@@ -71,11 +70,11 @@ final updateBookmarksProv = FutureProvider.family<
       await userDataRepo.updateBookmarks(args.isAddition
           ? [...args.bookmarks, args.id]
           : args.bookmarks.where((bkmrk) => bkmrk != args.id).toList());
-      displaySnackbar(args.listing, args.isAddition);
+      displaySnackbar(args.context, args.listing, args.isAddition);
       log("${args.isAddition ? '' : 'Un'}bookmarked");
     } catch (e, stk) {
       log(e.toString(), stackTrace: stk);
-      showSnackBar("An error occured");
+      showSnackBar("An error occured", args.context);
     }
   },
 );

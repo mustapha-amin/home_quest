@@ -31,10 +31,10 @@ class PropertyListingRepo {
   });
 
   FutureVoid createListing(
-      PropertyListing propertyListing, List<String>? existingImages, bool? isUpdate) async {
+      PropertyListing propertyListing, List<String>? existingImages) async {
     List<String> urls = [];
     try {
-      if (!isUpdate! || propertyListing.imagesUrls.isNotEmpty) {
+      if (propertyListing.imagesUrls.isNotEmpty) {
         urls = await Future.wait(propertyListing.imagesUrls.map(
             (url) => uploadImage(storage, File(url), ImageBucketIDs.listings)));
       }

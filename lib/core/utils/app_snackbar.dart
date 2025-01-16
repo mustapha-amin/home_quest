@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/main.dart';
 
-void showSnackBar(String error) {
-  scaffoldKey.currentState!.showSnackBar(
+void showSnackBar(String error, BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(
         error,

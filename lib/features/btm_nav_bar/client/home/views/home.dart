@@ -33,7 +33,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       },
       error: (e, _) {
         return ErrorScreen(
-          errorText: "Error fetching listings",
+          errorText: "Error fetching listings: ${e.toString()}",
           onRefresh: () {
             ref.invalidate(fetchListingsProvider);
           },

@@ -4,14 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/features/auth/view/auth_screen.dart';
 import 'package:home_quest/features/auth/view/home_user_wrapper.dart';
+import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/firebase_options.dart';
 import 'package:home_quest/services/onboarding_settings.dart';
+import 'package:home_quest/shared/loading_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'core/providers.dart';
 import 'features/onboarding/view/onboarding.dart';
 
-final GlobalKey<ScaffoldMessengerState> scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -23,33 +24,9 @@ Future<void> main() async {
       overrides: [
         sharedPrefsProvider.overrideWithValue(sharedPreferences),
       ],
-      child: const MyApp(),
-    ),
-  );
-}
-
-class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Sizer(builder: (___, _, __) {
-      return MaterialApp(
-        scaffoldMessengerKey: scaffoldKey,
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: ref.watch(onBoardingSettingsProvider).isFirstTime()
-            ? const OnboardingScreen()
-            : ref.watch(authChangesProvider).when(
-                  data: (user) {
-                    if (user != null) {
-                      return const HomeUserDataWrapper();
-                    } else {
-                      return const AuthScreen();
-                    }
-                  },
-                  error: (_, __) => const AuthScreen(),
-                  loading: () => const SizedBox(),
-                ),
+        home: const MyApp(),
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: AppColors.brown),
           scaffoldBackgroundColor: Colors.white,
@@ -61,7 +38,33 @@ class MyApp extends ConsumerWidget {
             type: BottomNavigationBarType.fixed,
           ),
         ),
-      );
-    });
+      ),
+    ),
+  );
+}
+
+class MyApp extends ConsumerWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Sizer(
+      builder: (___, _, __) {
+        if (ref.watch(onBoardingSettingsProvider).isFirstTime()) {
+          return const OnboardingScreen();
+        }
+        return ref.watch(authChangesProvider).when(
+              data: (user) {
+                if (user != null) {
+                  return const HomeUserDataWrapper();
+                } else {
+                  return const AuthScreen();
+                }
+              },
+              error: (_, __) => const AuthScreen(),
+              loading: () => const LoadingScreen(),
+            );
+      },
+    );
   }
 }

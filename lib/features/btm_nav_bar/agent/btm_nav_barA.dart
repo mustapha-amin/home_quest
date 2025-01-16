@@ -12,6 +12,8 @@ import 'package:sizer/sizer.dart';
 import '../../../core/providers.dart';
 import '../../../core/utils/image_path.dart';
 import '../../../core/utils/svg_util.dart';
+import '../../../core/utils/textstyle.dart';
+import '../../../shared/spacing.dart';
 import '../../../shared/user_avatar.dart';
 import 'listings/views/listings.dart';
 
@@ -55,6 +57,17 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("HomeQuest", style: kTextStyle(30)),
+              spaceX(4),
+              Image.asset(ImagePaths.homeLogo, height: 25),
+            ],
+          ).padX(10),
+        ]),
       ),
       body: screensA[ref.watch(currentAgentScreenProvider)],
       floatingActionButton: ref.watch(currentAgentScreenProvider) == 1

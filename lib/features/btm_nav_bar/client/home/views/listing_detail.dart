@@ -61,7 +61,6 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                         backgroundColor: Colors.white,
                       ),
                       onPressed: () {
-                        scaffoldKey.currentState!.clearSnackBars();
                         context.pop();
                       },
                       icon: const HugeIcon(
@@ -80,6 +79,7 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                                 ),
                                 onPressed: () {
                                   ref.read(updateBookmarksProv((
+                                    context: context,
                                     listing: widget.propertyListing,
                                     bookmarks: user.bookmarks,
                                     id: widget.propertyListing.id,

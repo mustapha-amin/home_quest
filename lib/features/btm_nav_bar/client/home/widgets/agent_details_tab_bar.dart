@@ -32,8 +32,8 @@ class AgentDetailsTabBar extends ConsumerWidget {
             );
           },
           error: (e, stk) {
-            return const Center(
-              child: Text('Error fetching listings'),
+            return Center(
+              child: Text('Error fetching listings ${e.toString()}'),
             );
           },
           loading: () {

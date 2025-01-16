@@ -140,7 +140,7 @@ class _AgentDetailState extends ConsumerState<AgentDetail> {
                                                                         "Review submitted")));
                                                       } on Exception catch (_) {
                                                         showSnackBar(
-                                                            "Failed to submit review");
+                                                            "Failed to submit review", context);
                                                       } finally {
                                                         submisionLoading =
                                                             false;
@@ -210,7 +210,7 @@ class _AgentDetailState extends ConsumerState<AgentDetail> {
                 );
               },
               loading: () => const LoadingIndicator(),
-              error: (error, stackTrace) => Text('Error: $error'),
+              error: (error, stackTrace) => Text('Error: ${error.toString()}'),
             ),
       ),
     );

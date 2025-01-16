@@ -21,6 +21,7 @@ class HomeUserDataWrapper extends ConsumerWidget {
         if (userExists!) {
           return ref.watch(userDataStreamProvider).when(
                 data: (user) {
+                  log(user.runtimeType.toString());
                   if (user.runtimeType == AgentModel) {
                     return const BtmNavBarA();
                   } else {
@@ -31,7 +32,7 @@ class HomeUserDataWrapper extends ConsumerWidget {
                   log(e.toString());
                   log(stk.toString());
                   return ErrorScreen(
-                    errorText: e.toString(),
+                    errorText: e.toString() + stk.toString(),
                     onRefresh: () => ref.invalidate(userDataStreamProvider),
                   );
                 },
@@ -41,7 +42,7 @@ class HomeUserDataWrapper extends ConsumerWidget {
           return const UserSetup();
         }
       },
-      error: (e, __) {
+      error: (e, stk) {
         return ErrorScreen(
           errorText: e.toString(),
           onRefresh: () => ref.invalidate(userDataExistsProvider),

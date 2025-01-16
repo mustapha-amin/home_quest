@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions.dart';
@@ -24,7 +25,7 @@ final userDataExistsProvider = FutureProvider((ref) async {
 });
 
 final userDataStreamProvider = StreamProvider<User?>((ref) {
-  return ref.watch(userDataRepoProvider).fetchUserData();
+  return ref.watch(userDataRepoProvider).fetchUserData(FirebaseAuth.instance.currentUser!.uid);
 });
 
 final userDataStreamIDProvider =
@@ -65,7 +66,7 @@ class UserRemoteDataNotifier extends StateNotifier<bool> {
       log("user data saved");
       context.replace(const HomeUserDataWrapper());
     } catch (e) {
-      showSnackBar(e.toString());
+      showSnackBar(e.toString(), context);
     }
     state = false;
   }
@@ -81,7 +82,7 @@ class UserRemoteDataNotifier extends StateNotifier<bool> {
       await userDataRepo.updateField(collection, id, data);
       log("field updated");
     } catch (e) {
-      showSnackBar(e.toString());
+      showSnackBar(e.toString(), context);
     }
     state = false;
   }
