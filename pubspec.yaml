@@ -41,18 +41,16 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.2
-  flutter_launcher_icons: ^0.14.1
+  flutter_launcher_icons: ^0.14.2
   flutter_map: ^7.0.2
   flutter_map_location_marker: ^9.1.1
-  flutter_native_splash: ^2.4.3
+  flutter_native_splash: ^2.4.4
   flutter_riverpod: ^2.6.1
   flutter_spinkit: ^5.2.1
   flutter_svg: ^2.0.15
   fpdart: ^1.1.1
   google_fonts: ^6.2.1
   google_sign_in: ^6.2.2
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
   http: ^1.2.2
   hugeicons: ^0.0.7
   image_picker: ^1.1.2
@@ -72,6 +70,21 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   hive_generator: null
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/home_logo.png.png
+  android_12:
+    image: assets/images/home_logo.png.png
+    color: "#ffffff"
+
+flutter_launcher_icons:
+  android: "app_icon"
+  ios: true
+  image_path: "assets/images/task_mate_icon.png"
+  min_sdk_android: 23
+  adaptive_icon_foreground: "assets/images/task_mate_icon.png"
+  adaptive_icon_background: "#ffffff"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

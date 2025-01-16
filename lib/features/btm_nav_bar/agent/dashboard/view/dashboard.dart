@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/dashboard/widgets/agent_stat_widget.dart';
@@ -29,7 +30,7 @@ class AgentDashboard extends ConsumerWidget {
               iconData: HugeIcons.strokeRoundedPropertyView,
               title: "Listings",
               count: listings.length,
-            )),
+            )).animate().fadeIn(delay: Duration(milliseconds: 50)),
             AgentStatWidget(
                 agentStat: AgentStat(
               iconData: HugeIcons.strokeRoundedPropertyView,
@@ -37,7 +38,7 @@ class AgentDashboard extends ConsumerWidget {
               count: (ref.watch(userDataStreamProvider).value as AgentModel)
                   .reviews
                   .length,
-            )),
+            )).animate().fadeIn(delay: Duration(milliseconds: 70)),
             AgentStatWidget(
                 agentStat: AgentStat(
               iconData: Icons.star,
@@ -50,13 +51,13 @@ class AgentDashboard extends ConsumerWidget {
                       .reviews
                       .map((review) => review.rating)
                       .length,
-            )),
+            )).animate().fadeIn(delay: Duration(milliseconds: 90)),
             AgentStatWidget(
                 agentStat: AgentStat(
               iconData: HugeIcons.strokeRoundedPropertyView,
               title: "Listings",
               count: listings.length,
-            )),
+            )).animate().fadeIn(delay: Duration(milliseconds: 110)),
           ],
         );
       },

@@ -1,8 +1,6 @@
 // ignore_for_file: annotate_overrides, overridden_fields
-import 'package:hive_flutter/hive_flutter.dart';
 import 'user.dart';
 
-@HiveType(typeId: 1)
 class ClientModel extends User {
   
   final int phoneNumber;
