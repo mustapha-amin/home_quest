@@ -140,7 +140,7 @@ class PropertyListing {
       kitchens: kitchens ?? this.kitchens,
       sittingRooms: sittingRooms ?? this.sittingRooms,
       bedrooms: bedrooms ?? this.bedrooms,
-      facilities: facilities ?? this.facilities,
+      facilities: facilities ?? facilities,
       geoPoint: geoPoint ?? this.geoPoint,
       state: state ?? this.state,
       lga: lga ?? this.lga,

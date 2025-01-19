@@ -114,7 +114,7 @@ class AgentDetailsTabBar extends ConsumerWidget {
                       ),
               );
             }, error: (_, __) {
-              return Text("An error occured");
+              return const Text("An error occured");
             }, loading: () {
               return const LoadingIndicator();
             })

@@ -43,7 +43,7 @@ class AuthController extends StateNotifier<bool> {
       (l) => showSnackBar(l, context),
       (r) => context.replace(const HomeUserDataWrapper()),
     );
-    return null;
+    return;
   }
 
   FutureVoid signUp({
@@ -59,7 +59,7 @@ class AuthController extends StateNotifier<bool> {
       (l) => showSnackBar(l, context),
       (r) => context.replace(const UserTypeScreen()),
     );
-    return null;
+    return;
   }
 
   FutureVoid signOut(BuildContext context, WidgetRef ref, bool isClient) async {

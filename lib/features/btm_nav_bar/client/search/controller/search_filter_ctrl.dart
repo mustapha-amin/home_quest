@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/enums.dart';
 import 'package:home_quest/core/typedefs.dart';
-import 'package:nigerian_states_and_lga/nigerian_states_and_lga.dart';
 
 final searchFilterProvider =
     StateNotifierProvider<SearchFilterNotifier, PropertyFilter>((ref) {

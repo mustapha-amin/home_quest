@@ -240,7 +240,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                                     height: 40,
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(5),
-                                        color: const Color(0xFFFFADDBB)),
+                                        color: const Color(0xffffaddbb)),
                                     child: const HugeIcon(
                                       icon: HugeIcons.strokeRoundedLocation01,
                                       size: 18,

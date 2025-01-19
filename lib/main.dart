@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/features/auth/view/auth_screen.dart';
 import 'package:home_quest/features/auth/view/home_user_wrapper.dart';
-import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/firebase_options.dart';
 import 'package:home_quest/services/onboarding_settings.dart';
 import 'package:home_quest/shared/loading_screen.dart';

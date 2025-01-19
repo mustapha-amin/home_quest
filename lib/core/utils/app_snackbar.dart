@@ -10,7 +10,7 @@ void showSnackBar(String error, BuildContext context) {
         style: kTextStyle(12, isBold: true, color: Colors.white),
       ),
       backgroundColor: Colors.red,
-      duration: Duration(seconds: 3),
+      duration: const Duration(seconds: 3),
     ),
   );
 }

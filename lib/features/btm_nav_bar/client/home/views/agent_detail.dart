@@ -89,7 +89,7 @@ class _AgentDetailState extends ConsumerState<AgentDetail> {
                                                     textCapitalization:
                                                         TextCapitalization
                                                             .sentences,
-                                                    decoration: InputDecoration(
+                                                    decoration: const InputDecoration(
                                                       border:
                                                           OutlineInputBorder(),
                                                     ),

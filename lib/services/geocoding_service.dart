@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:home_quest/models/geolocation.dart';
 import 'package:latlong2/latlong.dart';

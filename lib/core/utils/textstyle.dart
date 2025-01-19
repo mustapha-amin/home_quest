@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sizer/sizer.dart';
 
 TextStyle kTextStyle(double fontSize,
     {bool isBold = false, Color color = Colors.black}) {

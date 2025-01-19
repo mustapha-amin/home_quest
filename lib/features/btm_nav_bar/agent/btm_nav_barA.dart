@@ -9,7 +9,6 @@ import 'package:home_quest/features/user%20setup/controller/user_data_controller
 import 'package:hugeicons/hugeicons.dart';
 import 'package:sizer/sizer.dart';
 
-import '../../../core/providers.dart';
 import '../../../core/utils/image_path.dart';
 import '../../../core/utils/svg_util.dart';
 import '../../../core/utils/textstyle.dart';

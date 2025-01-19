@@ -11,32 +11,28 @@ class AgentStatWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            AppColors.brown,
-            Colors.brown,
-          ],
-        ),
-        borderRadius: BorderRadius.circular(12),
-      ),
+    return Card.filled(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 16,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          HugeIcon(icon: agentStat.iconData, color: Colors.amber, size: 30),
-          Text(
-            agentStat.title,
-            style: kTextStyle(28, color: Colors.white),
-          ),
+          Row(
+              spacing: 8,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                HugeIcon(
+                    icon: agentStat.iconData, color: AppColors.brown, size: 30),
+                Text(
+                  agentStat.title,
+                  style: kTextStyle(18, color: AppColors.brown),
+                ),
+              ]),
           Text(
             agentStat.count.toString(),
-            style: kTextStyle(20, color: Colors.white),
+            style: kTextStyle(28, color: AppColors.brown),
           ),
         ],
-      ),
-    ).padAll(5);
+      ).padAll(12).padAll(5),
+    );
   }
 }

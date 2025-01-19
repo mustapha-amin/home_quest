@@ -40,7 +40,7 @@ class AgentListing extends StatelessWidget {
                   color: listing.listingType == ListingType.rent
                       ? Colors.green
                       : Colors.blue,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(15),
                     bottomRight: Radius.circular(15),
                   ),
@@ -74,19 +74,19 @@ class AgentListing extends StatelessWidget {
                                       .toLowerCase(),
                               style: kTextStyle(20,
                                   isBold: true, color: Colors.black)),
-                          Icon(Icons.delete, color: Colors.red, size: 28),
+                          const Icon(Icons.delete, color: Colors.red, size: 28),
                         ],
                       ),
                       spaceY(8),
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.location_on,
                             color: Colors.red,
                             size: 20,
                           ),
                           Text(
-                            listing.lga + ", " + listing.state,
+                            "${listing.lga}, ${listing.state}",
                             style: kTextStyle(15, color: Colors.grey[700]!),
                           ),
                         ],
@@ -97,22 +97,22 @@ class AgentListing extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          HugeIcon(
+                          const HugeIcon(
                             icon: HugeIcons.strokeRoundedBedSingle02,
                             color: Colors.blue,
                             size: 20,
                           ),
                           Text(
-                            listing.bedrooms.toString() + " Bedrooms",
+                            "${listing.bedrooms} Bedrooms",
                             style: kTextStyle(15, color: Colors.black),
                           ),
                           spaceX(5),
-                          HugeIcon(
+                          const HugeIcon(
                               icon: HugeIcons.strokeRoundedBathtub01,
                               color: Colors.blue,
                               size: 20),
                           Text(
-                            listing.bathrooms.toString() + " Bathrooms",
+                            "${listing.bathrooms} Bathrooms",
                             style: kTextStyle(15, color: Colors.black),
                           ),
                         ],
@@ -120,12 +120,12 @@ class AgentListing extends StatelessWidget {
                       spaceY(5),
                       Row(
                         children: [
-                          HugeIcon(
+                          const HugeIcon(
                               icon: HugeIcons.strokeRoundedTapeMeasure,
                               color: Colors.blue,
                               size: 20),
                           Text(
-                            listing.propertySize.toString() + " sqm",
+                            "${listing.propertySize} sqm",
                             style: kTextStyle(15, color: Colors.black),
                           ),
                         ],

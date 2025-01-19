@@ -6,7 +6,6 @@ import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/views/agent_detail.dart';
 
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
-import 'package:home_quest/main.dart';
 import 'package:home_quest/models/client.dart';
 import 'package:home_quest/models/property_listing.dart';
 import 'package:hugeicons/hugeicons.dart';

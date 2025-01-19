@@ -40,6 +40,8 @@ dependencies:
   firebase_storage: ^12.3.6
   flutter:
     sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
   flutter_animate: ^4.5.2
   flutter_launcher_icons: ^0.14.2
   flutter_map: ^7.0.2
@@ -73,17 +75,17 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/images/home_logo.png.png
+  image: assets/images/home_logo.png
   android_12:
-    image: assets/images/home_logo.png.png
+    image: assets/images/home_logo.png
     color: "#ffffff"
 
 flutter_launcher_icons:
   android: "app_icon"
   ios: true
-  image_path: "assets/images/task_mate_icon.png"
+  image_path: "assets/images/home_logo.png"
   min_sdk_android: 23
-  adaptive_icon_foreground: "assets/images/task_mate_icon.png"
+  adaptive_icon_foreground: "assets/images/home_logo.png"
   adaptive_icon_background: "#ffffff"
 
 # For information on the generic Dart part of this file, see the

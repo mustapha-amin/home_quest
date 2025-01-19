@@ -14,7 +14,7 @@ class SearchScreen extends ConsumerStatefulWidget {
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [],
     );
   }

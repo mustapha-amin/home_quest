@@ -25,7 +25,7 @@ InputDecoration _textDecoration({
 }) {
   return InputDecoration(
     labelText: hintText,
-    contentPadding: EdgeInsets.all(18),
+    contentPadding: const EdgeInsets.all(18),
     border: const OutlineInputBorder(),
     labelStyle: kTextStyle(16),
   );
@@ -158,10 +158,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                       (l) => log(l),
                       (r) {
                         setState(() {
-                          if (r != null) {
-                            pickedImage = r;
-                          }
-                        });
+                          pickedImage = r;
+                                                });
                       },
                     );
                   },

@@ -77,7 +77,7 @@ class ListingWidget extends ConsumerWidget {
                           ),
                         );
                       },
-                      error: (e, s) => Text("Error"),
+                      error: (e, s) => const Text("Error"),
                       loading: () => const LoadingIndicator(),
                     ),
               )

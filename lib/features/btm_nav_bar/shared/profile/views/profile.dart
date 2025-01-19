@@ -4,16 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:home_quest/core/extensions.dart';
-import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/auth/controller/auth_controller.dart';
-import 'package:home_quest/features/auth/view/auth_screen.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/account.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/edit_profile.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/widgets/contact_details.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/widgets/profile_card.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
-import 'package:home_quest/main.dart';
 import 'package:home_quest/models/client.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:sizer/sizer.dart';

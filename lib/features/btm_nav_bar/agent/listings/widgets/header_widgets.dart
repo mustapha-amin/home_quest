@@ -158,7 +158,7 @@ class HeaderWidgets extends ConsumerWidget {
                     ),
                     onPressed: () {
                       ref.read(isExpanded.notifier).state = true;
-                      Future.delayed(Duration(milliseconds: 10),
+                      Future.delayed(const Duration(milliseconds: 10),
                           () => focusNode.requestFocus());
                     },
                     icon: const HugeIcon(

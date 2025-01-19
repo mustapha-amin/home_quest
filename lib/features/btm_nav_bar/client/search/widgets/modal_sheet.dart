@@ -45,13 +45,13 @@ class _AppBottomSheetState extends ConsumerState<AppBottomSheet> {
               children: [
                 OutlinedButton.icon(
                   style: OutlinedButton.styleFrom(
-                    shape: CircleBorder(),
-                    padding: EdgeInsets.all(8),
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(8),
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  label: HugeIcon(
+                  label: const HugeIcon(
                     icon: HugeIcons.strokeRoundedCancel01,
                     color: Colors.black,
                     size: 18,
@@ -133,7 +133,7 @@ class _AppBottomSheetState extends ConsumerState<AppBottomSheet> {
                               ),
                             ),
                             value: ref.watch(searchFilterProvider).state,
-                            hint: Text("  Select state"),
+                            hint: const Text("  Select state"),
                             items: [
                               ...NigerianStatesAndLGA.allStates.map(
                                 (state) => DropdownMenuItem(
@@ -172,7 +172,7 @@ class _AppBottomSheetState extends ConsumerState<AppBottomSheet> {
                               ),
                             ),
                             value: ref.watch(searchFilterProvider).lga,
-                            hint: Text("  Select LGA"),
+                            hint: const Text("  Select LGA"),
                             items: ref.watch(searchFilterProvider).state == null
                                 ? []
                                 : [
