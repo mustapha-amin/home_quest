@@ -527,7 +527,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                     propertySubtype: propertySubtype,
                     geoPoint: GeoPoint(
                         ref.watch(geolocationNotifierProvider).$1!.lat!,
-                        ref.watch(geolocationNotifierProvider).$1!.lat!),
+                        ref.watch(geolocationNotifierProvider).$1!.lng!),
                     state: ref.watch(geolocationNotifierProvider).$1!.state!,
                     lga: ref.watch(geolocationNotifierProvider).$1!.county!,
                     bedrooms: int.parse(textControllers[0].text),

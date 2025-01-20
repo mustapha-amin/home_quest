@@ -13,6 +13,7 @@ import 'package:home_quest/models/property_listing.dart';
 import 'package:home_quest/services/geocoding_service.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -367,62 +368,50 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                               height: 30.h,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
-                                child: 1 == 2
-                                    ? InkWell(
-                                        onTap: () async {
-                                          await GeocodingService.reverseCoding(
-                                              LatLng(
-                                                  widget.propertyListing
-                                                      .geoPoint.latitude,
-                                                  widget.propertyListing
-                                                      .geoPoint.longitude));
-                                        },
-                                        child: Text("Hello"))
-                                    : Stack(
-                                        alignment: Alignment.bottomLeft,
-                                        children: [
-                                          FlutterMap(
-                                            options: MapOptions(
-                                              initialCenter: LatLng(
-                                                  widget.propertyListing
-                                                      .geoPoint.latitude,
-                                                  widget.propertyListing
-                                                      .geoPoint.longitude),
-                                              initialZoom: 10,
-                                              minZoom: 6,
-                                            ),
-                                            children: [
-                                              TileLayer(
-                                                urlTemplate:
-                                                    'https://api.mapbox.com/styles/v1/mustyameen/cm4tu2iyy002r01s18ylrerzd/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg',
-                                                userAgentPackageName:
-                                                    'com.mustapha.homequest',
-                                                additionalOptions: const {
-                                                  "accessToken":
-                                                      "pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg",
-                                                  "id":
-                                                      "mapbox://styles/mustyameen/cm4tu2iyy002r01s18ylrerzd"
-                                                },
-                                              ),
-                                              MarkerLayer(markers: [
-                                                Marker(
-                                                  point: LatLng(
-                                                      widget.propertyListing
-                                                          .geoPoint.latitude,
-                                                      widget.propertyListing
-                                                          .geoPoint.longitude),
-                                                  child: HugeIcon(
-                                                    icon: HugeIcons
-                                                        .strokeRoundedLocation01,
-                                                    color: Colors.red,
-                                                  ),
-                                                )
-                                              ])
-                                            ],
-                                          ),
-                                          
-                                        ],
+                                child: Stack(
+                                  alignment: Alignment.bottomLeft,
+                                  children: [
+                                    FlutterMap(
+                                      options: MapOptions(
+                                        initialCenter: LatLng(
+                                            widget.propertyListing.geoPoint
+                                                .latitude,
+                                            widget.propertyListing.geoPoint
+                                                .longitude),
+                                        initialZoom: 17,
+                                        minZoom: 6,
                                       ),
+                                      children: [
+                                        TileLayer(
+                                          urlTemplate:
+                                              'https://api.mapbox.com/styles/v1/mustyameen/cm4tu2iyy002r01s18ylrerzd/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg',
+                                          userAgentPackageName:
+                                              'com.mustapha.homequest',
+                                          additionalOptions: const {
+                                            "accessToken":
+                                                "pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg",
+                                            "id":
+                                                "mapbox://styles/mustyameen/cm4tu2iyy002r01s18ylrerzd"
+                                          },
+                                        ),
+                                        MarkerLayer(markers: [
+                                          Marker(
+                                            point: LatLng(
+                                                widget.propertyListing.geoPoint
+                                                    .latitude,
+                                                widget.propertyListing.geoPoint
+                                                    .longitude),
+                                            child: HugeIcon(
+                                              icon: Icons.location_on,
+                                              color: Colors.red,
+                                            ),
+                                          )
+                                        ])
+                                      ],
+                                    ),
+                                    const AttributionWidget(),
+                                  ],
+                                ),
                               )),
                           Text(
                             "Safety tips",
