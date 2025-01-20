@@ -120,19 +120,20 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
         index: ref.watch(currentScreenProvider),
         children: screens,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: ref.watch(currentScreenProvider),
-        onTap: (value) {
+      bottomNavigationBar: NavigationBar(
+        height: 6.5.h,
+        selectedIndex: ref.watch(currentScreenProvider),
+        onDestinationSelected: (value) {
           navigateTo(ref, value);
         },
-        items: [
-          BottomNavigationBarItem(
+        destinations: [
+          NavigationDestination(
             icon: ref.watch(currentScreenProvider) == 0
                 ? svgImage(btmNavBarIconsFilled[0], true)
                 : svgImage(btmNavBarIcons[0], false),
             label: "Home",
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: HugeIcon(
                 icon: HugeIcons.strokeRoundedSearch01,
                 color: ref.watch(currentScreenProvider) == 1
@@ -140,7 +141,7 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
                     : Colors.grey),
             label: "Search",
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: ref.watch(currentScreenProvider) == 2
                 ? const Icon(
                     Icons.bookmark,
@@ -152,7 +153,7 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
                   ),
             label: "Bookmarks",
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             label: "Profile",
             icon: UserAvatar(
               url: ref.watch(userDataStreamProvider).value!.profilePicture,

@@ -23,4 +23,5 @@ abstract class ImagePaths {
   static const listing_filled = "$_basePath/listing_filled.svg";
   static const dashboard = "$_basePath/dashboard.png";
   static const dashboard_filled = "$_basePath/dashboard_filled.png";
+  static const mapbox = "$_basePath/mapbox.png";
 }

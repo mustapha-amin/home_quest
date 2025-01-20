@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -51,4 +52,11 @@ extension MoneyExts on num {
 
 extension StringExts on String {
   String get captializeFirst => this[0].toUpperCase() + substring(1);
+}
+
+extension GeopointExt on GeoPoint {
+
+  String toStringg() {
+    return '$latitude $longitude';
+  }
 }

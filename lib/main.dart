@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/features/auth/view/auth_screen.dart';
@@ -18,6 +19,8 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent));
   runApp(
     ProviderScope(
       overrides: [

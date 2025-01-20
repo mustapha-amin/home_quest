@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:home_quest/models/geolocation.dart';
 import 'package:latlong2/latlong.dart';
@@ -11,6 +12,7 @@ class GeocodingService {
           "https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latlng.latitude}&lon=${latlng.longitude}"));
       GeoLocation geoLocation =
           GeoLocation.fromJson(json.decode(response.body));
+      log(geoLocation.toString());
       return geoLocation;
     } catch (e) {
       throw Exception(e.toString());
