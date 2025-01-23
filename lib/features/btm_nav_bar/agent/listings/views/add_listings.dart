@@ -8,6 +8,7 @@ import 'package:home_quest/core/enums.dart';
 
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/providers.dart';
+import 'package:home_quest/core/utils/app_snackbar.dart';
 import 'package:home_quest/core/utils/image_picker_util.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/controller/property_listing_ctrl.dart';
@@ -19,6 +20,7 @@ import 'package:home_quest/shared/custom_button.dart';
 import 'package:home_quest/shared/loading_indicator.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:sizer/sizer.dart';
 import 'package:uuid/uuid.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
 import '../widgets/header_widgets.dart';
@@ -26,10 +28,6 @@ import '../widgets/pictures_text_header.dart';
 
 final pickedImagesCtrl = AutoDisposeStateProvider<List<File>>((ref) {
   return [];
-});
-
-final selectedLocationProvider = StateProvider<String?>((ref) {
-  return null;
 });
 
 InputDecoration _textDecoration({
@@ -70,18 +68,32 @@ class _AddListingsState extends ConsumerState<AddListings> {
   List<String> propertyImages = [];
 
   bool canUploadListing() {
-    return (ref.watch(pickedImagesCtrl).length > 4 ||
-            propertyImages.isNotEmpty) &&
-        ref.watch(geolocationNotifierProvider).$1 != null &&
-        propertyImages.isNotEmpty &&
-        addressCtrl.text.isNotEmpty &&
-        propertySizeCtrl.text.isNotEmpty &&
-        priceCtrl.text.isNotEmpty &&
-        agentFeeCtrl.text.isNotEmpty &&
-        selectedFacilities!.isNotEmpty &&
-        textControllers.every((element) {
-          return element.text.isNotEmpty;
-        });
+    bool result =
+        (ref.watch(pickedImagesCtrl).length > 4 || propertyImages.isNotEmpty) &&
+            ref.watch(geolocationNotifierProvider).$1 != null &&
+            addressCtrl.text.isNotEmpty &&
+            propertySizeCtrl.text.isNotEmpty &&
+            priceCtrl.text.isNotEmpty &&
+            agentFeeCtrl.text.isNotEmpty &&
+            selectedFacilities!.isNotEmpty &&
+            textControllers.every((element) {
+              return element.text.isNotEmpty;
+            }) &&
+            ref.watch(geolocationNotifierProvider).$1 != null;
+
+    log('pickedImagesCtrl length: ${ref.watch(pickedImagesCtrl).length}');
+    log('propertyImages: $propertyImages');
+    log('geolocation: ${ref.watch(geolocationNotifierProvider).$1}');
+    log('addressCtrl: ${addressCtrl.text}');
+    log('propertySizeCtrl: ${propertySizeCtrl.text}');
+    log('priceCtrl: ${priceCtrl.text}');
+    log('agentFeeCtrl: ${agentFeeCtrl.text}');
+    log('selectedFacilities: $selectedFacilities');
+    log('textControllers: ${textControllers.map((e) => e.text).toList()}');
+    log('geoLocationNotifierProvider: ${ref.watch(geolocationNotifierProvider)}');
+    log('canUploadListing result: $result');
+
+    return result;
   }
 
   @override
@@ -105,18 +117,19 @@ class _AddListingsState extends ConsumerState<AddListings> {
       textControllers[3].text =
           widget.propertyListingArg!.sittingRooms.toString();
       propertyImages = widget.propertyListingArg!.imagesUrls;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(geolocationNotifierProvider.notifier).updateLocation(
+              GeoLocation(
+                city: widget.propertyListingArg!.state,
+                county: widget.propertyListingArg!.lga,
+                state: widget.propertyListingArg!.state,
+                lat: widget.propertyListingArg!.geoPoint.latitude,
+                lng: widget.propertyListingArg!.geoPoint.longitude,
+              ),
+            );
+      });
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(geolocationNotifierProvider.notifier).updateLocation(
-            GeoLocation(
-              city: widget.propertyListingArg!.state,
-              county: widget.propertyListingArg!.lga,
-              state: widget.propertyListingArg!.state,
-              lat: widget.propertyListingArg!.geoPoint.latitude,
-              lng: widget.propertyListingArg!.geoPoint.longitude,
-            ),
-          );
-    });
   }
 
   @override
@@ -498,45 +511,46 @@ class _AddListingsState extends ConsumerState<AddListings> {
                 ),
               ),
               CustomButton(
+                width: 90.w,
                 label: widget.propertyListingArg != null
                     ? "Update property"
                     : "List property",
                 onTap: () async {
-                  final propertyListing = PropertyListing(
-                    id: widget.propertyListingArg != null
-                        ? widget.propertyListingArg!.id
-                        : const Uuid().v4(),
-                    agentID: ref.watch(firebaseAuthProvider).currentUser!.uid,
-                    address: addressCtrl.text.trim(),
-                    propertyType: propertyType,
-                    propertySize:
-                        double.parse(propertySizeCtrl.text.split(',').join('')),
-                    price: double.parse(priceCtrl.text.split(',').join('')),
-                    agentFee:
-                        double.parse(agentFeeCtrl.text.split(',').join('')),
-                    listingType: listingType,
-                    imagesUrls: ref.watch(pickedImagesCtrl).isEmpty
-                        ? []
-                        : ref
-                            .watch(pickedImagesCtrl)
-                            .map((image) => image.path)
-                            .toList(),
-                    condition: condition,
-                    facilities: selectedFacilities!,
-                    furnishing: furnishing,
-                    propertySubtype: propertySubtype,
-                    geoPoint: GeoPoint(
-                        ref.watch(geolocationNotifierProvider).$1!.lat!,
-                        ref.watch(geolocationNotifierProvider).$1!.lng!),
-                    state: ref.watch(geolocationNotifierProvider).$1!.state!,
-                    lga: ref.watch(geolocationNotifierProvider).$1!.county!,
-                    bedrooms: int.parse(textControllers[0].text),
-                    bathrooms: int.parse(textControllers[1].text),
-                    kitchens: int.parse(textControllers[2].text),
-                    sittingRooms: int.parse(textControllers[3].text),
-                  );
-                  log(propertyListing.toString());
                   if (canUploadListing()) {
+                    final propertyListing = PropertyListing(
+                      id: widget.propertyListingArg != null
+                          ? widget.propertyListingArg!.id
+                          : const Uuid().v4(),
+                      agentID: ref.watch(firebaseAuthProvider).currentUser!.uid,
+                      address: addressCtrl.text.trim(),
+                      propertyType: propertyType,
+                      propertySize: double.parse(
+                          propertySizeCtrl.text.split(',').join('')),
+                      price: double.parse(priceCtrl.text.split(',').join('')),
+                      agentFee:
+                          double.parse(agentFeeCtrl.text.split(',').join('')),
+                      listingType: listingType,
+                      imagesUrls: ref.watch(pickedImagesCtrl).isEmpty
+                          ? []
+                          : ref
+                              .watch(pickedImagesCtrl)
+                              .map((image) => image.path)
+                              .toList(),
+                      condition: condition,
+                      facilities: selectedFacilities!,
+                      furnishing: furnishing,
+                      propertySubtype: propertySubtype,
+                      geoPoint: GeoPoint(
+                          ref.watch(geolocationNotifierProvider).$1!.lat!,
+                          ref.watch(geolocationNotifierProvider).$1!.lng!),
+                      state: ref.watch(geolocationNotifierProvider).$1!.state!,
+                      lga: ref.watch(geolocationNotifierProvider).$1!.county!,
+                      bedrooms: int.parse(textControllers[0].text),
+                      bathrooms: int.parse(textControllers[1].text),
+                      kitchens: int.parse(textControllers[2].text),
+                      sittingRooms: int.parse(textControllers[3].text),
+                    );
+                    log(propertyListing.toString());
                     log(propertyListing.toJson().toString());
                     try {
                       ref
@@ -571,12 +585,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                       );
                     }
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Please fill all fields"),
-                        duration: Duration(milliseconds: 500),
-                      ),
-                    );
+                    showSnackBar("Please fill the required fields", context);
                     // context.pop()
                   }
                 },

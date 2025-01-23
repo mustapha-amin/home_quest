@@ -379,7 +379,7 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                                             widget.propertyListing.geoPoint
                                                 .longitude),
                                         initialZoom: 17,
-                                        minZoom: 6,
+                                        minZoom: 10,
                                       ),
                                       children: [
                                         TileLayer(
@@ -404,6 +404,7 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                                             child: HugeIcon(
                                               icon: Icons.location_on,
                                               color: Colors.red,
+                                              size: 30,
                                             ),
                                           )
                                         ])

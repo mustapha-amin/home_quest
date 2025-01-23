@@ -79,18 +79,15 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
                   icon: HugeIcons.strokeRoundedAdd01, color: Colors.black),
             )
           : const SizedBox(),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: NavigationBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        selectedItemColor: Colors.black,
-        enableFeedback: false,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: ref.watch(currentAgentScreenProvider),
-        onTap: (value) {
+        height: 6.5.h,
+        selectedIndex: ref.watch(currentAgentScreenProvider),
+        onDestinationSelected: (value) {
           navigateTo(ref, value);
         },
-        items: [
-          BottomNavigationBarItem(
+        destinations: [
+          NavigationDestination(
             icon: Padding(
               padding: const EdgeInsets.only(top: 5),
               child: HugeIcon(
@@ -103,12 +100,12 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
             ),
             label: "Dashboard",
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
               icon: ref.watch(currentAgentScreenProvider) == 1
                   ? svgImage(btmNavBarIconsFilled[1], true)
                   : svgImage(btmNavBarIcons[1], false),
               label: "My Listings"),
-          BottomNavigationBarItem(
+          NavigationDestination(
             label: "Profile",
             icon: UserAvatar(
               url: ref

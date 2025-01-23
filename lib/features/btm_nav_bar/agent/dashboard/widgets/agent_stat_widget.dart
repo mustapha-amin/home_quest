@@ -28,7 +28,9 @@ class AgentStatWidget extends StatelessWidget {
                 ),
               ]),
           Text(
-            agentStat.count.toString(),
+            agentStat.title == "Ratings"
+                ? agentStat.count.toDouble().toString()
+                : agentStat.count.toString(),
             style: kTextStyle(28, color: AppColors.brown),
           ),
         ],

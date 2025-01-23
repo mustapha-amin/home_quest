@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:developer';
 
 import 'package:appwrite/appwrite.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,7 +45,9 @@ class PropertyListingRepo {
           .collection('listings')
           .doc(newProperty.id)
           .set(newProperty.toJson());
+      log("Listed successfully");
     } on (FirebaseException, AppwriteException) catch (e) {
+      log(e.toString());
       throw Exception(e.toString());
     }
   }
@@ -150,15 +153,13 @@ class PropertyListingRepo {
     }
   }
 
-  Future<List<PropertyListing>> fetchListingsByAgentID(String? id) async {
+  Stream<List<PropertyListing>> fetchListingsByAgentID(String? id) {
     try {
-      final results = await firebaseFirestore
+      final results = firebaseFirestore
           .collection('listings')
-          .where('agentID', isEqualTo: id)
-          .get();
-      return results.docs
-          .map((doc) => PropertyListing.fromJson(doc.data()))
-          .toList();
+          .where('agentID', isEqualTo: id);
+      return results.snapshots().map((doc) =>
+          doc.docs.map((e) => PropertyListing.fromJson(e.data())).toList());
     } on FirebaseException catch (e) {
       throw Exception(e.toString());
     } on SocketException catch (_) {

@@ -11,9 +11,13 @@ enum PropertyType {
 }
 
 enum Furnishing {
-  unfurnished,
-  semi_furnished,
-  furnished,
+  unfurnished('unfurnished'),
+  semi_furnished('semi furnished'),
+  furnished('furnished');
+
+  final String name;
+
+  const Furnishing(this.name);
 }
 
 enum Condition {

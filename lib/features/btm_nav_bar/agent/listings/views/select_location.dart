@@ -19,7 +19,16 @@ import '../../../../../core/coords.dart';
 import '../widgets/mapping_hint_widget.dart';
 
 final userLocationProvider = FutureProvider((ref) async {
-  return await loc.Location.instance.getLocation();
+  if(await loc.Location().serviceEnabled() == false) {
+   final result = await loc.Location().requestService();
+   if(result == true) {
+     return loc.Location.instance.getLocation();
+   } else {
+     return Future.error("Location service not enabled");
+   }
+  } else {
+    return loc.Location.instance.getLocation();
+  }
 });
 
 final mapIsMovingProvider = StateProvider.autoDispose((ref) {
@@ -52,7 +61,6 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
         return LatLng(coord[1], coord[0]);
       }).toList();
     }).toList();
-    log(polygons.toString());
     return polygons;
   }
 
@@ -171,9 +179,11 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
                 ],
               );
             },
-            error: (e, _) {
-              return const Center(
-                child: Text("An Error occured"),
+            error: (e, stk) {
+              log('${e.toString()}', stackTrace: stk);
+
+              return Center(
+                child: Text("Error fetching location. Check your internet"),
               );
             },
             loading: () {
@@ -193,9 +203,15 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
               await ref
                   .read(geolocationNotifierProvider.notifier)
                   .reverseCoding(context, mapController.camera.center);
+              ref
+                  .read(globalLoadingProvider.notifier)
+                  .toggleGlobalLoadingIndicator(true);
               if (ref.watch(geolocationNotifierProvider).$1 != null) {
                 context.pop();
               }
+              ref
+                  .read(globalLoadingProvider.notifier)
+                  .toggleGlobalLoadingIndicator(false);
             },
             onSearch: (location) {
               mapController.move(LatLng(location!.lat!, location.lng!), 13);

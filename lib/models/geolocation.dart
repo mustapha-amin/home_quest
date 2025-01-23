@@ -6,7 +6,7 @@ class GeoLocation {
 
   factory GeoLocation.fromJson(Map<String, dynamic> json) {
     return GeoLocation(
-      city: json['address']['city'],
+      city: json['address']['city'] ??  json['address']['county'],
       county: json['address']['county'],
       state: json['address']['state'],
       lat: double.parse(json['lat']),

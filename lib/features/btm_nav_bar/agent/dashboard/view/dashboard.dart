@@ -55,15 +55,21 @@ class AgentDashboard extends ConsumerWidget {
                       agentStat: AgentStat(
                     iconData: Icons.star,
                     title: "Ratings",
-                    count: (ref.watch(userDataStreamProvider).value
-                                as AgentModel)
-                            .reviews
-                            .map((review) => review.rating)
-                            .fold(0, (prev, next) => prev + next) /
+                    count:
                         (ref.watch(userDataStreamProvider).value as AgentModel)
-                            .reviews
-                            .map((review) => review.rating)
-                            .length,
+                                .reviews
+                                .isNotEmpty
+                            ? (ref.watch(userDataStreamProvider).value
+                                        as AgentModel)
+                                    .reviews
+                                    .map((review) => review.rating)
+                                    .fold(0, (prev, next) => prev + next) /
+                                (ref.watch(userDataStreamProvider).value
+                                        as AgentModel)
+                                    .reviews
+                                    .map((review) => review.rating)
+                                    .length
+                            : 0,
                   )).animate().fadeIn(delay: const Duration(milliseconds: 110)),
                   AgentStatWidget(
                       agentStat: AgentStat(
@@ -77,7 +83,7 @@ class AgentDashboard extends ConsumerWidget {
             Row(
               children: [
                 Text(
-                  "Clients' Reviews",
+                  "Clients' Reviews (${(ref.watch(userDataStreamProvider).value as AgentModel).reviews.length})",
                   style: kTextStyle(28, isBold: true),
                 ),
               ],
