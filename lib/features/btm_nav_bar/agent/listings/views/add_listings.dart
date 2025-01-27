@@ -99,7 +99,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
   @override
   void initState() {
     super.initState();
-
+    log('property is null: ${widget.propertyListingArg == null}');
     if (widget.propertyListingArg != null) {
       addressCtrl.text = widget.propertyListingArg!.address;
       propertySizeCtrl.text =
@@ -517,7 +517,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                     : "List property",
                 onTap: () async {
                   if (canUploadListing()) {
-                    final propertyListing = PropertyListing(
+                    final propertyListing = widget.propertyListingArg!.copyWith(
                       id: widget.propertyListingArg != null
                           ? widget.propertyListingArg!.id
                           : const Uuid().v4(),
@@ -530,12 +530,10 @@ class _AddListingsState extends ConsumerState<AddListings> {
                       agentFee:
                           double.parse(agentFeeCtrl.text.split(',').join('')),
                       listingType: listingType,
-                      imagesUrls: ref.watch(pickedImagesCtrl).isEmpty
-                          ? []
-                          : ref
-                              .watch(pickedImagesCtrl)
-                              .map((image) => image.path)
-                              .toList(),
+                      imagesUrls: ref
+                          .watch(pickedImagesCtrl)
+                          .map((image) => image.path)
+                          .toList(),
                       condition: condition,
                       facilities: selectedFacilities!,
                       furnishing: furnishing,
@@ -550,28 +548,35 @@ class _AddListingsState extends ConsumerState<AddListings> {
                       kitchens: int.parse(textControllers[2].text),
                       sittingRooms: int.parse(textControllers[3].text),
                     );
-                    log(propertyListing.toString());
-                    log(propertyListing.toJson().toString());
+                    // log(propertyListing.toString());
+                    // log(propertyListing.toJson().toString());
                     try {
                       ref
                           .read(globalLoadingProvider.notifier)
                           .toggleGlobalLoadingIndicator(true);
 
-                      ref.read(createListingProvider((
-                        listing: propertyListing,
-                        existingImages: propertyImages,
-                      )));
+                      if (widget.propertyListingArg == null) {
+                        await ref.read(createListingProvider(
+                          propertyListing,
+                        ).future);
+                      } else {
+                        ref.read(updateListingProvider((
+                          listing: propertyListing,
+                          existingImages: propertyImages,
+                        )));
+                      }
 
                       ref
                           .read(globalLoadingProvider.notifier)
                           .toggleGlobalLoadingIndicator(false);
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Property listed successfully"),
+                        SnackBar(
+                          content: Text(widget.propertyListingArg == null
+                              ? "Property listed successfully"
+                              : "Property updated successfully"),
                           duration: Duration(milliseconds: 500),
                         ),
                       );
-                      Navigator.pop(context);
                     } catch (e, stk) {
                       ref
                           .read(globalLoadingProvider.notifier)

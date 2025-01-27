@@ -4,20 +4,14 @@ import 'package:home_quest/models/property_listing.dart';
 
 import '../repository/property_listing_repo.dart';
 
-final createListingProvider = FutureProvider.family<
-    void,
-    ({
-      PropertyListing listing,
-      List<String>? existingImages
-    })>((ref, args) async {
-  await ref
-      .read(propertyListingRepoProvider)
-      .createListing(args.listing, args.existingImages);
+final createListingProvider =
+    FutureProvider.family<void, PropertyListing>((ref, listing) async {
+  await ref.read(propertyListingRepoProvider).createListing(listing);
 });
 
 final updateListingProvider =
-    FutureProvider.family<void, PropertyListing>((ref, propertyListing) async {
-  await ref.read(propertyListingRepoProvider).updateListing(propertyListing);
+    FutureProvider.family<void, ({PropertyListing listing, List<String> existingImages})>((ref, args) async {
+  await ref.read(propertyListingRepoProvider).updateListing(args.listing, args.existingImages);
 });
 
 final deleteListingProvider =

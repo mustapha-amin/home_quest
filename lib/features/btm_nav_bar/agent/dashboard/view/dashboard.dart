@@ -1,8 +1,14 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_quest/core/bucket_ids.dart';
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/providers.dart';
+import 'package:home_quest/core/utils/appwrite_image_upload.dart';
+import 'package:home_quest/core/utils/image_picker_util.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/dashboard/widgets/agent_stat_widget.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/controller/property_listing_ctrl.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
@@ -15,11 +21,18 @@ import 'package:sizer/sizer.dart';
 import '../../../../../core/utils/textstyle.dart';
 import '../../../../../shared/spacing.dart';
 
-class AgentDashboard extends ConsumerWidget {
+class AgentDashboard extends ConsumerStatefulWidget {
   const AgentDashboard({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _AgentDashboardState();
+}
+
+class _AgentDashboardState extends ConsumerState<AgentDashboard> {
+  List<File?> images = [];
+
+  @override
+  Widget build(BuildContext context) {
     return ref
         .watch(fetchListingsByAgentIDProvider(
             ref.watch(firebaseAuthProvider).currentUser!.uid))
@@ -80,6 +93,7 @@ class AgentDashboard extends ConsumerWidget {
                 ],
               ),
             ),
+            
             Row(
               children: [
                 Text(

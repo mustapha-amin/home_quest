@@ -50,7 +50,7 @@ class PropertyListing {
       'id': id,
       'agentID': agentID,
       'address': address,
-      'propertyType': propertyType,
+      'propertyType': propertyType.name,
       'propertySize': propertySize,
       'price': price,
       'agentFee': agentFee,
@@ -60,10 +60,10 @@ class PropertyListing {
       'sittingRooms': sittingRooms,
       'kitchens': kitchens,
       'bathrooms': bathrooms,
-      'condition': condition,
+      'condition': condition.name,
       'facilities': facilities.map((facility) => facility.name).toList(),
-      'furnishing': furnishing,
-      'propertySubtype': propertySubtype,
+      'furnishing': furnishing.name,
+      'propertySubtype': propertySubtype.name,
       'geoPoint': geoPoint,
       'state': state,
       'lga': lga,
@@ -76,26 +76,36 @@ class PropertyListing {
       id: json['id'],
       agentID: json['agentID'],
       address: json['address'],
-      propertyType: PropertyType.values.byName(json['propertyType']),
+      propertyType: PropertyType.values
+          .byName(json['propertyType']), // Convert string to enum
       propertySize: json['propertySize'].toDouble(),
       price: json['price'].toDouble(),
       agentFee: json['agentFee'].toDouble(),
-      listingType: ListingType.values.byName(json['listingType']),
+      listingType: ListingType.values
+          .byName(json['listingType']), // Convert string to enum
       imagesUrls: List<String>.from(json['imagesUrls']),
       bedrooms: json['bedrooms'],
       sittingRooms: json['sittingRooms'],
       bathrooms: json['bathrooms'],
       kitchens: json['kitchens'],
-      condition: Condition.values.byName(json['condition']),
-      facilities: (json['facilities'] as List?)
-              ?.map((facilityString) => Facility.values.firstWhere(
-                  (facility) => facility.name == facilityString,
-                  orElse: () => Facility.values.first // Provide a default value
-                  ))
-              .toList() ??
-          [],
-      furnishing: Furnishing.values.byName(json['furnishing']),
-      propertySubtype: PropertySubtype.values.byName(json['propertySubtype']),
+      condition: Condition.values.firstWhere(
+        (condition) => condition.name == json['condition'],
+        orElse: () => Condition.all,
+      ),
+      facilities: (json['facilities'] as List)
+          .map((facilityString) => Facility.values.firstWhere(
+                (facility) => facility.name == facilityString,
+                orElse: () => Facility.electricity,
+              ))
+          .toList(),
+      furnishing: Furnishing.values.firstWhere(
+        (furnishing) => furnishing.name == json['furnishing'],
+        orElse: () => Furnishing.unfurnished,
+      ),
+      propertySubtype: PropertySubtype.values.firstWhere(
+        (subtype) => subtype.name == json['propertySubtype'],
+        orElse: () => PropertySubtype.all,
+      ),
       geoPoint: json['geoPoint'],
       state: json['state'],
       lga: json['lga'],
@@ -115,6 +125,7 @@ class PropertyListing {
     Furnishing? furnishing,
     Condition? condition,
     PropertySubtype? propertySubtype,
+    List<Facility>? facilities,
     int? bedrooms,
     int? bathrooms,
     int? kitchens,
@@ -140,7 +151,7 @@ class PropertyListing {
       kitchens: kitchens ?? this.kitchens,
       sittingRooms: sittingRooms ?? this.sittingRooms,
       bedrooms: bedrooms ?? this.bedrooms,
-      facilities: facilities ?? facilities,
+      facilities: facilities ?? this.facilities,
       geoPoint: geoPoint ?? this.geoPoint,
       state: state ?? this.state,
       lga: lga ?? this.lga,

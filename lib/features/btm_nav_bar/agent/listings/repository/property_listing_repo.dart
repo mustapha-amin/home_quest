@@ -31,16 +31,13 @@ class PropertyListingRepo {
     required this.firebaseAuth,
   });
 
-  FutureVoid createListing(
-      PropertyListing propertyListing, List<String>? existingImages) async {
+  FutureVoid createListing(PropertyListing propertyListing) async {
     List<String> urls = [];
     try {
-      if (propertyListing.imagesUrls.isNotEmpty) {
-        urls = await Future.wait(propertyListing.imagesUrls.map(
-            (url) => uploadImage(storage, File(url), ImageBucketIDs.listings)));
-      }
-      PropertyListing newProperty =
-          propertyListing.copyWith(imagesUrls: [...?existingImages, ...urls]);
+      Future.wait(propertyListing.imagesUrls.map((url) async =>
+          await uploadImage(storage, File(url), ImageBucketIDs.listings)));
+
+      PropertyListing newProperty = propertyListing.copyWith(imagesUrls: urls);
       await firebaseFirestore
           .collection('listings')
           .doc(newProperty.id)
@@ -52,12 +49,22 @@ class PropertyListingRepo {
     }
   }
 
-  FutureVoid updateListing(PropertyListing propertyListing) async {
+  FutureVoid updateListing(
+      PropertyListing propertyListing, List<String> existingImages) async {
+    List<String>? urls;
     try {
+      if (propertyListing.imagesUrls.isNotEmpty) {
+        Future.wait(propertyListing.imagesUrls.map((url) async =>
+            await uploadImage(storage, File(url), ImageBucketIDs.listings)));
+      }
+      final newPropertyListing =
+          propertyListing.copyWith(imagesUrls: [...existingImages, ...?urls]);
       await firebaseFirestore
           .collection('listings')
           .doc(propertyListing.id)
-          .set(propertyListing.toJson(), SetOptions(merge: true));
+          .set(newPropertyListing.copyWith(bathrooms: 1).toJson());
+      log("Updated successfully");
+      log(newPropertyListing.toJson().toString());
     } on (FirebaseException, AppwriteException) catch (e) {
       throw Exception(e.toString());
     } on SocketException catch (_) {

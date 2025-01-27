@@ -31,9 +31,12 @@ class Listings extends ConsumerWidget {
                   : ListView.separated(
                       itemCount: listings.length,
                       itemBuilder: (context, index) {
-                        return AgentListing(listing: listings[index])
-                            .padX(10)
-                            .padY(8);
+                        return InkWell(
+                          onTap: () => log(listings[index].id),
+                          child: AgentListing(listing: listings[index])
+                              .padX(10)
+                              .padY(8),
+                        );
                       },
                       separatorBuilder: (context, index) => const Divider(
                         color: Colors.grey,
