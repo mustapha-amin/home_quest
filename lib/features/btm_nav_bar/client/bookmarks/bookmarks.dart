@@ -9,6 +9,7 @@ import 'package:home_quest/features/user%20setup/controller/user_data_controller
 import 'package:home_quest/models/client.dart';
 import 'package:home_quest/shared/loading_indicator.dart';
 
+import '../home/widgets/bookmarked_listing_widget.dart';
 import 'controllers/bookmark_ctrl.dart';
 
 class FavoritesScreen extends ConsumerStatefulWidget {
@@ -39,7 +40,7 @@ class _FavoritesScreenState extends ConsumerState<FavoritesScreen> {
                     child: Column(
                       children: [
                         ...listings.map((listing) =>
-                            ListingWidget(propertyListing: listing))
+                            BookmarkedListingWidget(propertyListing: listing, onRemoveBookmark: () {},))
                       ],
                     ).padX(10),
                   );

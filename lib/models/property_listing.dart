@@ -89,7 +89,7 @@ class PropertyListing {
       bathrooms: json['bathrooms'],
       kitchens: json['kitchens'],
       condition: Condition.values.firstWhere(
-        (condition) => condition.name == json['condition'],
+        (condition) => condition.name == json['condition'] as String,
         orElse: () => Condition.all,
       ),
       facilities: (json['facilities'] as List)

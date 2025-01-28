@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:home_quest/core/extensions.dart';
 import 'package:hugeicons/hugeicons.dart';
 
 import '../core/utils/textstyle.dart';
@@ -7,7 +8,8 @@ import '../core/utils/textstyle.dart';
 class ErrorScreen extends ConsumerWidget {
   final String errorText;
   final VoidCallback onRefresh;
-  const ErrorScreen({required this.errorText, required this.onRefresh, super.key});
+  const ErrorScreen(
+      {required this.errorText, required this.onRefresh, super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,14 +23,14 @@ class ErrorScreen extends ConsumerWidget {
               color: Colors.red,
               size: 150,
             ),
+            SelectableText(errorText).padX(8),
             Text.rich(
               TextSpan(
                 text: "Whoops\n",
                 style: kTextStyle(25, isBold: true),
                 children: [
                   TextSpan(
-                    text:
-                       errorText,
+                    text: errorText,
                     style: kTextStyle(15),
                   )
                 ],

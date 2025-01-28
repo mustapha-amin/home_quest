@@ -28,12 +28,15 @@ class ListingWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-      onTap: () => context.push(
-        ListingDetail(
-          propertyListing: propertyListing,
-          isViewDetails: isViewDetails,
-        ),
-      ),
+      onTap: () => {
+        log(propertyListing.toString()),
+        context.push(
+          ListingDetail(
+            propertyListing: propertyListing,
+            isViewDetails: isViewDetails,
+          ),
+        )
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -105,7 +108,7 @@ class ListingWidget extends ConsumerWidget {
                       ),
                       spaceX(5),
                       Text(
-                        "For ${propertyListing.listingType.name}",
+                        "For ${propertyListing.listingType.name} - ${propertyListing.condition.name.captializeFirst}",
                         style: kTextStyle(15),
                       ),
                     ],

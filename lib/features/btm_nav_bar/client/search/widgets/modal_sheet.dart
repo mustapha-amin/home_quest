@@ -6,7 +6,9 @@ import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/typedefs.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
+import 'package:home_quest/features/btm_nav_bar/agent/listings/controller/property_listing_ctrl.dart';
 import 'package:home_quest/features/btm_nav_bar/client/search/controller/search_filter_ctrl.dart';
+import 'package:home_quest/features/btm_nav_bar/client/search/widgets/search_chips.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:nigerian_states_and_lga/nigerian_states_and_lga.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
@@ -21,16 +23,23 @@ InputDecoration kTextDecoration(String hint) => InputDecoration(
       hintText: hint,
     );
 
-class AppBottomSheet extends ConsumerStatefulWidget {
-  const AppBottomSheet({super.key});
+class SearchBottomSheet extends ConsumerStatefulWidget {
+  const SearchBottomSheet({super.key});
 
   @override
-  ConsumerState<AppBottomSheet> createState() => _AppBottomSheetState();
+  ConsumerState<SearchBottomSheet> createState() => _SearchBottomSheetState();
 }
 
-class _AppBottomSheetState extends ConsumerState<AppBottomSheet> {
-  List<int> noOfSmtn = List.generate(4, (index) => index);
+class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
   List<String> lgas = [];
+  int selectedRoom = 0;
+  int selectedKitchen = 0;
+  int selectedSittingRoom = 0;
+  int selectedBathroom = 0;
+  TextEditingController minPriceCtrl = TextEditingController();
+  TextEditingController maxPriceCtrl = TextEditingController();
+  TextEditingController minSizeCtrl = TextEditingController();
+  TextEditingController maxSizeCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -81,30 +90,27 @@ class _AppBottomSheetState extends ConsumerState<AppBottomSheet> {
                     SizedBox(
                       width: 70.w,
                       child: SegmentedButton(
-                        selectedIcon: const HugeIcon(
-                          icon: HugeIcons.strokeRoundedTick01,
-                          color: AppColors.brown,
-                        ),
+                        showSelectedIcon: false,
                         segments: [
                           ButtonSegment(
                             value: ListingType.rent,
                             label: Text(
                               ListingType.rent.name.captializeFirst,
-                              style: kTextStyle(15, isBold: true),
+                              style: kTextStyle(18, isBold: true),
                             ),
                           ),
                           ButtonSegment(
                             value: ListingType.sale,
                             label: Text(
                               ListingType.sale.name.captializeFirst,
-                              style: kTextStyle(15, isBold: true),
+                              style: kTextStyle(18, isBold: true),
                             ),
                           ),
                         ],
-                        selected: ({searchfilter.listingType}),
+                        selected: ({searchfilter.filter.listingType}),
                         onSelectionChanged: (listing) {
-                          PropertyFilter propertyFilter =
-                              searchfilter.copyWith(listingType: listing.first);
+                          PropertyFilter propertyFilter = searchfilter.filter
+                              .copyWith(listingType: listing.first);
                           ref
                               .read(searchFilterProvider.notifier)
                               .updateFilter(propertyFilter);
@@ -132,7 +138,7 @@ class _AppBottomSheetState extends ConsumerState<AppBottomSheet> {
                                 borderRadius: BorderRadius.circular(5),
                               ),
                             ),
-                            value: ref.watch(searchFilterProvider).state,
+                            value: ref.watch(searchFilterProvider).filter.state,
                             hint: const Text("  Select state"),
                             items: [
                               ...NigerianStatesAndLGA.allStates.map(
@@ -147,7 +153,7 @@ class _AppBottomSheetState extends ConsumerState<AppBottomSheet> {
                             ],
                             onChanged: (newVal) {
                               PropertyFilter propertyFilter =
-                                  searchfilter.copyWith(
+                                  searchfilter.filter.copyWith(
                                       state: newVal,
                                       lga: NigerianStatesAndLGA.getStateLGAs(
                                           newVal!)[0]);
@@ -171,28 +177,31 @@ class _AppBottomSheetState extends ConsumerState<AppBottomSheet> {
                                 borderRadius: BorderRadius.circular(5),
                               ),
                             ),
-                            value: ref.watch(searchFilterProvider).lga,
+                            value: ref.watch(searchFilterProvider).filter.lga,
                             hint: const Text("  Select LGA"),
-                            items: ref.watch(searchFilterProvider).state == null
-                                ? []
-                                : [
-                                    ...NigerianStatesAndLGA.getStateLGAs(ref
-                                            .watch(searchFilterProvider)
-                                            .state!
-                                            .captializeFirst)
-                                        .map(
-                                      (lga) => DropdownMenuItem(
-                                        value: lga,
-                                        child: Text(
-                                          lga,
-                                          style: kTextStyle(15),
-                                        ).padX(6),
-                                      ),
-                                    ),
-                                  ],
+                            items:
+                                ref.watch(searchFilterProvider).filter.state ==
+                                        null
+                                    ? []
+                                    : [
+                                        ...NigerianStatesAndLGA.getStateLGAs(ref
+                                                .watch(searchFilterProvider)
+                                                .filter
+                                                .state!
+                                                .captializeFirst)
+                                            .map(
+                                          (lga) => DropdownMenuItem(
+                                            value: lga,
+                                            child: Text(
+                                              lga,
+                                              style: kTextStyle(15),
+                                            ).padX(6),
+                                          ),
+                                        ),
+                                      ],
                             onChanged: (newVal) {
                               PropertyFilter propertyFilter =
-                                  searchfilter.copyWith(lga: newVal);
+                                  searchfilter.filter.copyWith(lga: newVal);
                               ref
                                   .read(searchFilterProvider.notifier)
                                   .updateFilter(propertyFilter);
@@ -214,10 +223,12 @@ class _AppBottomSheetState extends ConsumerState<AppBottomSheet> {
                               condition.name.captializeFirst,
                               style: kTextStyle(15),
                             ),
-                            selected: searchfilter.condition == condition,
+                            selected:
+                                searchfilter.filter.condition == condition,
                             onSelected: (_) {
-                              PropertyFilter propertyFilter =
-                                  searchfilter.copyWith(condition: condition);
+                              PropertyFilter propertyFilter = searchfilter
+                                  .filter
+                                  .copyWith(condition: condition);
                               ref
                                   .read(searchFilterProvider.notifier)
                                   .updateFilter(propertyFilter);
@@ -237,10 +248,11 @@ class _AppBottomSheetState extends ConsumerState<AppBottomSheet> {
                           (type) => ChoiceChip(
                             label: Text(type.name.captializeFirst,
                                 style: kTextStyle(15)),
-                            selected: searchfilter.propertyType == type,
+                            selected: searchfilter.filter.propertyType == type,
                             onSelected: (_) {
-                              PropertyFilter propertyFilter =
-                                  searchfilter.copyWith(propertyType: type);
+                              PropertyFilter propertyFilter = searchfilter
+                                  .filter
+                                  .copyWith(propertyType: type);
                               ref
                                   .read(searchFilterProvider.notifier)
                                   .updateFilter(propertyFilter);
@@ -260,9 +272,11 @@ class _AppBottomSheetState extends ConsumerState<AppBottomSheet> {
                           (subtype) => ChoiceChip(
                             label: Text(subtype.name.captializeFirst,
                                 style: kTextStyle(15)),
-                            selected: searchfilter.propertySubtype == subtype,
+                            selected:
+                                searchfilter.filter.propertySubtype == subtype,
                             onSelected: (_) {
                               PropertyFilter propertyFilter = searchfilter
+                                  .filter
                                   .copyWith(propertySubtype: subtype);
                               ref
                                   .read(searchFilterProvider.notifier)
@@ -278,14 +292,38 @@ class _AppBottomSheetState extends ConsumerState<AppBottomSheet> {
                       children: [
                         Expanded(
                             child: TextField(
+                          controller: minPriceCtrl,
                           decoration: kTextDecoration("Min"),
                           keyboardType: TextInputType.number,
                           inputFormatters: [ThousandsFormatter()],
+                          onChanged: (value) {
+                            final filter = searchfilter.filter.copyWith(
+                                minPrice: double.parse(minPriceCtrl.text
+                                    .split(',')
+                                    .join('')
+                                    .trim()));
+                            ref
+                                .read(searchFilterProvider.notifier)
+                                .updateFilter(filter);
+                          },
                         )),
+                        Text('-'),
                         Expanded(
                             child: TextField(
+                          controller: maxPriceCtrl,
                           decoration: kTextDecoration("Max"),
                           keyboardType: TextInputType.number,
+                          inputFormatters: [ThousandsFormatter()],
+                          onChanged: (value) {
+                            final filter = searchfilter.filter.copyWith(
+                                maxPrice: double.parse(maxPriceCtrl.text
+                                    .split(',')
+                                    .join('')
+                                    .trim()));
+                            ref
+                                .read(searchFilterProvider.notifier)
+                                .updateFilter(filter);
+                          },
                         )),
                       ],
                     ),
@@ -298,262 +336,71 @@ class _AppBottomSheetState extends ConsumerState<AppBottomSheet> {
                       children: [
                         Expanded(
                             child: TextField(
+                          controller: minSizeCtrl,
                           decoration: kTextDecoration("Min"),
                           keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            final filter = searchfilter.filter.copyWith(
+                                minPropertySize:
+                                    double.parse(minSizeCtrl.text.trim()));
+                            ref
+                                .read(searchFilterProvider.notifier)
+                                .updateFilter(filter);
+                          },
                         )),
+                        Text('-'),
                         Expanded(
                             child: TextField(
+                          controller: maxSizeCtrl,
                           decoration: kTextDecoration("Max"),
                           keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            final filter = searchfilter.filter.copyWith(
+                                maxPropertySize:
+                                    double.parse(maxSizeCtrl.text.trim()));
+                            ref
+                                .read(searchFilterProvider.notifier)
+                                .updateFilter(filter);
+                          },
                         )),
                       ],
                     ),
-                    Row(
-                      spacing: 10,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Rooms",
-                                style: kTextStyle(18, isBold: true),
-                              ),
-                              DropdownButtonHideUnderline(
-                                child: DropdownButton2<int>(
-                                  dropdownStyleData:
-                                      const DropdownStyleData(elevation: 2),
-                                  buttonStyleData: ButtonStyleData(
-                                    height: 45,
-                                    width: 50.w,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.grey,
-                                      ),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  value:
-                                      ref.watch(searchFilterProvider).bedrooms,
-                                  items: [
-                                    ...noOfSmtn.map(
-                                      (no) => DropdownMenuItem(
-                                        value: no,
-                                        child: Text(
-                                          no < 3 ? no.toString() : '$no+',
-                                          style: kTextStyle(15),
-                                        ).padX(6),
-                                      ),
-                                    ),
-                                  ],
-                                  onChanged: (newVal) {
-                                    PropertyFilter propertyFilter =
-                                        searchfilter.copyWith(bedrooms: newVal);
-                                    ref
-                                        .read(searchFilterProvider.notifier)
-                                        .updateFilter(propertyFilter);
-                                    log(ref
-                                        .watch(searchFilterProvider)
-                                        .toString());
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Kitchens",
-                                style: kTextStyle(18, isBold: true),
-                              ),
-                              DropdownButtonHideUnderline(
-                                child: DropdownButton2<int>(
-                                  dropdownStyleData:
-                                      const DropdownStyleData(elevation: 2),
-                                  buttonStyleData: ButtonStyleData(
-                                    height: 45,
-                                    width: 50.w,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.grey,
-                                      ),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  value:
-                                      ref.watch(searchFilterProvider).kitchens,
-                                  items: [
-                                    ...noOfSmtn.map(
-                                      (no) => DropdownMenuItem(
-                                        value: no,
-                                        child: Text(
-                                          no < 3 ? no.toString() : '$no+',
-                                          style: kTextStyle(15),
-                                        ).padX(6),
-                                      ),
-                                    ),
-                                  ],
-                                  onChanged: (newVal) {
-                                    PropertyFilter propertyFilter =
-                                        searchfilter.copyWith(kitchens: newVal);
-                                    ref
-                                        .read(searchFilterProvider.notifier)
-                                        .updateFilter(propertyFilter);
-                                    log(ref
-                                        .watch(searchFilterProvider)
-                                        .toString());
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      spacing: 10,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Sitting rooms",
-                                style: kTextStyle(18, isBold: true),
-                              ),
-                              DropdownButtonHideUnderline(
-                                child: DropdownButton2<int>(
-                                  dropdownStyleData:
-                                      const DropdownStyleData(elevation: 2),
-                                  buttonStyleData: ButtonStyleData(
-                                    height: 45,
-                                    width: 50.w,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.grey,
-                                      ),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  value: ref
-                                      .watch(searchFilterProvider)
-                                      .sittingRooms,
-                                  items: [
-                                    ...noOfSmtn.map(
-                                      (no) => DropdownMenuItem(
-                                        value: no,
-                                        child: Text(
-                                          no < 3 ? no.toString() : '$no+',
-                                          style: kTextStyle(15),
-                                        ).padX(6),
-                                      ),
-                                    ),
-                                  ],
-                                  onChanged: (newVal) {
-                                    PropertyFilter propertyFilter = searchfilter
-                                        .copyWith(sittingRooms: newVal);
-                                    ref
-                                        .read(searchFilterProvider.notifier)
-                                        .updateFilter(propertyFilter);
-                                    log(ref
-                                        .watch(searchFilterProvider)
-                                        .toString());
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Bathrooms",
-                                style: kTextStyle(18, isBold: true),
-                              ),
-                              DropdownButtonHideUnderline(
-                                child: DropdownButton2<int>(
-                                  dropdownStyleData:
-                                      const DropdownStyleData(elevation: 2),
-                                  buttonStyleData: ButtonStyleData(
-                                    height: 45,
-                                    width: 50.w,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.grey,
-                                      ),
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                  ),
-                                  value:
-                                      ref.watch(searchFilterProvider).bathrooms,
-                                  items: [
-                                    ...noOfSmtn.map(
-                                      (no) => DropdownMenuItem(
-                                        value: no,
-                                        child: Text(
-                                          no < 3 ? no.toString() : '$no+',
-                                          style: kTextStyle(15),
-                                        ).padX(6),
-                                      ),
-                                    ),
-                                  ],
-                                  onChanged: (newVal) {
-                                    PropertyFilter propertyFilter = searchfilter
-                                        .copyWith(bathrooms: newVal);
-                                    ref
-                                        .read(searchFilterProvider.notifier)
-                                        .updateFilter(propertyFilter);
-                                    log(ref
-                                        .watch(searchFilterProvider)
-                                        .toString());
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    CustomFilterChip(
+                        feature: Feature.bedrooms, selected: selectedRoom),
+                    CustomFilterChip(
+                        feature: Feature.bathrooms, selected: selectedBathroom),
+                    CustomFilterChip(
+                        feature: Feature.kitchens, selected: selectedKitchen),
+                    CustomFilterChip(
+                        feature: Feature.sitting_rooms,
+                        selected: selectedSittingRoom),
                   ],
                 ),
               ).padX(12).padY(9),
             ),
-            Row(
-              spacing: 5,
-              children: [
-                Expanded(
-                  child: SizedBox(
-                    height: 50,
-                    child: OutlinedButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Cancel",
-                        style: kTextStyle(16,
-                            color: AppColors.brown, isBold: true),
-                      ),
-                    ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12, right: 8, left: 8),
+              child: SizedBox(
+                height: 50,
+                width: 100.w,
+                child: FilledButton(
+                  onPressed: () {
+                    log(ref.watch(searchFilterProvider).filter.toString());
+                    ref.read(searchFilterProvider.notifier).updateFilter(
+                        ref.watch(searchFilterProvider).filter,
+                        searching: true);
+                    Navigator.of(context).pop();
+                    ref.read(fetchListingsWithFiltersProvider(
+                      ref.watch(searchFilterProvider).filter,
+                    ));
+                  },
+                  child: Text(
+                    "Search",
+                    style: kTextStyle(16, color: Colors.white, isBold: true),
                   ),
                 ),
-                Expanded(
-                  child: SizedBox(
-                    height: 50,
-                    child: FilledButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Search",
-                        style:
-                            kTextStyle(16, color: Colors.white, isBold: true),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ).padX(12).padY(5)
+              ),
+            )
           ],
         ),
       ],

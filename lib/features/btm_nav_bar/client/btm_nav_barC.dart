@@ -15,6 +15,7 @@ import 'package:home_quest/features/btm_nav_bar/shared/profile/views/profile.dar
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../../shared/user_avatar.dart';
@@ -74,6 +75,16 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        leading: ref.watch(currentScreenProvider) == 1
+            ? switch (ref.watch(searchFilterProvider).searching) {
+                true => BackButton(
+                    onPressed: () {
+                      ref.invalidate(searchFilterProvider);
+                    },
+                  ),
+                _ => null
+              }
+            : null,
         forceMaterialTransparency: true,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -81,9 +92,12 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("HomeQuest", style: kTextStyle(30)),
-                spaceX(4),
-                Image.asset(ImagePaths.homeLogo, height: 25),
+                if (!ref.watch(searchFilterProvider).searching ||
+                    ref.watch(currentScreenProvider) != 1) ...{
+                  Text("HomeQuest", style: kTextStyle(30)),
+                  spaceX(4),
+                  Image.asset(ImagePaths.homeLogo, height: 25),
+                },
               ],
             ).padX(10),
             if (ref.watch(currentScreenProvider) == 1)
@@ -107,7 +121,7 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
                     builder: (context) {
                       return SizedBox(
                         height: 95.h,
-                        child: const AppBottomSheet(),
+                        child: const SearchBottomSheet(),
                       );
                     },
                   );
@@ -128,9 +142,12 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
         },
         destinations: [
           NavigationDestination(
-            icon: ref.watch(currentScreenProvider) == 0
-                ? svgImage(btmNavBarIconsFilled[0], true)
-                : svgImage(btmNavBarIcons[0], false),
+            icon: Icon(
+              ref.watch(currentScreenProvider) == 0
+                  ? Iconsax.home
+                  : Iconsax.home_1_copy,
+              size: 26,
+            ),
             label: "Home",
           ),
           NavigationDestination(
@@ -144,11 +161,11 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
           NavigationDestination(
             icon: ref.watch(currentScreenProvider) == 2
                 ? const Icon(
-                    Icons.bookmark,
+                    Iconsax.bookmark,
                     size: 26,
                   )
                 : const Icon(
-                    Icons.bookmark_outline,
+                    Iconsax.bookmark_copy,
                     size: 26,
                   ),
             label: "Bookmarks",

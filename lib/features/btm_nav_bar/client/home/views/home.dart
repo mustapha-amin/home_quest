@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions.dart';
@@ -21,7 +23,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         return RefreshIndicator(
           onRefresh: () async => ref.invalidate(fetchListingsProvider),
           child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
+            physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
               children: [
                 ...listings!.map((listing) =>
@@ -35,6 +37,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         return ErrorScreen(
           errorText: "Error fetching listings: ${e.toString()}",
           onRefresh: () {
+            log(e.toString());
             ref.invalidate(fetchListingsProvider);
           },
         );
