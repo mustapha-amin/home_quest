@@ -9,9 +9,15 @@ final createListingProvider =
   await ref.read(propertyListingRepoProvider).createListing(listing);
 });
 
-final updateListingProvider =
-    FutureProvider.family<void, ({PropertyListing listing, List<String> existingImages})>((ref, args) async {
-  await ref.read(propertyListingRepoProvider).updateListing(args.listing, args.existingImages);
+final updateListingProvider = FutureProvider.family<
+    void,
+    ({
+      PropertyListing listing,
+      List<String> existingImages
+    })>((ref, args) async {
+  await ref
+      .read(propertyListingRepoProvider)
+      .updateListing(args.listing, args.existingImages);
 });
 
 final deleteListingProvider =
@@ -32,6 +38,7 @@ final fetchListingsByAgentIDProvider =
 final fetchListingsWithFiltersProvider =
     FutureProvider.family<List<PropertyListing>, PropertyFilter>(
         (ref, filter) async {
+  await Future.delayed(const Duration(seconds: 1));
   return await ref
       .read(propertyListingRepoProvider)
       .fetchListingsWithFilters(filter);

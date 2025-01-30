@@ -4,7 +4,6 @@ import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/core/enums.dart';
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/utils/image_path.dart';
-import 'package:home_quest/core/utils/svg_util.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:home_quest/features/btm_nav_bar/client/bookmarks/bookmarks.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/views/home.dart';
@@ -80,6 +79,22 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
                 true => BackButton(
                     onPressed: () {
                       ref.invalidate(searchFilterProvider);
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(35),
+                            topRight: Radius.circular(35),
+                          ),
+                        ),
+                        context: context,
+                        builder: (context) {
+                          return SizedBox(
+                            height: 95.h,
+                            child: const SearchBottomSheet(),
+                          );
+                        },
+                      );
                     },
                   ),
                 _ => null
@@ -138,6 +153,25 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
         height: 6.5.h,
         selectedIndex: ref.watch(currentScreenProvider),
         onDestinationSelected: (value) {
+          if (value == 1) {
+            ref.invalidate(searchFilterProvider);
+            showModalBottomSheet(
+              isScrollControlled: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(35),
+                  topRight: Radius.circular(35),
+                ),
+              ),
+              context: context,
+              builder: (context) {
+                return SizedBox(
+                  height: 95.h,
+                  child: const SearchBottomSheet(),
+                );
+              },
+            );
+          }
           navigateTo(ref, value);
         },
         destinations: [

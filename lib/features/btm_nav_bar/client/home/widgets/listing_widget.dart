@@ -113,10 +113,17 @@ class ListingWidget extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  Text(
-                    "${propertyListing.price.toMoney} ${propertyListing.listingType == ListingType.rent ? ' / Year' : ''}",
-                    style: kTextStyle(18, isBold: true),
-                  ),
+                  Text.rich(TextSpan(
+                      text: propertyListing.price.toMoney,
+                      style: kTextStyle(18, isBold: true),
+                      children: [
+                        TextSpan(
+                          text: propertyListing.listingType == ListingType.rent
+                              ? ' / Year'
+                              : '',
+                          style: kTextStyle(14, isBold: true),
+                        )
+                      ])),
                   SizedBox(
                     width: 35.w,
                     child: Text(

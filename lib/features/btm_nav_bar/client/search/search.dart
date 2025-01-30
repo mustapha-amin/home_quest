@@ -8,6 +8,8 @@ import 'package:home_quest/features/btm_nav_bar/client/search/controller/search_
 import 'package:home_quest/shared/error_screen.dart';
 import 'package:home_quest/shared/loading_indicator.dart';
 
+import '../../../../core/utils/textstyle.dart';
+
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
 
@@ -27,7 +29,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             data: (listings) {
               return listings.isEmpty
                   ? Center(
-                      child: Text("No listings matched your criteria"),
+                      child: Text("No listings matched your criteria", style: kTextStyle(20, isBold: true),),
                     )
                   : SingleChildScrollView(
                       child: Column(

@@ -15,6 +15,7 @@ import 'package:pattern_formatter/pattern_formatter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import '../../../../../core/enums.dart';
+import '../../btm_nav_barC.dart';
 
 InputDecoration kTextDecoration(String hint) => InputDecoration(
       border: OutlineInputBorder(
@@ -59,6 +60,7 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
+                    ref.invalidate(currentScreenProvider);
                   },
                   label: const HugeIcon(
                     icon: HugeIcons.strokeRoundedCancel01,
