@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions.dart';
-
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/dashboard/view/dashboard.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/views/add_listings.dart';
 import 'package:home_quest/features/btm_nav_bar/shared/profile/views/profile.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../../core/utils/image_path.dart';
 import '../../../core/utils/svg_util.dart';
 import '../../../core/utils/textstyle.dart';
@@ -88,16 +87,9 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
         },
         destinations: [
           NavigationDestination(
-            icon: Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: HugeIcon(
-                icon: HugeIcons.strokeRoundedDashboardSquare01,
-                color: ref.watch(currentAgentScreenProvider) == 0
-                    ? Colors.black
-                    : Colors.grey,
-                size: 25,
-              ),
-            ),
+            icon: Icon(ref.watch(currentAgentScreenProvider) == 0
+                ? Iconsax.grid_2
+                : Iconsax.grid_2_copy),
             label: "Dashboard",
           ),
           NavigationDestination(

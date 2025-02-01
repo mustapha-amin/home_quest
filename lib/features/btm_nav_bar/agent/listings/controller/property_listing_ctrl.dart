@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/typedefs.dart';
+import 'package:home_quest/models/agent.dart';
 import 'package:home_quest/models/property_listing.dart';
 
 import '../repository/property_listing_repo.dart';
@@ -42,4 +43,8 @@ final fetchListingsWithFiltersProvider =
   return await ref
       .read(propertyListingRepoProvider)
       .fetchListingsWithFilters(filter);
+});
+
+final updateListingStatusProvider = FutureProvider.family<void, (PropertyListing, AgentModel)>((ref, args) async {
+  await ref.read(propertyListingRepoProvider).updateListingStatus(args.$1, args.$2);
 });

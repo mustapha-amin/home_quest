@@ -13,6 +13,8 @@ import 'package:sizer/sizer.dart';
 import 'core/providers.dart';
 import 'features/onboarding/view/onboarding.dart';
 
+
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(

@@ -41,7 +41,7 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
 
   String whatsappMsgGen() {
     return "Hi! I'm interested in ${widget.propertyListing.listingType == ListingType.rent ? "renting " : "buying "}"
-        "the house situated at ${widget.propertyListing.address} and listed at ${widget.propertyListing.price.toMoney}${widget.propertyListing.listingType == ListingType.rent ? '/year' : ''} "
+        "the house situated at ${widget.propertyListing.address} and available at ${widget.propertyListing.price.toMoney}${widget.propertyListing.listingType == ListingType.rent ? '/year' : ''} "
         "on the HomeQuest app. "
         "Could you tell me about availability and scheduling a viewing?";
   }

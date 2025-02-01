@@ -14,6 +14,7 @@ class PropertyListing {
   final PropertySubtype propertySubtype;
   final List<Facility> facilities;
   final GeoPoint geoPoint;
+  final bool available;
 
   PropertyListing({
     required this.id,
@@ -36,12 +37,13 @@ class PropertyListing {
     required this.geoPoint,
     required this.state,
     required this.lga,
+    required this.available,
   });
 
   @override
   String toString() {
     return "$id $agentID $address $propertyType $propertySize $state $lga $price $agentFee $listingType $imagesUrls"
-        "$bedrooms $kitchens $bathrooms $sittingRooms $condition $facilities $furnishing $propertySubtype ${geoPoint.toString()} $price $agentFee";
+        "$bedrooms $kitchens $bathrooms $sittingRooms $condition $facilities $furnishing $propertySubtype ${geoPoint.toString()} $price $agentFee $available";
   }
 
   // Convert PropertyListing to JSON
@@ -67,6 +69,7 @@ class PropertyListing {
       'geoPoint': geoPoint,
       'state': state,
       'lga': lga,
+      'available': available,
     };
   }
 
@@ -109,31 +112,32 @@ class PropertyListing {
       geoPoint: json['geoPoint'],
       state: json['state'],
       lga: json['lga'],
+      available: json['available'],
     );
   }
 
-  PropertyListing copyWith({
-    String? id,
-    String? agentID,
-    String? address,
-    double? price,
-    double? agentFee,
-    double? propertySize,
-    ListingType? listingType,
-    PropertyType? propertyType,
-    List<String>? imagesUrls,
-    Furnishing? furnishing,
-    Condition? condition,
-    PropertySubtype? propertySubtype,
-    List<Facility>? facilities,
-    int? bedrooms,
-    int? bathrooms,
-    int? kitchens,
-    int? sittingRooms,
-    GeoPoint? geoPoint,
-    String? state,
-    String? lga,
-  }) {
+  PropertyListing copyWith(
+      {String? id,
+      String? agentID,
+      String? address,
+      double? price,
+      double? agentFee,
+      double? propertySize,
+      ListingType? listingType,
+      PropertyType? propertyType,
+      List<String>? imagesUrls,
+      Furnishing? furnishing,
+      Condition? condition,
+      PropertySubtype? propertySubtype,
+      List<Facility>? facilities,
+      int? bedrooms,
+      int? bathrooms,
+      int? kitchens,
+      int? sittingRooms,
+      GeoPoint? geoPoint,
+      String? state,
+      String? lga,
+      bool? available}) {
     return PropertyListing(
       id: id ?? this.id,
       agentID: agentID ?? this.agentID,
@@ -155,6 +159,7 @@ class PropertyListing {
       geoPoint: geoPoint ?? this.geoPoint,
       state: state ?? this.state,
       lga: lga ?? this.lga,
+      available: available ?? this.available,
     );
   }
 }

@@ -9,6 +9,7 @@ import 'package:home_quest/core/bucket_ids.dart';
 import 'package:home_quest/core/enums.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/appwrite_image_upload.dart';
+import 'package:home_quest/models/agent.dart';
 
 import '../../../../../core/typedefs.dart';
 import '../../../../../models/property_listing.dart';
@@ -66,6 +67,26 @@ class PropertyListingRepo {
           .set(newPropertyListing.copyWith(bathrooms: 1).toJson());
       log("Updated successfully");
       log(newPropertyListing.toJson().toString());
+    } on (FirebaseException, AppwriteException) catch (e) {
+      throw Exception(e.toString());
+    } on SocketException catch (_) {
+      throw Exception(
+          "A network error occured. Please check your internet connection and try again");
+    }
+  }
+
+  FutureVoid updateListingStatus(
+      PropertyListing listing, AgentModel agent) async {
+    try {
+      await firebaseFirestore
+          .collection('listings')
+          .doc(listing.id)
+          .update({'available': !listing.available});
+      await firebaseFirestore.collection('agents').doc(listing.agentID).update({
+        'revenue': listing.available
+            ? agent.revenue + listing.agentFee.toInt()
+            : agent.revenue - listing.agentFee.toInt()
+      });
     } on (FirebaseException, AppwriteException) catch (e) {
       throw Exception(e.toString());
     } on SocketException catch (_) {

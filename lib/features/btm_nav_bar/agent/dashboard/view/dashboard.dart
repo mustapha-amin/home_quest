@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
-
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -86,14 +86,15 @@ class _AgentDashboardState extends ConsumerState<AgentDashboard> {
                   )).animate().fadeIn(delay: const Duration(milliseconds: 110)),
                   AgentStatWidget(
                       agentStat: AgentStat(
-                    iconData: HugeIcons.strokeRoundedPropertyView,
-                    title: "Listings",
-                    count: listings.length,
+                    iconData: Iconsax.wallet_money,
+                    title: "Revenue",
+                    count:
+                        (ref.watch(userDataStreamProvider).value as AgentModel)
+                            .revenue,
                   )).animate().fadeIn(delay: const Duration(milliseconds: 130)),
                 ],
               ),
             ),
-            
             Row(
               children: [
                 Text(

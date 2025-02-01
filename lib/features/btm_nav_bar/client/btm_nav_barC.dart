@@ -100,6 +100,7 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
                 _ => null
               }
             : null,
+      
         forceMaterialTransparency: true,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

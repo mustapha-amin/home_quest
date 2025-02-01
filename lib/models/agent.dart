@@ -15,6 +15,7 @@ class AgentModel extends User {
 
   final List<String> listingsIDs;
 
+  final int revenue;
 
   final List<Review> reviews;
 
@@ -25,6 +26,7 @@ class AgentModel extends User {
     required this.profilePicture,
     required this.listingsIDs,
     required this.reviews,
+    required this.revenue,
   }) : super(
           id: agentID,
           name: name,
@@ -45,6 +47,7 @@ class AgentModel extends User {
       profilePicture: "profilePicture",
       listingsIDs: [],
       reviews: [],
+      revenue: 0,
     );
   }
 
@@ -56,7 +59,8 @@ class AgentModel extends User {
       'phoneNumber': phoneNumber,
       'profilePicture': profilePicture,
       'listingsIDs': listingsIDs,
-      'reviews' : reviews,
+      'reviews': reviews,
+      'revenue': revenue,
     };
   }
 
@@ -67,25 +71,27 @@ class AgentModel extends User {
       phoneNumber: json['phoneNumber'],
       profilePicture: json['profilePicture'],
       listingsIDs: List<String>.from(json['listingsIDs']),
-      reviews: (json['reviews'] as List<dynamic>).map((review) => Review.fromJson(review)).toList(),
+      reviews: (json['reviews'] as List<dynamic>)
+          .map((review) => Review.fromJson(review))
+          .toList(),
+      revenue: json['revenue'] as int,
     );
   }
 
-  AgentModel copyWith({
-    int? phoneNumber,
-    String? agentID,
-    String? name,
-    String? profilePicture,
-    List<String>? listingsIDs,
-    List<Review>? reviews
-  }) {
+  AgentModel copyWith(
+      {int? phoneNumber,
+      String? agentID,
+      String? name,
+      String? profilePicture,
+      List<String>? listingsIDs,
+      List<Review>? reviews}) { 
     return AgentModel(
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      agentID: agentID ?? this.agentID,
-      name: name ?? this.name,
-      profilePicture: profilePicture ?? this.profilePicture,
-      listingsIDs: listingsIDs ?? this.listingsIDs,
-      reviews: reviews ?? this.reviews
-    );
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        agentID: agentID ?? this.agentID,
+        name: name ?? this.name,
+        profilePicture: profilePicture ?? this.profilePicture,
+        listingsIDs: listingsIDs ?? this.listingsIDs,
+        reviews: reviews ?? this.reviews,
+        revenue: revenue ?? this.revenue);
   }
 }

@@ -36,12 +36,13 @@ final isLoadingProvider = StateProvider((ref) {
   return false;
 });
 
-final globalLoadingProvider = StateNotifierProvider<GloabalLoadingNotifier, bool>((ref) {
+final globalLoadingProvider =
+    StateNotifierProvider<GloabalLoadingNotifier, bool>((ref) {
   return GloabalLoadingNotifier();
 });
 
 class GloabalLoadingNotifier extends StateNotifier<bool> {
-  GloabalLoadingNotifier(): super(false);
+  GloabalLoadingNotifier() : super(false);
 
   void toggleGlobalLoadingIndicator(bool isLoading) {
     state = isLoading;

@@ -10,6 +10,7 @@ enum PropertyType {
   duplex,
 }
 
+
 enum Furnishing {
   unfurnished('unfurnished'),
   semi_furnished('semi furnished'),

@@ -53,7 +53,7 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                OutlinedButton.icon(
+                IconButton.filledTonal(
                   style: OutlinedButton.styleFrom(
                     shape: const CircleBorder(),
                     padding: const EdgeInsets.all(8),
@@ -62,14 +62,14 @@ class _SearchBottomSheetState extends ConsumerState<SearchBottomSheet> {
                     Navigator.of(context).pop();
                     ref.invalidate(currentScreenProvider);
                   },
-                  label: const HugeIcon(
+                  icon: const HugeIcon(
                     icon: HugeIcons.strokeRoundedCancel01,
                     color: Colors.black,
                     size: 18,
                   ),
-                ),
+                ).padX(5),
                 Text(
-                  "Search",
+                  "Filter",
                   style: kTextStyle(18, isBold: true),
                 ),
                 TextButton(

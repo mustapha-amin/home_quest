@@ -9,11 +9,13 @@ class LoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: const SpinKitWaveSpinner(
-        color: AppColors.brown,
-        size: 80,
-      ).padAll(6),
+    return Material(
+      child: Center(
+        child: const SpinKitWaveSpinner(
+          color: AppColors.brown,
+          size: 80,
+        ).padAll(6),
+      ),
     );
   }
 }

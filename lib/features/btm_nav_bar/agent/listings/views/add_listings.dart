@@ -572,7 +572,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(widget.propertyListingArg == null
-                              ? "Property listed successfully"
+                              ? "Property available successfully"
                               : "Property updated successfully"),
                           duration: Duration(milliseconds: 500),
                         ),

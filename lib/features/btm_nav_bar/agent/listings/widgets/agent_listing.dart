@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/enums.dart';
 import 'package:home_quest/core/extensions.dart';
+import 'package:home_quest/features/btm_nav_bar/agent/listings/controller/property_listing_ctrl.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/views/add_listings.dart';
+import 'package:home_quest/models/agent.dart';
 import 'package:home_quest/models/property_listing.dart';
 import 'package:home_quest/shared/spacing.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
 import '../../../../../core/utils/textstyle.dart';
 
-class AgentListing extends StatelessWidget {
+class AgentListing extends ConsumerWidget {
   final PropertyListing listing;
-  const AgentListing({required this.listing, super.key});
+  final AgentModel agentModel;
+  const AgentListing(
+      {required this.listing, required this.agentModel, super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SizedBox(
       height: 15.h,
       child: Row(
@@ -74,7 +80,77 @@ class AgentListing extends StatelessWidget {
                                       .toLowerCase(),
                               style: kTextStyle(20,
                                   isBold: true, color: Colors.black)),
-                          const Icon(Icons.delete, color: Colors.red, size: 28),
+                          PopupMenuButton(
+                              padding: EdgeInsets.zero,
+                              child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Icon(Icons.more_vert)),
+                              itemBuilder: (context) {
+                                return [
+                                  PopupMenuItem(
+                                    child: Text(
+                                      "Delete",
+                                      style: kTextStyle(14),
+                                    ),
+                                    onTap: () {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              title: Text(
+                                                "Delete listing",
+                                                style: kTextStyle(20,
+                                                    isBold: true),
+                                              ),
+                                              content: SizedBox(
+                                                width: 80.w,
+                                                child: Text(
+                                                  "Do you want to delete this property",
+                                                  style: kTextStyle(15),
+                                                ),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    ref.read(
+                                                        deleteListingProvider(
+                                                            listing.id));
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text(
+                                                    "Yes",
+                                                    style: kTextStyle(
+                                                      15,
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text(
+                                                    "No",
+                                                    style: kTextStyle(15),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          });
+                                    },
+                                  ),
+                                  PopupMenuItem(
+                                    child: Text(
+                                      "${listing.available ? 'M' : 'Un'}ark as ${listing.listingType == ListingType.rent ? 'Rented out' : 'Sold out'}",
+                                      style: kTextStyle(14),
+                                    ),
+                                    onTap: () {
+                                      ref.read(updateListingStatusProvider(
+                                          (listing, agentModel)));
+                                    },
+                                  ),
+                                ];
+                              })
                         ],
                       ),
                       spaceY(8),
