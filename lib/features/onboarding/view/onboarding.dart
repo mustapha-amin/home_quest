@@ -12,6 +12,8 @@ import 'package:home_quest/core/utils/image_path.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../../core/colors.dart';
+
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -75,7 +77,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   ),
                   spaceY(25),
                   CustomButton(
-                    color: Colors.brown,
+                    color: AppColors.brown,
                     label: "Get Started",
                     onTap: () {
                       try {

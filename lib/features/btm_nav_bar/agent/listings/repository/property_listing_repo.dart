@@ -34,10 +34,12 @@ class PropertyListingRepo {
   });
 
   FutureVoid createListing(PropertyListing propertyListing) async {
-    List<String> urls = [];
     try {
-      Future.wait(propertyListing.imagesUrls.map((url) async =>
-          await uploadImage(storage, File(url), ImageBucketIDs.listings)));
+      List<String> urls = await Future.wait(
+        propertyListing.imagesUrls.map((url) async {
+          return await uploadImage(storage, File(url), ImageBucketIDs.listings);
+        }),
+      );
 
       PropertyListing newProperty = propertyListing.copyWith(imagesUrls: urls);
       await firebaseFirestore
@@ -78,15 +80,20 @@ class PropertyListingRepo {
   FutureVoid updateListingStatus(
       PropertyListing listing, AgentModel agent) async {
     try {
-      await firebaseFirestore
-          .collection('listings')
-          .doc(listing.id)
-          .update({'available': !listing.available});
-      await firebaseFirestore.collection('agents').doc(listing.agentID).update({
-        'revenue': listing.available
-            ? agent.revenue + listing.agentFee.toInt()
-            : agent.revenue - listing.agentFee.toInt()
-      });
+      final batch = firebaseFirestore.batch();
+      batch.update(
+        firebaseFirestore.collection('agents').doc(listing.agentID),
+        {
+          'revenue': listing.available
+              ? agent.revenue + listing.agentFee.toInt()
+              : agent.revenue - listing.agentFee.toInt()
+        },
+      );
+      batch.update(
+        firebaseFirestore.collection('listings').doc(listing.id),
+        {'available': !listing.available},
+      );
+      await batch.commit();
     } on (FirebaseException, AppwriteException) catch (e) {
       throw Exception(e.toString());
     } on SocketException catch (_) {

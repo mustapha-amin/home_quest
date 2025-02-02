@@ -12,23 +12,33 @@ import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/widgets/header_widgets.dart';
 import 'package:home_quest/shared/loading_indicator.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart' as loc;
 
 import '../../../../../core/colors.dart';
 import '../../../../../core/coords.dart';
 import '../widgets/mapping_hint_widget.dart';
+import 'package:geolocator/geolocator.dart';
 
 final userLocationProvider = FutureProvider((ref) async {
-  if(await loc.Location().serviceEnabled() == false) {
-   final result = await loc.Location().requestService();
-   if(result == true) {
-     return loc.Location.instance.getLocation();
-   } else {
-     return Future.error("Location service not enabled");
-   }
-  } else {
-    return loc.Location.instance.getLocation();
+  bool serviceEnabled;
+  LocationPermission permission;
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    return Future.error('Location services are disabled.');
   }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      return Future.error('Location permissions are denied');
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    return Future.error(
+      'Location permissions are permanently denied, we cannot request permissions.');
+  } 
+  return await Geolocator.getCurrentPosition();
 });
 
 final mapIsMovingProvider = StateProvider.autoDispose((ref) {

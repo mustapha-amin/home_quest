@@ -550,9 +550,6 @@ class _AddListingsState extends ConsumerState<AddListings> {
                         kitchens: int.parse(textControllers[2].text),
                         sittingRooms: int.parse(textControllers[3].text),
                         available: true);
-                    log(propertyListing.imagesUrls
-                        .map((url) => url)
-                        .toString());
                     try {
                       ref
                           .read(globalLoadingProvider.notifier)
@@ -568,14 +565,13 @@ class _AddListingsState extends ConsumerState<AddListings> {
                           existingImages: propertyImages,
                         )));
                       }
-
                       ref
                           .read(globalLoadingProvider.notifier)
                           .toggleGlobalLoadingIndicator(false);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(widget.propertyListingArg == null
-                              ? "Property available successfully"
+                              ? "Property listed successfully"
                               : "Property updated successfully"),
                           duration: Duration(milliseconds: 500),
                         ),

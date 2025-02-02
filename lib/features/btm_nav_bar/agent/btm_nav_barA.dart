@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/extensions.dart';
+import 'package:home_quest/features/btm_nav_bar/agent/listings/widgets/header_widgets.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/dashboard/view/dashboard.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/views/add_listings.dart';
@@ -72,6 +73,7 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
           ? FloatingActionButton(
               elevation: 3,
               onPressed: () {
+                ref.invalidate(geolocationNotifierProvider);
                 context.push(AddListings());
               },
               child: const HugeIcon(

@@ -98,7 +98,7 @@ class _AgentDashboardState extends ConsumerState<AgentDashboard> {
             Row(
               children: [
                 Text(
-                  "Clients' Reviews (${(ref.watch(userDataStreamProvider).value as AgentModel).reviews.length})",
+                  "Clients' reviews (${(ref.watch(userDataStreamProvider).value as AgentModel).reviews.length})",
                   style: kTextStyle(28, isBold: true),
                 ),
               ],

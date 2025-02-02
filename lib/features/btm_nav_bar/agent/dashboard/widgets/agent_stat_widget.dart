@@ -21,10 +21,8 @@ class _AgentStatWidgetState extends State<AgentStatWidget> {
   void countdown() async {
     for (int i = 0;
         i <= widget.agentStat.count;
-        widget.agentStat.title == "Revenue" ? i += 50 : i++) {
-      widget.agentStat.title == "Revenue"
-          ? await Future.delayed(const Duration(microseconds: 1))
-          : await Future.delayed(const Duration(milliseconds: 50));
+        widget.agentStat.title == "Revenue" ? i += 1000 : i++) {
+      await Future.delayed(const Duration(microseconds: 1));
       streamCtrl.sink.add(i);
     }
   }
