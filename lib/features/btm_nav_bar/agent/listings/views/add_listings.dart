@@ -92,7 +92,6 @@ class _AddListingsState extends ConsumerState<AddListings> {
     log('textControllers: ${textControllers.map((e) => e.text).toList()}');
     log('geoLocationNotifierProvider: ${ref.watch(geolocationNotifierProvider)}');
     log('canUploadListing result: $result');
-
     return result;
   }
 
@@ -280,6 +279,7 @@ class _AddListingsState extends ConsumerState<AddListings> {
                       TextField(
                         controller: addressCtrl,
                         decoration: _textDecoration(hintText: "Address"),
+                        textCapitalization: TextCapitalization.sentences,
                       ),
                       spaceY(8),
                       TextField(
@@ -517,48 +517,51 @@ class _AddListingsState extends ConsumerState<AddListings> {
                     : "List property",
                 onTap: () async {
                   if (canUploadListing()) {
-                    final propertyListing = widget.propertyListingArg!.copyWith(
-                      id: widget.propertyListingArg != null
-                          ? widget.propertyListingArg!.id
-                          : const Uuid().v4(),
-                      agentID: ref.watch(firebaseAuthProvider).currentUser!.uid,
-                      address: addressCtrl.text.trim(),
-                      propertyType: propertyType,
-                      propertySize: double.parse(
-                          propertySizeCtrl.text.split(',').join('')),
-                      price: double.parse(priceCtrl.text.split(',').join('')),
-                      agentFee:
-                          double.parse(agentFeeCtrl.text.split(',').join('')),
-                      listingType: listingType,
-                      imagesUrls: ref
-                          .watch(pickedImagesCtrl)
-                          .map((image) => image.path)
-                          .toList(),
-                      condition: condition,
-                      facilities: selectedFacilities!,
-                      furnishing: furnishing,
-                      propertySubtype: propertySubtype,
-                      geoPoint: GeoPoint(
-                          ref.watch(geolocationNotifierProvider).$1!.lat!,
-                          ref.watch(geolocationNotifierProvider).$1!.lng!),
-                      state: ref.watch(geolocationNotifierProvider).$1!.state!,
-                      lga: ref.watch(geolocationNotifierProvider).$1!.county!,
-                      bedrooms: int.parse(textControllers[0].text),
-                      bathrooms: int.parse(textControllers[1].text),
-                      kitchens: int.parse(textControllers[2].text),
-                      sittingRooms: int.parse(textControllers[3].text),
-                    );
-                    // log(propertyListing.toString());
-                    // log(propertyListing.toJson().toString());
+                    final propertyListing = PropertyListing(
+                        id: widget.propertyListingArg != null
+                            ? widget.propertyListingArg!.id
+                            : const Uuid().v4(),
+                        agentID:
+                            ref.watch(firebaseAuthProvider).currentUser!.uid,
+                        address: addressCtrl.text.trim(),
+                        propertyType: propertyType,
+                        propertySize: double.parse(
+                            propertySizeCtrl.text.split(',').join('')),
+                        price: double.parse(priceCtrl.text.split(',').join('')),
+                        agentFee:
+                            double.parse(agentFeeCtrl.text.split(',').join('')),
+                        listingType: listingType,
+                        imagesUrls: ref
+                            .watch(pickedImagesCtrl)
+                            .map((image) => image.path)
+                            .toList(),
+                        condition: condition,
+                        facilities: selectedFacilities!,
+                        furnishing: furnishing,
+                        propertySubtype: propertySubtype,
+                        geoPoint: GeoPoint(
+                            ref.watch(geolocationNotifierProvider).$1!.lat!,
+                            ref.watch(geolocationNotifierProvider).$1!.lng!),
+                        state:
+                            ref.watch(geolocationNotifierProvider).$1!.state!,
+                        lga: ref.watch(geolocationNotifierProvider).$1!.county!,
+                        bedrooms: int.parse(textControllers[0].text),
+                        bathrooms: int.parse(textControllers[1].text),
+                        kitchens: int.parse(textControllers[2].text),
+                        sittingRooms: int.parse(textControllers[3].text),
+                        available: true);
+                    log(propertyListing.imagesUrls
+                        .map((url) => url)
+                        .toString());
                     try {
                       ref
                           .read(globalLoadingProvider.notifier)
                           .toggleGlobalLoadingIndicator(true);
 
                       if (widget.propertyListingArg == null) {
-                        await ref.read(createListingProvider(
+                        ref.read(createListingProvider(
                           propertyListing,
-                        ).future);
+                        ));
                       } else {
                         ref.read(updateListingProvider((
                           listing: propertyListing,
