@@ -53,7 +53,9 @@ class AgentListing extends ConsumerWidget {
                 ),
                 child: Center(
                   child: Text(
-                    '     ${listing.listingType.name}    ',
+                    listing.available ? '     ${listing.listingType.name}    ' : listing.listingType == ListingType.rent ? 
+                      "     Rented out     "
+                     : "     Sold out     ",
                     style: kTextStyle(15, color: Colors.white),
                   ),
                 ),

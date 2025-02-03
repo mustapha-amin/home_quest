@@ -22,7 +22,7 @@ final geolocationNotifierProvider =
   return GeoLocationNotifier();
 });
 
-class GeoLocationNotifier extends StateNotifier<(GeoLocation?, bool)> {
+class GeoLocationNotifier extends StateNotifier< (GeoLocation?, bool)> {
   GeoLocationNotifier() : super((null, false));
 
   Future<void> forwardCoding(BuildContext context, String query) async {
