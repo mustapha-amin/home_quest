@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:home_quest/core/enums.dart';
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
+import 'package:home_quest/features/auth/view/home_user_wrapper.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/features/user%20setup/views/user_data_setup.dart';
 import 'package:home_quest/features/user%20setup/views/user_type.dart';
@@ -95,7 +97,7 @@ class _UserSetupState extends ConsumerState<UserSetup> {
               ),
             ],
           ),
-          if (ref.watch(userRemoteDataProvider) == true)
+          if (ref.watch(userRemoteDataProvider) == Status.loading)
             const SpinKitWaveSpinner(
               color: AppColors.brown,
               size: 80,

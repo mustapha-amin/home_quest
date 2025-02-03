@@ -34,7 +34,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return ref.watch(fetchListingsProvider).when(
       data: (listings) {
         return RefreshIndicator(
-          onRefresh: () async => ref.invalidate(fetchListingsProvider),
+          onRefresh: () async => ref.refresh(fetchListingsProvider.future),
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
             child: Column(
@@ -43,52 +43,55 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     .where((listing) => listings.indexOf(listing) < 4)
                     .map((listing) =>
                         ListingWidget(propertyListing: listing).padX(10)),
-                ref.watch(userLocationProvider).when(
-                  data: (location) {
-                    return FutureBuilder(
-                      future: GeocodingService.reverseCoding(
-                          LatLng(location.latitude, location.longitude)),
-                      builder: (ctx, snap) {
-                        if (snap.hasData &&
-                            listings
-                                    .where((listing) =>
-                                        listing.state == snap.data!.state)
-                                    .length >
-                                1) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text("Listings in ${snap.data!.state!.captializeFirst}",
-                                      style: kTextStyle(30, isBold: true))
-                                  .padX(10),
-                              SizedBox(
-                                height: 20.h,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    ...listings.where((listing) {
-                                      return listing.state == snap.data!.state;
-                                    }).map((listing) =>
-                                        NearbyListingsWidget(listing: listing)
-                                            .padX(10)),
-                                  ],
+                SizedBox(
+                  height: 25.h,
+                  child: ref.watch(userLocationProvider).when(
+                    data: (location) {
+                      return FutureBuilder(
+                        future: GeocodingService.reverseCoding(
+                            LatLng(location.latitude, location.longitude)),
+                        builder: (ctx, snap) {
+                          if (snap.hasData &&
+                              listings
+                                      .where((listing) =>
+                                          listing.state == snap.data!.state)
+                                      .length >
+                                  1) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Listings in ${snap.data!.state!.captializeFirst}",
+                                        style: kTextStyle(30, isBold: true))
+                                    .padX(10),
+                                Expanded(
+                                  child: ListView(
+                                    scrollDirection: Axis.horizontal,
+                                    children: [
+                                      ...listings.where((listing) {
+                                        return listing.state ==
+                                            snap.data!.state;
+                                      }).map((listing) =>
+                                          NearbyListingsWidget(listing: listing)
+                                              .padX(10)),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ).padX(10);
-                        } else if (snap.hasError) {
-                          return Text("Error fetching listings");
-                        }
-                        return const LoadingIndicator();
-                      },
-                    );
-                  },
-                  loading: () {
-                    return const LoadingIndicator();
-                  },
-                  error: (e, _) {
-                    return Text("Error fetching location: ${e.toString()}");
-                  },
+                              ],
+                            ).padX(10);
+                          } else if (snap.hasError) {
+                            return Text("Error fetching listings");
+                          }
+                          return const LoadingIndicator();
+                        },
+                      );
+                    },
+                    loading: () {
+                      return const LoadingIndicator();
+                    },
+                    error: (e, _) {
+                      return Text("Error fetching location: ${e.toString()}");
+                    },
+                  ),
                 ),
                 ...listings
                     .where((listing) => listings.indexOf(listing) >= 4)

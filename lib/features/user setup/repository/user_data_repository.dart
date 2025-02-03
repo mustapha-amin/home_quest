@@ -12,6 +12,7 @@ import 'package:home_quest/models/agent.dart';
 import 'package:home_quest/models/client.dart';
 import 'package:home_quest/models/review.dart';
 import 'package:home_quest/models/user.dart' as k;
+import 'package:restart_app/restart_app.dart';
 
 import '../../../core/utils/appwrite_image_upload.dart';
 
@@ -52,6 +53,7 @@ class UserDataRepository {
             .doc(agentModel.agentID)
             .set(agentModel.toJson());
       }
+      Restart.restartApp();
     } on (FirebaseException, AppwriteException) catch (e) {
       throw Exception(e.toString());
     }
@@ -97,19 +99,16 @@ class UserDataRepository {
 
   Future<bool?> userDataExists() async {
     try {
-      final clientDoc = await firebaseFirestore
-          .collection("clients")
-          .doc(firebaseAuth.currentUser!.uid)
-          .get();
-      if (clientDoc.exists) {
-        return true;
-      } else {
-        final agentDoc = await firebaseFirestore
-            .collection("agents")
-            .doc(firebaseAuth.currentUser!.uid)
-            .get();
-        return agentDoc.exists;
-      }
+      final userId = firebaseAuth.currentUser!.uid;
+      final clientDoc =
+          await firebaseFirestore.collection("clients").doc(userId).get();
+      final agentDoc =
+          await firebaseFirestore.collection("agents").doc(userId).get();
+
+      log("Client data: ${clientDoc.data()}");
+      log("Agent data: ${agentDoc.data()}");
+
+      return clientDoc.exists || agentDoc.exists;
     } catch (e) {
       throw Exception(e.toString());
     }

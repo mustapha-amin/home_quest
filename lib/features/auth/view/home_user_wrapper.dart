@@ -16,8 +16,9 @@ class HomeUserDataWrapper extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(userDataExistsProvider).when(
+    return ref.watch(userDataExistsCtrl).when(
       data: (userExists) {
+        log(userExists.toString() + " from home wrapper");
         if (userExists!) {
           return ref.watch(userDataStreamProvider).when(
                 data: (user) {
@@ -33,7 +34,7 @@ class HomeUserDataWrapper extends ConsumerWidget {
                   log(stk.toString());
                   return ErrorScreen(
                     errorText: e.toString() + stk.toString(),
-                    onRefresh: () => ref.invalidate(userDataStreamProvider),
+                    onRefresh: () => ref.refresh(userDataStreamProvider.future),
                   );
                 },
                 loading: () => const LoadingScreen(),
@@ -45,7 +46,7 @@ class HomeUserDataWrapper extends ConsumerWidget {
       error: (e, stk) {
         return ErrorScreen(
           errorText: e.toString(),
-          onRefresh: () => ref.invalidate(userDataExistsProvider),
+          onRefresh: () => ref.invalidate(userDataExistsCtrl),
         );
       },
       loading: () {

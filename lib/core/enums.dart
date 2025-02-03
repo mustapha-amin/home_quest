@@ -10,6 +10,13 @@ enum PropertyType {
   duplex,
 }
 
+enum Status {
+  initial,
+  loading,
+  success,
+  error,
+}
+
 
 enum Furnishing {
   unfurnished('unfurnished'),

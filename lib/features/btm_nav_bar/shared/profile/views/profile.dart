@@ -12,6 +12,7 @@ import 'package:home_quest/features/btm_nav_bar/shared/profile/widgets/contact_d
 import 'package:home_quest/features/btm_nav_bar/shared/profile/widgets/profile_card.dart';
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/models/client.dart';
+import 'package:home_quest/shared/spacing.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:sizer/sizer.dart';
 
@@ -34,8 +35,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             final user = data;
             return Column(
               children: [
+                spaceY(20),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  spacing: 5,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Hero(
                       tag: 'avatar',
@@ -58,6 +61,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        spaceY(20),
                         Text(
                           user.name,
                           style: kTextStyle(20, isBold: true),

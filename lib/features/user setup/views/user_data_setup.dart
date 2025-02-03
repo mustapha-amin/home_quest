@@ -6,7 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_quest/core/colors.dart';
 import 'package:home_quest/core/enums.dart';
 import 'package:home_quest/core/extensions.dart';
+import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/image_picker_util.dart';
+import 'package:home_quest/features/auth/view/home_user_wrapper.dart';
+import 'package:home_quest/features/user%20setup/repository/user_data_repository.dart';
 import 'package:home_quest/features/user%20setup/views/user_type.dart';
 import 'package:home_quest/models/agent.dart';
 import 'package:home_quest/models/client.dart';
@@ -66,6 +69,12 @@ class _UserDataSetupState extends ConsumerState<UserDataSetup> {
                   child: InkWell(
                     customBorder: const CircleBorder(),
                     onTap: () async {
+                      // ref.watch(userDataExistsCtrl).when(
+                      //     data: (data) {
+                      //       log(data.toString());
+                      //     },
+                      //     error: (e, _) => log(e.toString()),
+                      //     loading: () {});
                       (await pickImage()).fold(
                         (l) => log(l),
                         (r) => ref.read(pickedImageProvider.notifier).state = r,

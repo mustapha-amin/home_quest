@@ -12,7 +12,7 @@ import 'package:home_quest/features/auth/repository/auth_repository.dart';
 import 'package:home_quest/features/auth/view/home_user_wrapper.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/btm_nav_barA.dart';
 import 'package:home_quest/features/btm_nav_bar/client/btm_nav_barC.dart';
-import 'package:home_quest/features/user%20setup/views/user_type.dart';
+import 'package:home_quest/features/user%20setup/views/user_setup.dart';
 import 'package:restart_app/restart_app.dart';
 
 import '../../../main.dart';
@@ -57,7 +57,7 @@ class AuthController extends StateNotifier<bool> {
     state = false;
     result.fold(
       (l) => showSnackBar(l, context),
-      (r) => context.replace(const UserTypeScreen()),
+      (r) => context.replace(const UserSetup()),
     );
     return;
   }

@@ -165,8 +165,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     },
                   ),
                   spaceY(15),
-                  const GoogleBttn(),
-                  spaceY(15),
+                  //const GoogleBttn(),
+                  //spaceY(15),
                   Text.rich(
                     TextSpan(
                       text: isSignUp
