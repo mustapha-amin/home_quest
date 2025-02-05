@@ -550,53 +550,34 @@ class _AddListingsState extends ConsumerState<AddListings> {
                         kitchens: int.parse(textControllers[2].text),
                         sittingRooms: int.parse(textControllers[3].text),
                         available: true);
-                    try {
-                      ref
-                          .read(globalLoadingProvider.notifier)
-                          .toggleGlobalLoadingIndicator(true);
-
-                      if (widget.propertyListingArg == null) {
-                        ref.read(createListingProvider(
-                          propertyListing,
-                        ));
-                      } else {
-                        ref.read(updateListingProvider((
-                          listing: propertyListing,
-                          existingImages: propertyImages,
-                        )));
-                      }
-                      ref
-                          .read(globalLoadingProvider.notifier)
-                          .toggleGlobalLoadingIndicator(false);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(widget.propertyListingArg == null
-                              ? "Property listed successfully"
-                              : "Property updated successfully"),
-                          duration: Duration(milliseconds: 500),
-                        ),
-                      );
-                    } catch (e, stk) {
-                      ref
-                          .read(globalLoadingProvider.notifier)
-                          .toggleGlobalLoadingIndicator(false);
-                      log(e.toString(), stackTrace: stk);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(e.toString()),
-                          duration: const Duration(milliseconds: 500),
-                        ),
-                      );
+                    ref
+                        .read(globalLoadingProvider.notifier)
+                        .toggleGlobalLoadingIndicator(true);
+                    if (widget.propertyListingArg == null) {
+                      await ref.read(createListingProvider(
+                        (context: context, listing: propertyListing),
+                      ).future);
+                    } else {
+                      await ref.read(updateListingProvider((
+                        listing: propertyListing,
+                        existingImages: propertyImages,
+                        context: context,
+                      )).future);
                     }
-                  } else {
-                    showSnackBar("Please fill the required fields", context);
-                    // context.pop()
+                    ref
+                        .read(globalLoadingProvider.notifier)
+                        .toggleGlobalLoadingIndicator(false);
                   }
                 },
               ).padX(8).padY(12),
             ],
           ),
-          if (ref.watch(globalLoadingProvider)) const LoadingIndicator(),
+          Consumer(builder: (context, ref, _) {
+            final isLoading = ref.watch(globalLoadingProvider);
+            return isLoading
+                ? const LoadingIndicator()
+                : const SizedBox.shrink();
+          })
         ],
       ),
     );

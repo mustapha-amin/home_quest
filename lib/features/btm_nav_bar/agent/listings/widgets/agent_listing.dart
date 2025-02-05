@@ -21,221 +21,219 @@ class AgentListing extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SizedBox(
-      height: 15.h,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            alignment: Alignment.topLeft,
-            children: [
-              Container(
-                width: 28.w,
-                height: 15.h,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(listing.imagesUrls[0]),
-                    fit: BoxFit.fitHeight,
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-              Container(
-                height: 30,
-                decoration: BoxDecoration(
-                  color: listing.listingType == ListingType.rent
-                      ? Colors.green
-                      : Colors.blue,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15),
+    return InkWell(
+      onTap: () => context.push(AddListings(
+        propertyListingArg: listing,
+      )),
+      child: SizedBox(
+        height: 15.h,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              alignment: Alignment.topLeft,
+              children: [
+                Container(
+                  width: 28.w,
+                  height: 15.h,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(listing.imagesUrls[0]),
+                      fit: BoxFit.fitHeight,
+                    ),
+                    borderRadius: BorderRadius.circular(15),
                   ),
                 ),
-                child: Center(
-                  child: Text(
-                    listing.available ? '     ${listing.listingType.name}    ' : listing.listingType == ListingType.rent ? 
-                      "     Rented out     "
-                     : "     Sold out     ",
-                    style: kTextStyle(15, color: Colors.white),
+                Container(
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color: listing.listingType == ListingType.rent
+                        ? Colors.green
+                        : Colors.blue,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15),
+                    ),
                   ),
-                ),
-              )
-            ],
-          ),
-          spaceX(8),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                              listing.propertySubtype.name[0].toUpperCase() +
-                                  listing.propertySubtype.name
-                                      .substring(1)
-                                      .toLowerCase(),
-                              style: kTextStyle(20,
-                                  isBold: true, color: Colors.black)),
-                          PopupMenuButton(
-                              padding: EdgeInsets.zero,
-                              child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Icon(Icons.more_vert)),
-                              itemBuilder: (context) {
-                                return [
-                                  PopupMenuItem(
-                                    child: Text(
-                                      "Delete",
-                                      style: kTextStyle(14),
-                                    ),
-                                    onTap: () {
-                                      showDialog(
-                                          context: context,
-                                          builder: (context) {
-                                            return AlertDialog(
-                                              title: Text(
-                                                "Delete listing",
-                                                style: kTextStyle(20,
-                                                    isBold: true),
-                                              ),
-                                              content: SizedBox(
-                                                width: 80.w,
-                                                child: Text(
-                                                  "Do you want to delete this property",
-                                                  style: kTextStyle(15),
+                  child: Center(
+                    child: Text(
+                      listing.available
+                          ? '     ${listing.listingType.name}    '
+                          : listing.listingType == ListingType.rent
+                              ? "     Rented out     "
+                              : "     Sold out     ",
+                      style: kTextStyle(15, color: Colors.white),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            spaceX(8),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                                listing.propertySubtype.name[0].toUpperCase() +
+                                    listing.propertySubtype.name
+                                        .substring(1)
+                                        .toLowerCase(),
+                                style: kTextStyle(20,
+                                    isBold: true, color: Colors.black)),
+                            PopupMenuButton(
+                                padding: EdgeInsets.zero,
+                                child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Icon(Icons.more_vert)),
+                                itemBuilder: (context) {
+                                  return [
+                                    PopupMenuItem(
+                                      child: Text(
+                                        "Delete",
+                                        style: kTextStyle(14),
+                                      ),
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  "Delete listing",
+                                                  style: kTextStyle(20,
+                                                      isBold: true),
                                                 ),
-                                              ),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    ref.read(
-                                                        deleteListingProvider(
-                                                            listing.id));
-                                                    Navigator.of(context).pop();
-                                                  },
+                                                content: SizedBox(
+                                                  width: 80.w,
                                                   child: Text(
-                                                    "Yes",
-                                                    style: kTextStyle(
-                                                      15,
-                                                      color: Colors.red,
-                                                    ),
-                                                  ),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: Text(
-                                                    "No",
+                                                    "Do you want to delete this property",
                                                     style: kTextStyle(15),
                                                   ),
                                                 ),
-                                              ],
-                                            );
-                                          });
-                                    },
-                                  ),
-                                  PopupMenuItem(
-                                    child: Text(
-                                      "${listing.available ? 'M' : 'Un'}ark as ${listing.listingType == ListingType.rent ? 'Rented out' : 'Sold out'}",
-                                      style: kTextStyle(14),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      ref.read(
+                                                          deleteListingProvider(
+                                                              listing.id));
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: Text(
+                                                      "Yes",
+                                                      style: kTextStyle(
+                                                        15,
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    },
+                                                    child: Text(
+                                                      "No",
+                                                      style: kTextStyle(15),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            });
+                                      },
                                     ),
-                                    onTap: () {
-                                      ref.read(updateListingStatusProvider(
-                                          (listing, agentModel)));
-                                    },
-                                  ),
-                                ];
-                              })
-                        ],
-                      ),
-                      spaceY(8),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.location_on,
-                            color: Colors.red,
-                            size: 20,
-                          ),
-                          Text(
-                            "${listing.lga}, ${listing.state}",
-                            style: kTextStyle(15, color: Colors.grey[700]!),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Row(
-                        children: [
-                          const HugeIcon(
-                            icon: HugeIcons.strokeRoundedBedSingle02,
-                            color: Colors.blue,
-                            size: 20,
-                          ),
-                          Text(
-                            "${listing.bedrooms} Bedrooms",
-                            style: kTextStyle(15, color: Colors.black),
-                          ),
-                          spaceX(5),
-                          const HugeIcon(
-                              icon: HugeIcons.strokeRoundedBathtub01,
-                              color: Colors.blue,
-                              size: 20),
-                          Text(
-                            "${listing.bathrooms} Bathrooms",
-                            style: kTextStyle(15, color: Colors.black),
-                          ),
-                        ],
-                      ),
-                      spaceY(5),
-                      Row(
-                        children: [
-                          const HugeIcon(
-                              icon: HugeIcons.strokeRoundedTapeMeasure,
-                              color: Colors.blue,
-                              size: 20),
-                          Text(
-                            "${listing.propertySize} sqm",
-                            style: kTextStyle(15, color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        listing.price.toMoney,
-                        style:
-                            kTextStyle(18, isBold: true, color: Colors.black),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          context.push(AddListings(
-                            propertyListingArg: listing,
-                          ));
-                        },
-                        child: Text(
-                          'View Details',
-                          style: kTextStyle(16, color: Colors.blue),
+                                    PopupMenuItem(
+                                      child: Text(
+                                        "${listing.available ? 'M' : 'Un'}ark as ${listing.listingType == ListingType.rent ? 'Rented out' : 'Sold out'}",
+                                        style: kTextStyle(14),
+                                      ),
+                                      onTap: () {
+                                        ref.read(updateListingStatusProvider(
+                                            (listing, agentModel)));
+                                      },
+                                    ),
+                                  ];
+                                })
+                          ],
                         ),
-                      )
-                    ],
-                  ),
-                ],
+                        spaceY(8),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.location_on,
+                              color: Colors.red,
+                              size: 20,
+                            ),
+                            Text(
+                              "${listing.lga}, ${listing.state}",
+                              style: kTextStyle(15, color: Colors.grey[700]!),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Row(
+                          children: [
+                            const HugeIcon(
+                              icon: HugeIcons.strokeRoundedBedSingle02,
+                              color: Colors.blue,
+                              size: 20,
+                            ),
+                            Text(
+                              "${listing.bedrooms} Bedrooms",
+                              style: kTextStyle(15, color: Colors.black),
+                            ),
+                            spaceX(5),
+                            const HugeIcon(
+                                icon: HugeIcons.strokeRoundedBathtub01,
+                                color: Colors.blue,
+                                size: 20),
+                            Text(
+                              "${listing.bathrooms} Bathrooms",
+                              style: kTextStyle(15, color: Colors.black),
+                            ),
+                          ],
+                        ),
+                        spaceY(5),
+                        Row(
+                          children: [
+                            const HugeIcon(
+                                icon: HugeIcons.strokeRoundedTapeMeasure,
+                                color: Colors.blue,
+                                size: 20),
+                            Text(
+                              "${listing.propertySize} sqm",
+                              style: kTextStyle(15, color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          listing.price.toMoney,
+                          style:
+                              kTextStyle(18, isBold: true, color: Colors.black),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -89,9 +89,14 @@ class _BtmNavBarAState extends ConsumerState<BtmNavBarA> {
         },
         destinations: [
           NavigationDestination(
-            icon: Icon(ref.watch(currentAgentScreenProvider) == 0
-                ? Iconsax.grid_2
-                : Iconsax.grid_2_copy),
+            icon: Icon(
+              ref.watch(currentAgentScreenProvider) == 0
+                  ? Iconsax.grid_2
+                  : Iconsax.grid_2_copy,
+              color: ref.watch(currentAgentScreenProvider) == 0
+                  ? Colors.black
+                  : Colors.grey,
+            ),
             label: "Dashboard",
           ),
           NavigationDestination(

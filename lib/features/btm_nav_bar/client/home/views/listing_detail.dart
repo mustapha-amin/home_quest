@@ -414,6 +414,7 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                                   ],
                                 ),
                               )),
+                              spaceY(40),
                           Text(
                             "Safety tips",
                             style: kTextStyle(20, isBold: true),

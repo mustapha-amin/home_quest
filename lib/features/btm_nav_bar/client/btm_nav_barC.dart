@@ -100,7 +100,6 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
                 _ => null
               }
             : null,
-      
         forceMaterialTransparency: true,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -182,6 +181,9 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
                   ? Iconsax.home
                   : Iconsax.home_1_copy,
               size: 26,
+              color: ref.watch(currentScreenProvider) == 0
+                  ? Colors.black
+                  : Colors.grey,
             ),
             label: "Home",
           ),
@@ -202,6 +204,7 @@ class _BtmNavBarState extends ConsumerState<BtmNavBarC>
                 : const Icon(
                     Iconsax.bookmark_copy,
                     size: 26,
+                    color: Colors.grey,
                   ),
             label: "Bookmarks",
           ),
