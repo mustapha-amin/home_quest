@@ -37,7 +37,7 @@ class AgentListing extends ConsumerWidget {
                   width: 28.w,
                   height: 15.h,
                   decoration: BoxDecoration(
-                    image: DecorationImage(
+                    image: listing.imagesUrls.isEmpty ? null : DecorationImage(
                       image: NetworkImage(listing.imagesUrls[0]),
                       fit: BoxFit.fitHeight,
                     ),

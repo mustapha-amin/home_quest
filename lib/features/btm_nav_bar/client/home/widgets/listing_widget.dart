@@ -46,12 +46,14 @@ class ListingWidget extends ConsumerWidget {
               Container(
                 height: 23.h,
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage(
-                      propertyListing.imagesUrls[0],
-                    ),
-                  ),
+                  image: propertyListing.imagesUrls.isEmpty
+                      ? null
+                      : DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(
+                            propertyListing.imagesUrls[0],
+                          ),
+                        ),
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
@@ -81,7 +83,10 @@ class ListingWidget extends ConsumerWidget {
                         );
                       },
                       error: (e, s) => const Text("Error"),
-                      loading: () => const LoadingIndicator(),
+                      loading: () => const IconButton(
+                        onPressed: null,
+                        icon: Icon(Icons.bookmark),
+                      ),
                     ),
               )
             ],
@@ -125,7 +130,7 @@ class ListingWidget extends ConsumerWidget {
                         )
                       ])),
                   SizedBox(
-                    width: 35.w,
+                    width: 75.w,
                     child: Text(
                       propertyListing.address,
                       style: kTextStyle(15),

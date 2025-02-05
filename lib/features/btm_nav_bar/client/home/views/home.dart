@@ -1,8 +1,10 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:home_quest/core/enums.dart';
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/core/utils/textstyle.dart';
@@ -10,11 +12,14 @@ import 'package:home_quest/features/btm_nav_bar/agent/listings/controller/proper
 import 'package:home_quest/features/btm_nav_bar/agent/listings/widgets/header_widgets.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/widgets/listing_widget.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/widgets/nearby_listings_widget.dart';
+import 'package:home_quest/models/property_listing.dart';
 import 'package:home_quest/services/geocoding_service.dart';
 import 'package:home_quest/shared/error_screen.dart';
 import 'package:home_quest/shared/loading_indicator.dart';
+import 'package:home_quest/shared/spacing.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sizer/sizer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -24,9 +29,16 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  ValueNotifier<String?> state = ValueNotifier(null);
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final location = await ref.watch(userLocationProvider.future);
+      state.value = (await GeocodingService.reverseCoding(
+              LatLng(location.latitude, location.longitude)))!
+          .state!;
+    });
   }
 
   @override
@@ -44,23 +56,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     .map((listing) =>
                         ListingWidget(propertyListing: listing).padX(10)),
                 SizedBox(
-                  height: 25.h,
-                  child: ref.watch(userLocationProvider).when(
-                    data: (location) {
-                      return FutureBuilder(
-                        future: GeocodingService.reverseCoding(
-                            LatLng(location.latitude, location.longitude)),
-                        builder: (ctx, snap) {
-                          if (snap.hasData &&
-                              listings
-                                      .where((listing) =>
-                                          listing.state == snap.data!.state)
-                                      .length >
-                                  1) {
+                    height: 25.h,
+                    child: ValueListenableBuilder<String?>(
+                        valueListenable: state,
+                        builder: (context, data, _) {
+                          if (data != null) {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Listings in ${snap.data!.state!.captializeFirst}",
+                                spaceY(10),
+                                Text("Listings in ${data.captializeFirst}",
                                         style: kTextStyle(30, isBold: true))
                                     .padX(10),
                                 Expanded(
@@ -68,31 +73,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     scrollDirection: Axis.horizontal,
                                     children: [
                                       ...listings.where((listing) {
-                                        return listing.state ==
-                                            snap.data!.state;
+                                        return listing.state == data;
                                       }).map((listing) =>
                                           NearbyListingsWidget(listing: listing)
                                               .padX(10)),
                                     ],
                                   ),
                                 ),
+                                spaceY(10),
                               ],
                             ).padX(10);
-                          } else if (snap.hasError) {
-                            return Text("Error fetching listings");
+                          } else {
+                            return const SizedBox();
                           }
-                          return const LoadingIndicator();
-                        },
-                      );
-                    },
-                    loading: () {
-                      return const LoadingIndicator();
-                    },
-                    error: (e, _) {
-                      return Text("Error fetching location: ${e.toString()}");
-                    },
-                  ),
-                ),
+                        })),
                 ...listings
                     .where((listing) => listings.indexOf(listing) >= 4)
                     .map((listing) =>
@@ -112,7 +106,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         );
       },
       loading: () {
-        return const Center(child: LoadingIndicator());
+        return Skeletonizer(
+          containersColor: Colors.grey[600],
+          enabled: true,
+          child: ListView(
+            children: [
+              ...List.generate(8, (_) {
+                return ListingWidget(
+                  propertyListing: PropertyListing(
+                      id: "id",
+                      agentID: "agentID",
+                      address: 'address',
+                      propertyType: PropertyType.all,
+                      propertySize: 10,
+                      price: 10,
+                      agentFee: 10,
+                      listingType: ListingType.rent,
+                      imagesUrls: [],
+                      bedrooms: 1,
+                      kitchens: 1,
+                      bathrooms: 1,
+                      sittingRooms: 1,
+                      condition: Condition.all,
+                      facilities: [],
+                      furnishing: Furnishing.furnished,
+                      propertySubtype: PropertySubtype.all,
+                      geoPoint: const GeoPoint(1, 1),
+                      state: '',
+                      lga: '',
+                      available: false),
+                );
+              })
+            ],
+          ),
+        );
       },
     );
   }

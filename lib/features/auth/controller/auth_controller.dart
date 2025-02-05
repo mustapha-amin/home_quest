@@ -40,7 +40,7 @@ class AuthController extends StateNotifier<bool> {
     result = await authService.signIn(email: email, password: password);
     state = false;
     result.fold(
-      (l) => showSnackBar(l, context),
+      (l) => showSnackBar(l, context, isError: true),
       (r) => context.replace(const HomeUserDataWrapper()),
     );
     return;
@@ -56,7 +56,7 @@ class AuthController extends StateNotifier<bool> {
     result = await authService.signUp(email: email, password: password);
     state = false;
     result.fold(
-      (l) => showSnackBar(l, context),
+      (l) => showSnackBar(l, context, isError: true),
       (r) => context.replace(const UserSetup()),
     );
     return;

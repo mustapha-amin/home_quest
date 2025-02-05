@@ -143,6 +143,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     label: isSignUp ? "Sign up" : "Log In",
                     onTap: () async {
                       if (formKey.currentState!.validate()) {
+                        FocusScope.of(context).unfocus();
                         isSignUp
                             ? await ref
                                 .read(authControllerProvider.notifier)
