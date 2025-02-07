@@ -13,8 +13,6 @@ import 'package:sizer/sizer.dart';
 import 'core/providers.dart';
 import 'features/onboarding/view/onboarding.dart';
 
-
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -23,6 +21,7 @@ Future<void> main() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent));
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
   runApp(
     ProviderScope(
       overrides: [
