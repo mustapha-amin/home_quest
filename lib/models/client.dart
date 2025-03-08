@@ -2,16 +2,17 @@
 import 'user.dart';
 
 class ClientModel extends User {
-  
   final int phoneNumber;
-  
+
   final String clientID;
-  
+
   final String name;
-  
+
   final String profilePicture;
-  
+
   final List<String> bookmarks;
+
+  final String email;
 
   ClientModel({
     required this.clientID,
@@ -19,11 +20,13 @@ class ClientModel extends User {
     required this.phoneNumber,
     required this.profilePicture,
     required this.bookmarks,
+    required this.email,
   }) : super(
           id: clientID,
           name: name,
           phoneNumber: phoneNumber,
           profilePicture: profilePicture,
+          email: email,
         );
 
   @override
@@ -38,6 +41,7 @@ class ClientModel extends User {
       phoneNumber: 123,
       profilePicture: "profilePicture",
       bookmarks: [],
+      email: "email",
     );
   }
 
@@ -49,9 +53,10 @@ class ClientModel extends User {
       'phoneNumber': phoneNumber,
       'profilePicture': profilePicture,
       'bookmarks': bookmarks,
+      'email': email,
     };
   }
-  
+
   factory ClientModel.fromJson(Map<String, dynamic> json) {
     return ClientModel(
       clientID: json['clientID'],
@@ -59,9 +64,10 @@ class ClientModel extends User {
       phoneNumber: json['phoneNumber'],
       profilePicture: json['profilePicture'],
       bookmarks: List<String>.from(json['bookmarks']),
+      email: json['email'],
     );
   }
-  
+
   ClientModel copyWith({
     int? phoneNumber,
     String? clientID,
@@ -69,6 +75,7 @@ class ClientModel extends User {
     String? profilePicture,
     List<String>? bookmarks,
     List<String>? appointmentIDs,
+    String? email,
   }) {
     return ClientModel(
       phoneNumber: phoneNumber ?? this.phoneNumber,
@@ -76,6 +83,7 @@ class ClientModel extends User {
       name: name ?? this.name,
       profilePicture: profilePicture ?? this.profilePicture,
       bookmarks: bookmarks ?? this.bookmarks,
+      email: email ?? this.email,
     );
   }
 }

@@ -40,14 +40,14 @@ class UserDataRepository {
           await uploadImage(storage, image!, ImageBucketIDs.profilePictures);
       if (user is ClientModel) {
         ClientModel clientModel = user.copyWith(
-            profilePicture: imageUrl, clientID: firebaseAuth.currentUser!.uid);
+            profilePicture: imageUrl, clientID: firebaseAuth.currentUser!.uid, email: firebaseAuth.currentUser!.email!);  
         await firebaseFirestore
             .collection("clients")
             .doc(clientModel.clientID)
             .set(clientModel.toJson());
       } else if (user is AgentModel) {
         AgentModel agentModel = user.copyWith(
-            profilePicture: imageUrl, agentID: firebaseAuth.currentUser!.uid);
+            profilePicture: imageUrl, agentID: firebaseAuth.currentUser!.uid, email: firebaseAuth.currentUser!.email!);
         await firebaseFirestore
             .collection("agents")
             .doc(agentModel.agentID)

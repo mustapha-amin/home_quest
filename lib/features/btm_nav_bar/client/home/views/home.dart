@@ -55,38 +55,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     .where((listing) => listings.indexOf(listing) < 4)
                     .map((listing) =>
                         ListingWidget(propertyListing: listing).padX(10)),
-                SizedBox(
-                    height: 25.h,
-                    child: ValueListenableBuilder<String?>(
-                        valueListenable: state,
-                        builder: (context, data, _) {
-                          if (data != null) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                spaceY(10),
-                                Text("Listings in ${data.captializeFirst}",
-                                        style: kTextStyle(30, isBold: true))
-                                    .padX(10),
-                                Expanded(
-                                  child: ListView(
-                                    scrollDirection: Axis.horizontal,
-                                    children: [
-                                      ...listings.where((listing) {
-                                        return listing.state == data;
-                                      }).map((listing) =>
-                                          NearbyListingsWidget(listing: listing)
-                                              .padX(10)),
-                                    ],
-                                  ),
+                ValueListenableBuilder<String?>(
+                    valueListenable: state,
+                    builder: (context, data, _) {
+                      if (data != null) {
+                        return SizedBox(
+                          height: 25.h,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              spaceY(10),
+                              Text("Listings in ${data.captializeFirst}",
+                                      style: kTextStyle(30, isBold: true))
+                                  .padX(10),
+                              Expanded(
+                                child: ListView(
+                                  scrollDirection: Axis.horizontal,
+                                  children: [
+                                    ...listings.where((listing) {
+                                      return listing.state == data;
+                                    }).map((listing) =>
+                                        NearbyListingsWidget(listing: listing)
+                                            .padX(10)),
+                                  ],
                                 ),
-                                spaceY(10),
-                              ],
-                            ).padX(10);
-                          } else {
-                            return const SizedBox();
-                          }
-                        })),
+                              ),
+                              spaceY(10),
+                            ],
+                          ).padX(10),
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    }),
                 ...listings
                     .where((listing) => listings.indexOf(listing) >= 4)
                     .map((listing) =>

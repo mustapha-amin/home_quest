@@ -19,6 +19,8 @@ class AgentModel extends User {
 
   final List<Review> reviews;
 
+  final String email;
+
   AgentModel({
     required this.agentID,
     required this.name,
@@ -27,11 +29,13 @@ class AgentModel extends User {
     required this.listingsIDs,
     required this.reviews,
     required this.revenue,
+    required this.email,
   }) : super(
           id: agentID,
           name: name,
           phoneNumber: phoneNumber,
           profilePicture: profilePicture,
+          email: email,
         );
 
   @override
@@ -48,6 +52,7 @@ class AgentModel extends User {
       listingsIDs: [],
       reviews: [],
       revenue: 0,
+      email: "email",
     );
   }
 
@@ -61,6 +66,7 @@ class AgentModel extends User {
       'listingsIDs': listingsIDs,
       'reviews': reviews,
       'revenue': revenue,
+      'email': email,
     };
   }
 
@@ -75,6 +81,7 @@ class AgentModel extends User {
           .map((review) => Review.fromJson(review))
           .toList(),
       revenue: json['revenue'] as int,
+      email: json['email'],
     );
   }
 
@@ -84,7 +91,10 @@ class AgentModel extends User {
       String? name,
       String? profilePicture,
       List<String>? listingsIDs,
-      List<Review>? reviews}) { 
+      List<Review>? reviews,
+      int? revenue,
+      String? email
+      }) { 
     return AgentModel(
         phoneNumber: phoneNumber ?? this.phoneNumber,
         agentID: agentID ?? this.agentID,
@@ -92,6 +102,6 @@ class AgentModel extends User {
         profilePicture: profilePicture ?? this.profilePicture,
         listingsIDs: listingsIDs ?? this.listingsIDs,
         reviews: reviews ?? this.reviews,
-        revenue: revenue ?? this.revenue);
+        revenue: revenue ?? this.revenue, email: email ?? this.email);
   }
 }

@@ -91,15 +91,7 @@ class Listings extends ConsumerWidget {
                     lga: '',
                     available: false,
                   ),
-                  agentModel: AgentModel(
-                    agentID: 'agentID',
-                    name: 'name',
-                    phoneNumber: 1,
-                    profilePicture: 'profilePicture',
-                    listingsIDs: [],
-                    reviews: [],
-                    revenue: 1,
-                  ),
+                  agentModel: AgentModel.defaultInstance()
                 );
               }),
             ),
