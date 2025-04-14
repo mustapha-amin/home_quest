@@ -1,8 +1,8 @@
-#HomeQuest
+# HomeQuest
 
 HomeQuest is a real estate mobile application built with Flutter that bridges the gap between agents and home renters or buyers
 
-##Features
+## Features
 -Authentication
 -Role-based onboarding (Agent or Client):
   - Agents: Create and manage listings
@@ -19,7 +19,7 @@ Agents can upload properties with:Images, descriptions, prices, location, etc
 - Easy Communication
 Click-to-call and click-to-whatsapp for smooth agent-client communication
 
-##Tech Stack
+## Tech Stack
 - Flutter: UI development
 - Riverpod: State management
 - Firebase: Authentication & Storage
