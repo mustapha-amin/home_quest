@@ -1,16 +1,28 @@
-# home_quest
+# HomeQuest
 
-A new Flutter project.
+HomeQuest is a real estate mobile application built with Flutter that bridges the gap between agents and home renters or buyers
 
-## Getting Started
+## Features
+-Authentication
+-Role-based onboarding (Agent or Client):
+  - Agents: Create and manage listings
+  - Clients: Browse and search listings, filter by location, price, type, etc. bookmark listings and contact agents via whatsapp or direct phone call
 
-This project is a starting point for a Flutter application.
+-Property Listings
+Agents can upload properties with:Images, descriptions, prices, location, etc
 
-A few resources to get you started if this is your first Flutter project:
+- Maps Integration: 
+  Properties displayed with interactive map view
+  - Agents set listing locations
+  - Clients can explore listings
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Easy Communication
+Click-to-call and click-to-whatsapp for smooth agent-client communication
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Tech Stack
+- Flutter: UI development
+- Riverpod: State management
+- Firebase: Authentication & Storage
+- Mapbox maps: Location integration
+
+![homequest](https://github.com/user-attachments/assets/cfce82b7-fb67-4541-a19e-20ff0d0d591a)
