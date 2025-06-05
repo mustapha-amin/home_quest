@@ -7,6 +7,10 @@
         android:label="HomeQuest"
         android:name="${applicationName}"
         android:icon="@mipmap/app_icon">
+
+         <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyC44z5FqatmpNMs3XNLy6EsMtDZKoeaEMM"/>
+               
         <activity
             android:name=".MainActivity"
             android:exported="true"

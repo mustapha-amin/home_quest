@@ -1,0 +1,2 @@
+C:/Users/USER/Documents/flutter projs/home_quest/android/app/.cxx/RelWithDebInfo/164s145y/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/USER/Documents/flutter projs/home_quest/android/app/.cxx/RelWithDebInfo/164s145y/x86_64/CMakeFiles/rebuild_cache.dir

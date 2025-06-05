@@ -6,18 +6,16 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:home_quest/core/extensions.dart';
 
 import 'package:home_quest/core/providers.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/widgets/header_widgets.dart';
 import 'package:home_quest/shared/loading_indicator.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../../../../../core/colors.dart';
 import '../../../../../core/coords.dart';
 import '../widgets/mapping_hint_widget.dart';
-
-
 
 final mapIsMovingProvider = StateProvider.autoDispose((ref) {
   return false;
@@ -31,7 +29,6 @@ class SelectLocation extends ConsumerStatefulWidget {
 }
 
 class _SelectLocationState extends ConsumerState<SelectLocation> {
-  final MapController mapController = MapController();
   final SearchController searchController = SearchController();
   FocusNode focusNode = FocusNode();
   LatLng? currentPosition;
@@ -61,7 +58,7 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
 
   @override
   void initState() {
-    initBoundaries();
+    // initBoundaries();
     super.initState();
   }
 
@@ -79,7 +76,7 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
         children: [
           ref.watch(userLocationProvider).when(
             data: (data) {
-              currentPosition = LatLng(data.latitude!, data.longitude!);
+              currentPosition = LatLng(data.latitude, data.longitude);
               locationMarkerPosStream.sink.add(
                 LocationMarkerPosition(
                   latitude: currentPosition!.latitude,
@@ -90,70 +87,13 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
               return Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
-                  FlutterMap(
-                    mapController: mapController,
-                    options: MapOptions(
-                        initialCenter: currentPosition!,
-                        initialZoom: 9,
-                        minZoom: 6,
-                        cameraConstraint: CameraConstraint.containCenter(
-                            bounds: nigeriaBounds!),
-                        onPositionChanged: (camera, moving) {
-                          locationMarkerPosStream.sink.add(
-                            LocationMarkerPosition(
-                              latitude: camera.center.latitude,
-                              longitude: camera.center.longitude,
-                              accuracy: 1,
-                            ),
-                          );
-                        },
-                        onMapEvent: (event) {
-                          if (event.source == MapEventSource.onDrag) {
-                            ref.read(mapIsMovingProvider.notifier).state = true;
-                            log("moving");
-                          } else if (event.source == MapEventSource.dragEnd) {
-                            ref.read(mapIsMovingProvider.notifier).state =
-                                false;
-                            log("stopped");
-                          }
-                        }),
-                    children: [
-                      TileLayer(
-                        urlTemplate:
-                            'https://api.mapbox.com/styles/v1/mustyameen/cm4tu2iyy002r01s18ylrerzd/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg',
-                        userAgentPackageName: 'com.mustapha.homequest',
-                        additionalOptions: const {
-                          "accessToken":
-                              "pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg",
-                          "id":
-                              "mapbox://styles/mustyameen/cm4tu2iyy002r01s18ylrerzd"
-                        },
-                      ),
-                      PolygonLayer(
-                        polygons: [
-                          ...nigerianMapBounds.map(
-                            (points) => Polygon(
-                              points: points,
-                              borderColor: Colors.green,
-                              borderStrokeWidth: 6.0,
-                              color: Colors.green.withOpacity(0.1),
-                            ),
-                          )
-                        ],
-                      ),
-                      StreamBuilder(
-                        stream: locationMarkerPosStream.stream,
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return LocationMarkerLayer(
-                              position: snapshot.data!,
-                            );
-                          } else {
-                            return const SizedBox();
-                          }
-                        },
-                      ),
-                    ],
+                  GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: currentPosition!,
+                      zoom: 12,
+                      
+                    ),
+                    cameraTargetBounds: CameraTargetBounds(),
                   ),
                   Consumer(builder: (context, ref, _) {
                     bool mapIsMoving = ref.watch(mapIsMovingProvider);
@@ -188,12 +128,12 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
             searchCtrl: searchController,
             focusNode: focusNode,
             onSave: () async {
-              await ref
-                  .read(geolocationNotifierProvider.notifier)
-                  .reverseCoding(context, mapController.camera.center);
-              ref
-                  .read(globalLoadingProvider.notifier)
-                  .toggleGlobalLoadingIndicator(true);
+              // await ref
+              //     .read(geolocationNotifierProvider.notifier)
+              //     .reverseCoding(context, mapController.camera.center);
+              // ref
+              //     .read(globalLoadingProvider.notifier)
+              //     .toggleGlobalLoadingIndicator(true);
               if (ref.watch(geolocationNotifierProvider).$1 != null) {
                 context.pop();
               }
@@ -202,14 +142,14 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
                   .toggleGlobalLoadingIndicator(false);
             },
             onSearch: (location) {
-              mapController.move(LatLng(location!.lat!, location.lng!), 13);
-              locationMarkerPosStream.sink.add(
-                LocationMarkerPosition(
-                  latitude: location.lat!,
-                  longitude: location.lng!,
-                  accuracy: 1,
-                ),
-              );
+              //mapController.move(LatLng(location!.lat!, location.lng!), 13);
+              // locationMarkerPosStream.sink.add(
+              //   LocationMarkerPosition(
+              //     latitude: location.lat!,
+              //     longitude: location.lng!,
+              //     accuracy: 1,
+              //   ),
+              // );
             },
           ),
         ],
@@ -229,7 +169,7 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
                 accuracy: 1,
               ),
             );
-            mapController.move(currentPosition!, mapController.camera.zoom);
+            // mapController.move(currentPosition!, mapController.camera.zoom);
           },
           child: const Stack(
             alignment: Alignment.center,

@@ -87,7 +87,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         log("Error: ${e.toString()}");
                       }
                     },
-                  ).padX(20),
+                  ).padX(20).padY(8),
                 ],
               ).padY(10),
             ),
