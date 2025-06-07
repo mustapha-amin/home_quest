@@ -1,28 +1,63 @@
-# HomeQuest
+# HomeQuest 🏠
 
-HomeQuest is a real estate mobile application built with Flutter that bridges the gap between agents and home renters or buyers
-
-## Features
--Authentication
--Role-based onboarding (Agent or Client):
-  - Agents: Create and manage listings
-  - Clients: Browse and search listings, filter by location, price, type, etc. bookmark listings and contact agents via whatsapp or direct phone call
-
--Property Listings
-Agents can upload properties with:Images, descriptions, prices, location, etc
-
-- Maps Integration: 
-  Properties displayed with interactive map view
-  - Agents set listing locations
-  - Clients can explore listings
-
-- Easy Communication
-Click-to-call and click-to-whatsapp for smooth agent-client communication
-
-## Tech Stack
-- Flutter: UI development
-- Riverpod: State management
-- Firebase: Authentication & Storage
-- Mapbox maps: Location integration
+HomeQuest is a modern real estate mobile application built with Flutter that seamlessly connects real estate agents with potential home renters and buyers. The platform offers an intuitive interface for property management and discovery.
 
 ![homequest](https://github.com/user-attachments/assets/cfce82b7-fb67-4541-a19e-20ff0d0d591a)
+
+## 🌟 Features
+
+### Authentication & User Management
+- Secure user authentication
+- Role-based access control
+- Personalized user profiles
+- Session management
+
+### Role-based Onboarding
+#### For Agents
+- Create and manage property listings
+- Upload multiple property images
+- Set property details and pricing
+- Track listing performance
+- Manage client inquiries
+
+#### For Clients
+- Browse and search properties
+- Advanced filtering options:
+  - Location-based search
+  - Price range filtering
+  - Property type selection
+  - Amenities filtering
+- Bookmark favorite listings
+- Direct communication with agents
+
+### Property Management
+- Rich property listings with:
+  - High-quality image galleries
+  - Detailed property descriptions
+  - Pricing information
+  - Location details
+  - Available amenities
+  - Property specifications
+
+### Maps Integration
+- Interactive map view for properties
+- Location-based property discovery
+- Precise property location marking
+- Area exploration features
+
+### Communication Features
+- Direct agent contact options:
+  - One-click phone calls
+  - WhatsApp integration
+  - In-app messaging
+- Real-time notifications
+
+## 🛠️ Tech Stack
+
+- **Frontend Framework**: Flutter
+- **State Management**: Riverpod
+- **Backend Services**: Firebase
+  - Authentication
+  - Cloud Storage
+  - Real-time Database
+- **Maps Integration**: Google maps
