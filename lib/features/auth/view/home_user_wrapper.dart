@@ -43,42 +43,7 @@ class HomeUserDataWrapper extends ConsumerWidget {
               );
             },
             loading: () {
-              return Scaffold(
-                body: Skeletonizer(
-                  containersColor: Colors.grey[600],
-                  enabled: true,
-                  child: ListView(
-                    children: [
-                      ...List.generate(8, (_) {
-                        return ListingWidget(
-                          propertyListing: PropertyListing(
-                              id: "id",
-                              agentID: "agentID",
-                              address: 'address',
-                              propertyType: PropertyType.all,
-                              propertySize: 10,
-                              price: 10,
-                              agentFee: 10,
-                              listingType: ListingType.rent,
-                              imagesUrls: [],
-                              bedrooms: 1,
-                              kitchens: 1,
-                              bathrooms: 1,
-                              sittingRooms: 1,
-                              condition: Condition.all,
-                              facilities: [],
-                              furnishing: Furnishing.furnished,
-                              propertySubtype: PropertySubtype.all,
-                              geoPoint: const GeoPoint(1, 1),
-                              state: '',
-                              lga: '',
-                              available: false),
-                        );
-                      })
-                    ],
-                  ),
-                ),
-              );
+              return const LoadingScreen();
             },
           );
         } else {

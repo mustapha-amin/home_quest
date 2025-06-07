@@ -70,11 +70,10 @@ class AuthController extends StateNotifier<bool> {
     result.fold((l) {
       state = false;
       showSnackBar(l, context);
-    }, (r) {
+    }, (r) async {
       log("Signed out");
-
-      Restart.restartApp();
       state = false;
+      await Restart.restartApp();
       ref.invalidate(
           isClient ? currentScreenProvider : currentAgentScreenProvider);
     });

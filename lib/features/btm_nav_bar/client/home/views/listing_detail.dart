@@ -1,26 +1,21 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:home_quest/core/extensions.dart';
-import 'package:home_quest/core/utils/image_path.dart';
 import 'package:home_quest/features/btm_nav_bar/client/home/views/agent_detail.dart';
 
 import 'package:home_quest/features/user%20setup/controller/user_data_controller.dart';
 import 'package:home_quest/models/client.dart';
 import 'package:home_quest/models/property_listing.dart';
-import 'package:home_quest/services/geocoding_service.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
 import 'package:sizer/sizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../../core/enums.dart';
 import '../../../../../core/utils/safety_tips_text.dart';
 import '../../../../../core/utils/textstyle.dart';
-import '../../../../../shared/attribution_widget.dart';
 import '../../../../../shared/loading_indicator.dart';
 import '../../../../../shared/spacing.dart';
 import '../../bookmarks/controllers/bookmark_ctrl.dart';
@@ -364,57 +359,32 @@ class _ListingDetailState extends ConsumerState<ListingDetail> {
                           ),
                           spaceY(10),
                           SizedBox(
-                              width: double.infinity,
-                              height: 30.h,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Stack(
-                                  alignment: Alignment.bottomLeft,
-                                  children: [
-                                    FlutterMap(
-                                      options: MapOptions(
-                                        initialCenter: LatLng(
-                                            widget.propertyListing.geoPoint
-                                                .latitude,
-                                            widget.propertyListing.geoPoint
-                                                .longitude),
-                                        initialZoom: 17,
-                                        minZoom: 10,
-                                      ),
-                                      children: [
-                                        TileLayer(
-                                          urlTemplate:
-                                              'https://api.mapbox.com/styles/v1/mustyameen/cm4tu2iyy002r01s18ylrerzd/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg',
-                                          userAgentPackageName:
-                                              'com.mustapha.homequest',
-                                          additionalOptions: const {
-                                            "accessToken":
-                                                "pk.eyJ1IjoibXVzdHlhbWVlbiIsImEiOiJjbTRucTJjNmIwYjJsMmpxc3R5bGEwcm1mIn0.O8Jpsml14mA7jpVLFvmcbg",
-                                            "id":
-                                                "mapbox://styles/mustyameen/cm4tu2iyy002r01s18ylrerzd"
-                                          },
-                                        ),
-                                        MarkerLayer(markers: [
-                                          Marker(
-                                            point: LatLng(
-                                                widget.propertyListing.geoPoint
-                                                    .latitude,
-                                                widget.propertyListing.geoPoint
-                                                    .longitude),
-                                            child: HugeIcon(
-                                              icon: Icons.location_on,
-                                              color: Colors.red,
-                                              size: 30,
-                                            ),
-                                          )
-                                        ])
-                                      ],
+                            width: double.infinity,
+                            height: 30.h,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: GoogleMap(
+                                mapType: MapType.satellite,
+                                markers: {
+                                  Marker(
+                                    position: LatLng(
+                                      widget.propertyListing.geoPoint.latitude,
+                                      widget.propertyListing.geoPoint.longitude,
                                     ),
-                                    const AttributionWidget(),
-                                  ],
+                                    markerId: const MarkerId('loc'),
+                                  )
+                                },
+                                initialCameraPosition: CameraPosition(
+                                  zoom: 18,
+                                  target: LatLng(
+                                    widget.propertyListing.geoPoint.latitude,
+                                    widget.propertyListing.geoPoint.longitude,
+                                  ),
                                 ),
-                              )),
-                              spaceY(40),
+                              ),
+                            ),
+                          ),
+                          spaceY(40),
                           Text(
                             "Safety tips",
                             style: kTextStyle(20, isBold: true),

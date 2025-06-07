@@ -20,8 +20,13 @@ Future<void> main() async {
   );
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(systemNavigationBarColor: Colors.transparent));
-  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+    const SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarContrastEnforced: false,
+    ),
+  );
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
   runApp(
     ProviderScope(
       overrides: [

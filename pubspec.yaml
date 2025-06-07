@@ -43,8 +43,6 @@ dependencies:
     sdk: flutter
   flutter_animate: ^4.5.2
   flutter_launcher_icons: ^0.14.3
-  flutter_map: ^7.0.2
-  flutter_map_location_marker: ^9.1.1
   flutter_native_splash: ^2.4.4
   flutter_riverpod: ^2.6.1
   flutter_spinkit: ^5.2.1
@@ -52,6 +50,7 @@ dependencies:
   flutter_web_plugins:
     sdk: flutter
   fpdart: ^1.1.1
+  geojson: ^1.0.0
   geolocator: ^13.0.2
   google_fonts: ^6.2.1
   google_maps_flutter: ^2.12.2
@@ -60,7 +59,6 @@ dependencies:
   hugeicons: ^0.0.7
   iconsax_flutter: ^1.0.0
   image_picker: ^1.1.2
-  latlong2: ^0.9.1
   location: ^7.0.1
   nigerian_states_and_lga: ^1.0.0
   pattern_formatter: ^4.0.0

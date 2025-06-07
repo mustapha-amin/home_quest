@@ -1,20 +1,20 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:isolate';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:home_quest/core/extensions.dart';
 
 import 'package:home_quest/core/providers.dart';
+import 'package:home_quest/core/utils/nigeria_bound_extracter.dart';
 import 'package:home_quest/features/btm_nav_bar/agent/listings/widgets/header_widgets.dart';
 import 'package:home_quest/shared/loading_indicator.dart';
 
 import '../../../../../core/colors.dart';
-import '../../../../../core/coords.dart';
 import '../widgets/mapping_hint_widget.dart';
 
 final mapIsMovingProvider = StateProvider.autoDispose((ref) {
@@ -32,39 +32,24 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
   final SearchController searchController = SearchController();
   FocusNode focusNode = FocusNode();
   LatLng? currentPosition;
-  StreamController<LocationMarkerPosition> locationMarkerPosStream =
-      StreamController();
-  List<List<LatLng>> nigerianMapBounds = [];
-  LatLngBounds? nigeriaBounds;
+  late List<LatLng> nigerianBorder;
+  bool borderLoaded = false;
 
-  List<List<LatLng>> extractCoordinates(Map<String, dynamic> geojsonData) {
-    final coordinates =
-        geojsonData['features'][0]['geometry']['coordinates'] as List;
-    List<List<LatLng>> polygons = coordinates.map<List<LatLng>>((polygon) {
-      final ring = polygon[0] as List;
-      return ring.map<LatLng>((coord) {
-        return LatLng(coord[1], coord[0]);
-      }).toList();
-    }).toList();
-    return polygons;
-  }
-
-  void initBoundaries() {
-    nigerianMapBounds = extractCoordinates(NigeriaBoundaries.coords);
-    nigeriaBounds = LatLngBounds.fromPoints(
-      nigerianMapBounds.map((e) => e).expand((e) => e).toList(),
-    );
+  void initBounds() async {
+   nigerianBorder = await loadNigeriaBorder();
+    setState(() {
+      borderLoaded = true;
+    });
   }
 
   @override
   void initState() {
-    // initBoundaries();
+    initBounds();
     super.initState();
   }
 
   @override
   void dispose() {
-    locationMarkerPosStream.close();
     super.dispose();
   }
 
@@ -77,13 +62,6 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
           ref.watch(userLocationProvider).when(
             data: (data) {
               currentPosition = LatLng(data.latitude, data.longitude);
-              locationMarkerPosStream.sink.add(
-                LocationMarkerPosition(
-                  latitude: currentPosition!.latitude,
-                  longitude: currentPosition!.longitude,
-                  accuracy: 1,
-                ),
-              );
               return Stack(
                 alignment: Alignment.bottomCenter,
                 children: [
@@ -91,9 +69,14 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
                     initialCameraPosition: CameraPosition(
                       target: currentPosition!,
                       zoom: 12,
-                      
                     ),
-                    cameraTargetBounds: CameraTargetBounds(),
+                    polylines: {
+                      Polyline(
+                        polylineId: PolylineId('nigeria'),
+                        points: borderLoaded ? nigerianBorder : [currentPosition!],
+                        color: Colors.red,
+                      ),
+                    },
                   ),
                   Consumer(builder: (context, ref, _) {
                     bool mapIsMoving = ref.watch(mapIsMovingProvider);
@@ -162,13 +145,13 @@ class _SelectLocationState extends ConsumerState<SelectLocation> {
           tooltip: 'My Location',
           elevation: 0,
           onPressed: () {
-            locationMarkerPosStream.sink.add(
-              LocationMarkerPosition(
-                latitude: currentPosition!.latitude,
-                longitude: currentPosition!.longitude,
-                accuracy: 1,
-              ),
-            );
+            // locationMarkerPosStream.sink.add(
+            //   LocationMarkerPosition(
+            //     latitude: currentPosition!.latitude,
+            //     longitude: currentPosition!.longitude,
+            //     accuracy: 1,
+            //   ),
+            // );
             // mapController.move(currentPosition!, mapController.camera.zoom);
           },
           child: const Stack(
