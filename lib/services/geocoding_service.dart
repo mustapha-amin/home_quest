@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:home_quest/models/geolocation.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:home_quest/models/geolocation.dart';  
 import 'package:http/http.dart' as http;
 
 class GeocodingService {

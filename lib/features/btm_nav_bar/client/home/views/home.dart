@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:home_quest/core/enums.dart';
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/providers.dart';
@@ -14,7 +15,6 @@ import 'package:home_quest/models/property_listing.dart';
 import 'package:home_quest/services/geocoding_service.dart';
 import 'package:home_quest/shared/error_screen.dart';
 import 'package:home_quest/shared/spacing.dart';
-import 'package:latlong2/latlong.dart';
 import 'package:sizer/sizer.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

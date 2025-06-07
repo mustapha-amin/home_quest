@@ -1,12 +1,10 @@
 import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:home_quest/core/extensions.dart';
 import 'package:home_quest/core/providers.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../../../../../core/colors.dart';
 import '../../../../../core/utils/textstyle.dart';
@@ -22,7 +20,7 @@ final geolocationNotifierProvider =
   return GeoLocationNotifier();
 });
 
-class GeoLocationNotifier extends StateNotifier< (GeoLocation?, bool)> {
+class GeoLocationNotifier extends StateNotifier<(GeoLocation?, bool)> {
   GeoLocationNotifier() : super((null, false));
 
   Future<void> forwardCoding(BuildContext context, String query) async {
@@ -86,6 +84,7 @@ class HeaderWidgets extends ConsumerWidget {
       right: 20,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
             style: IconButton.styleFrom(

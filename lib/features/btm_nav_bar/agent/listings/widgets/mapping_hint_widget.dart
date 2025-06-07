@@ -29,7 +29,7 @@ class MappingHintWidget extends StatelessWidget {
           ),
           spaceX(5),
           Text(
-            "Move to select location",
+            "Tap to select location",
             style: kTextStyle(14),
           ),
         ],
