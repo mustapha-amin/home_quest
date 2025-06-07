@@ -49,8 +49,6 @@ HomeQuest is a modern real estate mobile application built with Flutter that sea
 - Direct agent contact options:
   - One-click phone calls
   - WhatsApp integration
-  - In-app messaging
-- Real-time notifications
 
 ## 🛠️ Tech Stack
 
