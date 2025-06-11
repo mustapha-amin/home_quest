@@ -4,7 +4,7 @@ HomeQuest is a modern real estate mobile application built with Flutter that sea
 
 ![homequest](https://github.com/user-attachments/assets/cfce82b7-fb67-4541-a19e-20ff0d0d591a)
 
-## App download link: https://github.com/mustapha-amin/home_quest/actions/runs/15508983361/artifacts/3281525741
+## App download link: https://github.com/mustapha-amin/home_quest/releases/download/v1.0.1/app-arm64-v8a-release.apk
 
 ## 🌟 Features
 
